@@ -2,6 +2,7 @@
 import { Command } from "commander";
 import { execSync } from "child_process";
 import { installDependency } from "./cmd/install";
+import { genkey } from "./cmd/genkey";
 
 const program = new Command();
 
@@ -15,6 +16,11 @@ program
   .command("install")
   .description("Install the ckb dependency binary")
   .action(installDependency);
+
+program
+  .command("genkey")
+  .description("genereate 20 accounts")
+  .action(genkey);
 
 program
   .command("use")
