@@ -1,0 +1,5 @@
+node_modules/
+target
+docker/ckb/data/
+.DS_Store
+data/
