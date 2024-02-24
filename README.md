@@ -4,15 +4,15 @@ ckb development environment for professionals
 
 ### Built-in scripts
 
-- xUDT
+- [x] xUDT
  - https://github.com/nervosnetwork/rfcs/pull/428
-- Omnilock
+- [x] Omnilock
  - https://github.com/cryptape/omnilock
 - Spore
  - https://github.com/sporeprotocol/spore-contract
-- AnyoneCanPay
+- [x] AnyoneCanPay
  - https://github.com/cryptape/anyone-can-pay
-- AlwaysSuccess
+- [x] AlwaysSuccess
  - https://github.com/nervosnetwork/ckb-production-scripts/blob/master/c/always_success.c
 
 ### Accounts
@@ -37,4 +37,13 @@ fc8142dc0a6c1dc9102696e7ca730b8c05e233549ea924fafa477f5086d94ac3
 1ef1c9cbf031d7bc181c039cebb4f2914dbad689ab268e192fe22ea314d9b4a4
 a5808e79c243d8e026a034273ad7a5ccdcb2f982392fd0230442b1734c98a4c2
 ace08599f3174f4376ae51fdc30950d4f2d731440382bb0aa1b6b0bd3a9728cd
+```
+
+## Development
+
+update built-in scripts:
+
+update submodule inside `docker` and then run
+```sh
+make all
 ```
