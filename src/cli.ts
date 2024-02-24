@@ -3,6 +3,7 @@ import { Command } from "commander";
 import { installDependency } from "./cmd/install";
 import { genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
+import { node } from "./cmd/node";
 
 const program = new Command();
 
@@ -25,6 +26,11 @@ program
   .command("list-hashes")
   .description("Use the CKB to list blockchain scripts hashes")
   .action(listHashes);
+
+program
+  .command("node")
+  .description("Use the CKB to start devnet")
+  .action(node);
 
 // Parse command-line arguments
 program.parse(process.argv);
