@@ -1,10 +1,10 @@
-import { exec, execSync } from "child_process";
+import { exec } from "child_process";
+import { devnetPath } from "../cfg/const";
 
 export function node() {
   const binPath = "target/ckb/ckb";
-  const configPath = "docker/devnet";
-  const ckbCmd = `${binPath} run -C ${configPath}`;
-  const minerCmd = `${binPath} miner -C ${configPath}`;
+  const ckbCmd = `${binPath} run -C ${devnetPath}`;
+  const minerCmd = `${binPath} miner -C ${devnetPath}`;
   try {
     // Run first command
     const ckbProcess = exec(ckbCmd);
