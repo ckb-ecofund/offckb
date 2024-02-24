@@ -8,7 +8,7 @@ ckb development environment for professionals
  - https://github.com/nervosnetwork/rfcs/pull/428
 - [x] Omnilock
  - https://github.com/cryptape/omnilock
-- Spore
+- [ ] Spore
  - https://github.com/sporeprotocol/spore-contract
 - [x] AnyoneCanPay
  - https://github.com/cryptape/anyone-can-pay

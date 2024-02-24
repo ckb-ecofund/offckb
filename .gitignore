@@ -1,5 +1,5 @@
 node_modules/
 target
-docker/ckb/data/
+docker/devnet/data/
 .DS_Store
 data/
