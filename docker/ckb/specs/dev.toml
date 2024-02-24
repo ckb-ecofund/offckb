@@ -37,6 +37,19 @@ capacity = 100_000_0000_0000
 [[genesis.system_cells]]
 file = { file = "sudt" }
 create_type_id = true
+[[genesis.system_cells]]
+file = { file = "xudt_rce" }
+create_type_id = true
+[[genesis.system_cells]]
+file = { file = "omni_lock" }
+create_type_id = true
+[[genesis.system_cells]]
+file = { file = "anyone_can_pay" }
+create_type_id = true
+[[genesis.system_cells]]
+file = { file = "always_success" }
+create_type_id = true
+
 
 [genesis.system_cells_lock]
 code_hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
@@ -47,14 +60,14 @@ hash_type = "data"
 [[genesis.dep_groups]]
 name = "secp256k1_blake160_sighash_all"
 files = [
-  { bundled = "specs/cells/secp256k1_data" },
-  { bundled = "specs/cells/secp256k1_blake160_sighash_all" },
+    { bundled = "specs/cells/secp256k1_data" },
+    { bundled = "specs/cells/secp256k1_blake160_sighash_all" },
 ]
 [[genesis.dep_groups]]
 name = "secp256k1_blake160_multisig_all"
 files = [
-  { bundled = "specs/cells/secp256k1_data" },
-  { bundled = "specs/cells/secp256k1_blake160_multisig_all" },
+    { bundled = "specs/cells/secp256k1_data" },
+    { bundled = "specs/cells/secp256k1_blake160_multisig_all" },
 ]
 
 # For first 11 block
