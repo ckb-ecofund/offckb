@@ -7,6 +7,7 @@ import { node } from "./cmd/node";
 import { initChainIfNeeded } from "./cmd/init-chain";
 import { buildLumosConfig } from "./cmd/build-lumos-config";
 import { init } from "./cmd/init";
+import { accounts } from "./cmd/accounts";
 
 const program = new Command();
 
@@ -47,10 +48,15 @@ program
   .description("generate accounts with prefunded CKB tokens")
   .action(buildAccounts);
 
-  program
+program
   .command("print-account-issue-info")
   .description("print account issue cells config toml sections")
   .action(printIssueSectionForToml);
+
+program
+  .command("accounts")
+  .description("print account list info")
+  .action(accounts);
 
 program
   .command("init")
