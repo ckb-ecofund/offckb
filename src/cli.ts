@@ -4,7 +4,7 @@ import { installDependency } from "./cmd/install";
 import { genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
-import { initChain } from "./cmd/init-chain";
+import { initChainIfNeeded } from "./cmd/init-chain";
 import { buildLumosConfig } from "./cmd/build-lumos-config";
 import { init } from "./cmd/init";
 
@@ -35,7 +35,7 @@ program.command("node").description("Use the CKB to start devnet").action(node);
 program
   .command("init-chain")
   .description("Use the CKB to init devnet")
-  .action(initChain);
+  .action(initChainIfNeeded);
 
 program
   .command("build-lumos-config")

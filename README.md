@@ -2,6 +2,27 @@
 
 ckb development environment for professionals
 
+## Install
+
+```sh
+git clone https://github.com/RetricSu/offckb.git
+cd offckb && alias offckb='yarn start'
+```
+
+eventually you will do simple
+```sh
+npm install -g offckb // not yet, todo
+```
+
+## Usage
+
+```sh
+offckb node // start the devnet of CKB 
+offckb init // init a typescript boilerplate with lumos to get started with to build CKB DAPP,think 'hardhat init'
+offckb list-hashes // list scripts hashes, equals `ckb list-hashes`
+offckb list-accounts // todo, list accounts with prefund CKB tokens
+```
+
 ### Built-in scripts
 
 - [x] xUDT https://github.com/nervosnetwork/rfcs/pull/428
