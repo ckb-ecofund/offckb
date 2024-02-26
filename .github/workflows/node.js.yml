@@ -1,0 +1,34 @@
+name: Nodejs CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Linting
+        run: yarn run lint
+
+      - name: Building
+        run: yarn run build
+
+      - run: yarn run fmt
+      - run: git diff --exit-code

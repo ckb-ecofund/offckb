@@ -1,17 +1,9 @@
-import * as fs from "fs";
-import * as path from "path";
-import { accountTargetDir } from "../cfg/const";
-import {
-  Address,
-  HashType,
-  HexString,
-  Script,
-  config,
-  hd,
-  helpers,
-} from "@ckb-lumos/lumos";
-import * as readline from "readline";
-import { devnetConfig } from "./build-lumos-config";
+import * as fs from 'fs';
+import * as path from 'path';
+import { accountTargetDir } from '../cfg/const';
+import { Address, HashType, HexString, Script, config, hd, helpers } from '@ckb-lumos/lumos';
+import * as readline from 'readline';
+import { devnetConfig } from './build-lumos-config';
 
 interface Account {
   privkey: HexString;
@@ -29,8 +21,8 @@ export function genkey() {
 }
 
 function generateHex(length: number) {
-  const characters = "abcdef0123456789";
-  let result = "";
+  const characters = 'abcdef0123456789';
+  let result = '';
   for (let i = 0; i < length; i++) {
     result += characters[Math.floor(Math.random() * characters.length)];
   }
@@ -43,7 +35,7 @@ function generateKeysFile(numKeys: number, keyLength: number) {
   const stream = fs.createWriteStream(targetDir);
   for (let i = 0; i < numKeys; i++) {
     const key = generateHex(keyLength);
-    stream.write(key + "\n");
+    stream.write(key + '\n');
   }
   stream.end();
 }
@@ -71,9 +63,9 @@ export async function buildAccounts() {
 
   const accountDir = path.join(accountTargetDir, `account.json`);
 
-  fs.writeFile(accountDir, JSON.stringify(accounts, null, 2), "utf8", (err) => {
+  fs.writeFile(accountDir, JSON.stringify(accounts, null, 2), 'utf8', (err) => {
     if (err) {
-      return console.error("Error writing file:", err);
+      return console.error('Error writing file:', err);
     }
   });
 }
@@ -81,7 +73,7 @@ export async function buildAccounts() {
 export function genAccount(privkey: HexString): Account {
   const pubkey = hd.key.privateToPublic(privkey);
   const args = hd.key.publicKeyToBlake160(pubkey);
-  const template = devnetConfig.SCRIPTS["SECP256K1_BLAKE160"]!;
+  const template = devnetConfig.SCRIPTS['SECP256K1_BLAKE160']!;
   const lockScript: Script = {
     codeHash: template.CODE_HASH,
     hashType: template.HASH_TYPE as HashType,
@@ -100,7 +92,7 @@ export function genAccount(privkey: HexString): Account {
 }
 
 export function printIssueSectionForToml() {
-  const config: Account[] = require("../../account/account.json");
+  const config: Account[] = require('../../account/account.json');
 
   for (const account of config) {
     const section = `# issue for account private key: ${account.privkey}
