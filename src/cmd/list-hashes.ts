@@ -1,8 +1,8 @@
 import { execSync } from "child_process";
-import { devnetPath } from "../cfg/const";
+import { ckbBinPath, devnetPath } from "../cfg/const";
 
 export function listHashes() {
-  const cmd = `target/ckb/ckb list-hashes  -C ${devnetPath}`;
+  const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;
   try {
     execSync(cmd, {
       stdio: "inherit",

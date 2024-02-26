@@ -1,5 +1,5 @@
 node_modules/
-target
+target/
 docker/devnet/data/
 .DS_Store
 data/

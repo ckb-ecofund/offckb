@@ -5,9 +5,10 @@ import * as path from "path";
 import semver from "semver";
 import os from "os";
 import AdmZip from "adm-zip";
+import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from "../cfg/const";
 
-const BINARY = "ckb";
-const MINIMAL_VERSION = "0.113.1"; // Example latest version
+const BINARY = ckbBinPath;
+const MINIMAL_VERSION = minimalRequiredCKBVersion;
 
 // Function to download and install the dependency binary
 export async function installDependency() {
@@ -25,26 +26,21 @@ export async function installDependency() {
 
   const arch = getArch();
   const osname = getOS();
+  const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`; 
   try {
     const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
     const response = await axios.get(downloadURL, { responseType: "arraybuffer" });
-    const tempFilePath = path.join(os.tmpdir(), `ckb_v${version}_${osname}.zip`);
-
-    // Write downloaded file to temporary location
+    const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.zip`);
     fs.writeFileSync(tempFilePath, response.data);
 
     // Unzip the file
     const zip = new AdmZip(tempFilePath);
-    const rootDir = process.cwd();
-    const targetDir = path.join(rootDir, `target`);
-    const extractDir = path.join(targetDir, `ckb_v${MINIMAL_VERSION}`);
+    const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
     zip.extractAllTo(extractDir, /*overwrite*/ true);
+    const sourcePath = path.join(extractDir, ckbVersionOSName);
 
     // Install the extracted files
-    const originalBinFolderPath = path.join(extractDir, `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`);
-    const binFolerPath = path.join(targetDir, "ckb");
-    const ckbBinPath = path.join(binFolerPath, "ckb");
-    fs.renameSync(originalBinFolderPath, binFolerPath); // Move binary to desired location
+    fs.renameSync(sourcePath, ckbFolderPath); // Move binary to desired location
     fs.chmodSync(ckbBinPath, "755"); // Make the binary executable
 
     console.log("CKB installed successfully.");

@@ -4,16 +4,11 @@ ckb development environment for professionals
 
 ### Built-in scripts
 
-- [x] xUDT
- - https://github.com/nervosnetwork/rfcs/pull/428
-- [x] Omnilock
- - https://github.com/cryptape/omnilock
-- [ ] Spore
- - https://github.com/sporeprotocol/spore-contract
-- [x] AnyoneCanPay
- - https://github.com/cryptape/anyone-can-pay
-- [x] AlwaysSuccess
- - https://github.com/nervosnetwork/ckb-production-scripts/blob/master/c/always_success.c
+- [x] xUDT https://github.com/nervosnetwork/rfcs/pull/428
+- [x] Omnilock https://github.com/cryptape/omnilock
+- [x] AnyoneCanPay https://github.com/cryptape/anyone-can-pay
+- [x] AlwaysSuccess https://github.com/nervosnetwork/ckb-production-scripts/blob/master/c/always_success.c
+- [ ] Spore https://github.com/sporeprotocol/spore-contract
 
 ### Accounts
 ```
