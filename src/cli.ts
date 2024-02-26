@@ -5,6 +5,8 @@ import { genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
 import { initChain } from "./cmd/init-chain";
+import { buildLumosConfig } from "./cmd/build-lumos-config";
+import { init } from "./cmd/init";
 
 const program = new Command();
 
@@ -34,6 +36,20 @@ program
   .command("init-chain")
   .description("Use the CKB to init devnet")
   .action(initChain);
+
+program
+  .command("build-lumos-config")
+  .description("Use the CKB to generate lumos config.json")
+  .action(buildLumosConfig);
+
+program
+  .command("init")
+  .description("init dapp project with lumos")
+  .argument("<string>", "name of the dapp")
+  .action((str) => {
+    const name = str ?? "offckb-dapp";
+    return init(name);
+  });
 
 // Parse command-line arguments
 program.parse(process.argv);
