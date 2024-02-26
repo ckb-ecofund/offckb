@@ -1,7 +1,12 @@
 import { execSync } from "child_process";
 import { ckbBinPath, devnetPath } from "../cfg/const";
+import { installDependency } from "./install";
+import { initChainIfNeeded } from "./init-chain";
 
-export function listHashes() {
+export async function listHashes() {
+  await installDependency();
+  await initChainIfNeeded();
+
   const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;
   try {
     execSync(cmd, {

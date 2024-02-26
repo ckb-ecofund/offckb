@@ -1,7 +1,12 @@
 import { exec } from "child_process";
 import { ckbBinPath, devnetPath } from "../cfg/const";
+import { initChainIfNeeded } from "./init-chain";
+import { installDependency } from "./install";
 
-export function node() {
+export async function node() {
+  await installDependency();
+  await initChainIfNeeded();
+
   const ckbCmd = `${ckbBinPath} run -C ${devnetPath}`;
   const minerCmd = `${ckbBinPath} miner -C ${devnetPath}`;
   try {

@@ -1,8 +1,15 @@
 import * as fs from "fs";
 import { devnetPath, devnetSourcePath } from "../cfg/const";
 import path from "path";
+import { isFolderExists } from "../util";
 
-export async function initChain() {
+export async function initChainIfNeeded() {
+  if (!isFolderExists(devnetPath)) {
+    await doInitChain();
+  }
+}
+
+async function doInitChain() {
   await copyFilesWithExclusion(devnetSourcePath, devnetPath, ["data"]);
   console.debug(`init devnet config folder: ${devnetPath}`);
   copyAndEditMinerToml();

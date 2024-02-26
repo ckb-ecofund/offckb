@@ -5,7 +5,12 @@ import * as path from "path";
 import semver from "semver";
 import os from "os";
 import AdmZip from "adm-zip";
-import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from "../cfg/const";
+import {
+  ckbBinPath,
+  ckbFolderPath,
+  minimalRequiredCKBVersion,
+  targetEnvironmentPath,
+} from "../cfg/const";
 
 const BINARY = ckbBinPath;
 const MINIMAL_VERSION = minimalRequiredCKBVersion;
@@ -15,27 +20,36 @@ export async function installDependency() {
   const version = getInstalledVersion();
   if (version) {
     if (isVersionOutdated(version)) {
-      console.log(`${BINARY} version ${version} is outdated, download and install the new version ${MINIMAL_VERSION}..`);
-      console.log(buildDownloadUrl(MINIMAL_VERSION))
+      console.log(
+        `${BINARY} version ${version} is outdated, download and install the new version ${MINIMAL_VERSION}..`
+      );
+      console.log(buildDownloadUrl(MINIMAL_VERSION));
     } else {
       return;
     }
   } else {
-    console.log(`${BINARY} not found, download and install the new version ${MINIMAL_VERSION}..`);
+    console.log(
+      `${BINARY} not found, download and install the new version ${MINIMAL_VERSION}..`
+    );
   }
 
   const arch = getArch();
   const osname = getOS();
-  const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`; 
+  const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`;
   try {
     const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
-    const response = await axios.get(downloadURL, { responseType: "arraybuffer" });
+    const response = await axios.get(downloadURL, {
+      responseType: "arraybuffer",
+    });
     const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.zip`);
     fs.writeFileSync(tempFilePath, response.data);
 
     // Unzip the file
     const zip = new AdmZip(tempFilePath);
-    const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
+    const extractDir = path.join(
+      targetEnvironmentPath,
+      `ckb_v${MINIMAL_VERSION}`
+    );
     zip.extractAllTo(extractDir, /*overwrite*/ true);
     const sourcePath = path.join(extractDir, ckbVersionOSName);
 
@@ -49,7 +63,6 @@ export async function installDependency() {
   }
 }
 
-
 function getInstalledVersion(): string | null {
   try {
     const versionOutput = execSync(`${BINARY} --version`, {
@@ -62,7 +75,6 @@ function getInstalledVersion(): string | null {
     }
     return null;
   } catch (error) {
-    console.error("Error retrieving installed version:", error);
     return null;
   }
 }
