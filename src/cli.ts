@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { installDependency } from "./cmd/install";
-import { buildAccounts, genkey } from "./cmd/genkey";
+import { buildAccounts, generateIssueTomlSections, genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
 import { initChainIfNeeded } from "./cmd/init-chain";
@@ -46,6 +46,11 @@ program
   .command("build-accounts")
   .description("generate accounts with prefunded CKB tokens")
   .action(buildAccounts);
+
+  program
+  .command("gen-accounts-toml")
+  .description("generate account issue config toml sections")
+  .action(generateIssueTomlSections);
 
 program
   .command("init")

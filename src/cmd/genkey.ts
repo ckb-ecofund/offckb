@@ -98,3 +98,19 @@ export function genAccount(privkey: HexString): Account {
     args,
   };
 }
+
+export function generateIssueTomlSections() {
+  const config: Account[] = require("../../account/account.json");
+
+  for (const account of config) {
+    const section = `# issue for account private key: ${account.privkey}
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "${account.lockScript.codeHash}"
+lock.args = "${account.lockScript.args}"
+lock.hash_type = "${account.lockScript.hashType}"
+    `;
+
+    console.log(section);
+  }
+}
