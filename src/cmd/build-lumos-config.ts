@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { packageRootPath } from "../cfg/const";
+import { dappTemplatePath } from "../cfg/const";
 
 const genesisTxHash =
   "0xa45cab14fe656d942e1aeee4caee29980547dd38252dad715162115e1f1faa19";
@@ -79,7 +79,7 @@ const config = {
 };
 
 export function buildLumosConfig() {
-  const filePath = path.resolve(packageRootPath, "template/config.json");
+  const filePath = path.resolve(dappTemplatePath, "config.json");
   fs.writeFile(filePath, JSON.stringify(config, null, 2), "utf8", (err) => {
     if (err) {
       return console.error("Error writing file:", err);

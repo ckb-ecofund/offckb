@@ -1,14 +1,11 @@
 import * as fs from "fs";
-import { execSync } from "child_process";
 import { devnetPath, devnetSourcePath } from "../cfg/const";
 import path from "path";
 
-export function initChain() {
-  execSync(`cp -r ${devnetSourcePath} ${devnetPath}`);
-  console.log("copy devnet config folder");
+export async function initChain() {
+  await copyFilesWithExclusion(devnetSourcePath, devnetPath, ["data"]);
+  console.debug(`init devnet config folder: ${devnetPath}`);
   copyAndEditMinerToml();
-
-  execSync(`rm -rf ${devnetPath}/data`);
 }
 
 function copyAndEditMinerToml() {
@@ -31,8 +28,52 @@ function copyAndEditMinerToml() {
       if (err) {
         return console.error("Error writing file:", err);
       }
-      console.log("modified ", newMinerToml);
+      console.debug("modified ", newMinerToml);
     });
   });
 }
 
+async function copyFilesWithExclusion(
+  sourceDir: string,
+  destinationDir: string,
+  excludedFolders: string[]
+) {
+  try {
+    // Ensure the destination directory exists
+    await fs.promises.mkdir(destinationDir, { recursive: true });
+
+    // Function to recursively copy files and directories
+    async function copyRecursive(source: string, destination: string) {
+      // Get a list of all files and directories in the source directory
+      const files = await fs.promises.readdir(source);
+
+      // Iterate through each file or directory
+      for (const file of files) {
+        const sourcePath = path.join(source, file);
+        const destPath = path.join(destination, file);
+
+        // Get the file's stats
+        const stats = await fs.promises.stat(sourcePath);
+
+        // If it's a directory, recursively copy it (unless it's excluded)
+        if (stats.isDirectory()) {
+          if (excludedFolders.includes(file)) {
+            // Skipping directory: ${sourcePath}
+          } else {
+            // Ensure destination directory exists before copying
+            await fs.promises.mkdir(destPath, { recursive: true });
+            await copyRecursive(sourcePath, destPath);
+          }
+        } else {
+          // Otherwise, copy the file
+          await fs.promises.copyFile(sourcePath, destPath);
+        }
+      }
+    }
+
+    // Start copying recursively from the source directory
+    await copyRecursive(sourceDir, destinationDir);
+  } catch (error) {
+    console.error("An error occurred during copying files:", error);
+  }
+}

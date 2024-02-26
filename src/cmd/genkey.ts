@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
+import { packageRootPath } from "../cfg/const";
 
 export function genkey() {
   const numKeys = 20; // Number of keys to generate
@@ -18,8 +19,7 @@ function generateHex(length: number) {
 }
 
 function generateKeysFile(numKeys: number, keyLength: number) {
-  const rootDir = process.cwd();
-  const targetDir = path.join(rootDir, `account/keys`);
+  const targetDir = path.join(packageRootPath, `account/keys`);
 
   const stream = fs.createWriteStream(targetDir);
   for (let i = 0; i < numKeys; i++) {
