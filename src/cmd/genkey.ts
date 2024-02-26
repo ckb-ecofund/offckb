@@ -1,6 +1,25 @@
 import * as fs from "fs";
 import * as path from "path";
-import { packageRootPath } from "../cfg/const";
+import { accountTargetDir } from "../cfg/const";
+import {
+  Address,
+  HashType,
+  HexString,
+  Script,
+  config,
+  hd,
+  helpers,
+} from "@ckb-lumos/lumos";
+import * as readline from "readline";
+import { devnetConfig } from "./build-lumos-config";
+
+interface Account {
+  privkey: HexString;
+  pubkey: HexString;
+  args: HexString;
+  lockScript: Script;
+  address: Address;
+}
 
 export function genkey() {
   const numKeys = 20; // Number of keys to generate
@@ -19,7 +38,7 @@ function generateHex(length: number) {
 }
 
 function generateKeysFile(numKeys: number, keyLength: number) {
-  const targetDir = path.join(packageRootPath, `account/keys`);
+  const targetDir = path.join(accountTargetDir, `keys`);
 
   const stream = fs.createWriteStream(targetDir);
   for (let i = 0; i < numKeys; i++) {
@@ -27,4 +46,71 @@ function generateKeysFile(numKeys: number, keyLength: number) {
     stream.write(key + "\n");
   }
   stream.end();
+}
+
+export async function buildAccounts() {
+  const keysDir = path.join(accountTargetDir, `keys`);
+
+  // Create a Readable stream from the file
+  const fileStream = fs.createReadStream(keysDir);
+
+  // Create an interface for reading data from the stream line by line
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity, // Specify Infinity to read all lines without removing newlines
+  });
+
+  const accounts: Account[] = [];
+
+  // Read each line from the file
+  for await (const line of rl) {
+    const privkey = `0x${line}`;
+    const account = genAccount(privkey);
+    accounts.push(account);
+  }
+
+  const accountDir = path.join(accountTargetDir, `account.json`);
+
+  fs.writeFile(accountDir, JSON.stringify(accounts, null, 2), "utf8", (err) => {
+    if (err) {
+      return console.error("Error writing file:", err);
+    }
+  });
+}
+
+export function genAccount(privkey: HexString): Account {
+  const pubkey = hd.key.privateToPublic(privkey);
+  const args = hd.key.publicKeyToBlake160(pubkey);
+  const template = devnetConfig.SCRIPTS["SECP256K1_BLAKE160"]!;
+  const lockScript: Script = {
+    codeHash: template.CODE_HASH,
+    hashType: template.HASH_TYPE as HashType,
+    args: args,
+  };
+  const address = helpers.encodeToAddress(lockScript, {
+    config: devnetConfig as config.Config,
+  });
+  return {
+    privkey,
+    pubkey,
+    lockScript,
+    address,
+    args,
+  };
+}
+
+export function printIssueSectionForToml() {
+  const config: Account[] = require("../../account/account.json");
+
+  for (const account of config) {
+    const section = `# issue for account private key: ${account.privkey}
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "${account.lockScript.codeHash}"
+lock.args = "${account.lockScript.args}"
+lock.hash_type = "${account.lockScript.hashType}"
+    `;
+
+    console.log(section);
+  }
 }

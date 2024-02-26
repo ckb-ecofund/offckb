@@ -14,6 +14,8 @@ export const devnetPath = path.resolve(targetEnvironmentPath, `devnet`);
 export const ckbFolderPath = path.resolve(targetEnvironmentPath, 'ckb'); 
 export const ckbBinPath = path.resolve(ckbFolderPath, 'ckb');
 
+export const accountTargetDir = path.join(packageRootPath, `account`);
+
 // Version
 export const minimalRequiredCKBVersion = "0.113.1";
 

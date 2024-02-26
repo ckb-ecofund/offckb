@@ -83,19 +83,148 @@ lock.code_hash = "0x000000000000000000000000000000000000000000000000000000000000
 lock.args = "0x62e907b15cbf27d5425399ebf6f0fb50ebb88f18"
 lock.hash_type = "data"
 
-# issue for random generated private key: d00c06bfd800d27397002dca6fb0993d5ba6399b4238b2f29ee9deb97593d2bc
+#### account-list ####
+# issue for account private key: 0x6109170b275a09ad54877b82f7d9930f88cab5717d484fb4741ae9d1dd078cd6
 [[genesis.issued_cells]]
-capacity = 20_000_000_000_00000000
+capacity = 42_000_000_00000000
 lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-lock.args = "0xc8328aabcd9b9e8e64fbc566c4385c3bdeb219d7"
+lock.args = "0x8e42b1999f265a0078503c4acec4d5e134534297"
 lock.hash_type = "type"
+    
+# issue for account private key: 0x9f315d5a9618a39fdc487c7a67a8581d40b045bd7a42d83648ca80ef3b2cb4a1
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x758d311c8483e0602dfad7b69d9053e3f917457d"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x59ddda57ba06d6e9c5fa9040bdb98b4b098c2fce6520d39f51bc5e825364697a
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x9d1edebedf8f026c0d597c4c5cd3f45dec1f7557"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xf4a1fc19468b51ba9d1f0f5441fa3f4d91e625b2af105e1e37cc54bf9b19c0a1
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0xe65f823bc5a48a38515690604e503dba4eb15d61"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x0334ddff3b1e19af5c5fddda8dbcfb235416eaaba11cfca8acf63ad46e9f55b2
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x9665e6bc1966ec2bfcca4f11782d2b906f38438f"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x6f358d92f408511707803d292efa148236a2e114d73a472be2a07e0ba49200c7
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x0df9552f53d51a378aba267bc858dada447e8400"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xbde2f19c98dc5ab4cc98f73c573757a9f1782dc44398022a23f77ca752ad8fbe
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x683188bb29502ba6e702b7c650cc80707c3f8b4b"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x7c1280118923ea96529909638dac9bd258251a222783f91dedbf82de15526fd2
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x532bfb946e4b108d14758ca38e6e3b4af6801996"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x1fe1356d47224f34788eb099c4f67ab28a477a5a85d6ff4e54c240c11a0c693c
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x3982ac2f4893dfcac091ef795bb778cc2a25edd9"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xc3255dd2bbc3accc69c82bdb2c927ab4a681146331d5e01990890fb3cd732b47
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x5aab386e8a9f4f869776674c7181ea76fef75b55"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x8c3f8a6a6847a31af93000a31629f0c674e0cbb1b7cb71bdfbf4fb9dd828a518
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0xf6ca1c08a40ab3d00e2299930cf0f8c298a1a90d"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x11e34fc1bad213b1ce3071501a18c39e5dbf1ea2e66ac05059c36a5d1e7a56cf
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x5cb8098824329c3a2e731641ae4e90ba0a3ec396"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x0a0ecce6f15c444e6d0013d6eb79c87babff2c76447f3a2f6b28023490170c1f
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x516932280d5ff3108119fe2361d0868f1998dcc4"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x006250e940dbce94ad9329ac16c109acf7de98c7e4738013bdd3105d4f004d8a
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x7a83042ddabeb27294fe62588df7acc627d4181f"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xfc8142dc0a6c1dc9102696e7ca730b8c05e233549ea924fafa477f5086d94ac3
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x1416fe8e3e1d659a235f5f35b30f7cfbdf9fd77c"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x711aa98da3e9643170de94d6b16d3a30edf4bb231aa793aaac0fc7373c0f6322
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0xf246d3f9d94aab2688babb4802879056d9bf5810"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x76f51bf03e38b7f4a3c2cd8b088103e746f0e425fb0c5e0f8b22061f41c790cc
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x4ec295923dde1b522835007f9260e8ba398dc7cb"
+lock.hash_type = "type"
+    
+# issue for account private key: 0x1ef1c9cbf031d7bc181c039cebb4f2914dbad689ab268e192fe22ea314d9b4a4
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0xd7ab64e757d1177a955a5c997a6ba7feab49161b"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xa5808e79c243d8e026a034273ad7a5ccdcb2f982392fd0230442b1734c98a4c2
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x9ba28269270223ba366a29dc96401910540894a4"
+lock.hash_type = "type"
+    
+# issue for account private key: 0xace08599f3174f4376ae51fdc30950d4f2d731440382bb0aa1b6b0bd3a9728cd
+[[genesis.issued_cells]]
+capacity = 42_000_000_00000000
+lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
+lock.args = "0x4118c8c16749bf126b22468d030bf9de7da3717b"
+lock.hash_type = "type"
+#### account-list ####
 
-# issue for random generated private key: 63d86723e08f0f813a36ce6aa123bb2289d90680ae1e99d4de8cdb334553f24d
-[[genesis.issued_cells]]
-capacity = 5_198_735_037_00000000
-lock.code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
-lock.args = "0x470dcdc5e44064909650113a274b3b36aecb6dc7"
-lock.hash_type = "type"
 
 [params]
 initial_primary_epoch_reward = 1_917_808_21917808

@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { installDependency } from "./cmd/install";
-import { genkey } from "./cmd/genkey";
+import { buildAccounts, printIssueSectionForToml, genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
 import { initChainIfNeeded } from "./cmd/init-chain";
 import { buildLumosConfig } from "./cmd/build-lumos-config";
 import { init } from "./cmd/init";
+import { accounts } from "./cmd/accounts";
 
 const program = new Command();
 
@@ -41,6 +42,21 @@ program
   .command("build-lumos-config")
   .description("Use the CKB to generate lumos config.json")
   .action(buildLumosConfig);
+
+program
+  .command("build-accounts")
+  .description("generate accounts with prefunded CKB tokens")
+  .action(buildAccounts);
+
+program
+  .command("print-account-issue-info")
+  .description("print account issue cells config toml sections")
+  .action(printIssueSectionForToml);
+
+program
+  .command("accounts")
+  .description("print account list info")
+  .action(accounts);
 
 program
   .command("init")
