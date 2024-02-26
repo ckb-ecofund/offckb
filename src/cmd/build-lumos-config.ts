@@ -6,7 +6,7 @@ const genesisTxHash =
   "0xa45cab14fe656d942e1aeee4caee29980547dd38252dad715162115e1f1faa19";
 const depGroupTxHash = "0xa7a43104a51ec1e9ec3e03b4fcda771f4fdcde56ee3e635e18cf757333b38c4c";
 
-const config = {
+export const devnetConfig = {
   PREFIX: "ckt",
   SCRIPTS: {
     SECP256K1_BLAKE160: {
@@ -80,7 +80,7 @@ const config = {
 
 export function buildLumosConfig() {
   const filePath = path.resolve(dappTemplatePath, "config.json");
-  fs.writeFile(filePath, JSON.stringify(config, null, 2), "utf8", (err) => {
+  fs.writeFile(filePath, JSON.stringify(devnetConfig, null, 2), "utf8", (err) => {
     if (err) {
       return console.error("Error writing file:", err);
     }

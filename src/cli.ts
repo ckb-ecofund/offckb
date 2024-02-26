@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { installDependency } from "./cmd/install";
-import { genkey } from "./cmd/genkey";
+import { buildAccounts, genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
 import { initChainIfNeeded } from "./cmd/init-chain";
@@ -41,6 +41,11 @@ program
   .command("build-lumos-config")
   .description("Use the CKB to generate lumos config.json")
   .action(buildLumosConfig);
+
+program
+  .command("build-accounts")
+  .description("generate accounts with prefunded CKB tokens")
+  .action(buildAccounts);
 
 program
   .command("init")
