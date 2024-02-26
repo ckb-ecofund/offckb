@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 import { installDependency } from "./cmd/install";
-import { buildAccounts, generateIssueTomlSections, genkey } from "./cmd/genkey";
+import { buildAccounts, printIssueSectionForToml, genkey } from "./cmd/genkey";
 import { listHashes } from "./cmd/list-hashes";
 import { node } from "./cmd/node";
 import { initChainIfNeeded } from "./cmd/init-chain";
@@ -48,9 +48,9 @@ program
   .action(buildAccounts);
 
   program
-  .command("gen-accounts-toml")
-  .description("generate account issue config toml sections")
-  .action(generateIssueTomlSections);
+  .command("print-account-issue-info")
+  .description("print account issue cells config toml sections")
+  .action(printIssueSectionForToml);
 
 program
   .command("init")

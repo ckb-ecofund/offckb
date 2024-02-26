@@ -99,7 +99,7 @@ export function genAccount(privkey: HexString): Account {
   };
 }
 
-export function generateIssueTomlSections() {
+export function printIssueSectionForToml() {
   const config: Account[] = require("../../account/account.json");
 
   for (const account of config) {
