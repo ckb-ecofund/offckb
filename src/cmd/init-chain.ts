@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { exec, execSync } from "child_process";
+import { execSync } from "child_process";
 import { devnetPath, devnetSourcePath } from "../cfg/const";
 import path from "path";
 

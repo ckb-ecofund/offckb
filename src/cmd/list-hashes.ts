@@ -1,12 +1,12 @@
 import { execSync } from "child_process";
+import { devnetPath } from "../cfg/const";
 
 export function listHashes() {
+  const cmd = `target/ckb/ckb list-hashes  -C ${devnetPath}`;
   try {
-    // Assuming the binary is named 'dep-binary' and is in the same directory
-    const result = execSync("target/ckb/ckb list-hashes  -C docker/devnet", {
+    execSync(cmd, {
       stdio: "inherit",
     });
-    console.log(result);
   } catch (error) {
     console.error("Error running dependency binary:", error);
   }
