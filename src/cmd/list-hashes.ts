@@ -1,7 +1,7 @@
-import { execSync } from "child_process";
-import { ckbBinPath, devnetPath } from "../cfg/const";
-import { installDependency } from "./install";
-import { initChainIfNeeded } from "./init-chain";
+import { execSync } from 'child_process';
+import { ckbBinPath, devnetPath } from '../cfg/const';
+import { installDependency } from './install';
+import { initChainIfNeeded } from './init-chain';
 
 export async function listHashes() {
   await installDependency();
@@ -10,9 +10,9 @@ export async function listHashes() {
   const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;
   try {
     execSync(cmd, {
-      stdio: "inherit",
+      stdio: 'inherit',
     });
   } catch (error) {
-    console.error("Error running dependency binary:", error);
+    console.error('Error running dependency binary:', error);
   }
 }

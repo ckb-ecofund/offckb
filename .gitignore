@@ -3,3 +3,4 @@ target/
 docker/devnet/data/
 .DS_Store
 data/
+dist/
