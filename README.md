@@ -5,23 +5,45 @@ ckb development environment for professionals
 ## Install
 
 ```sh
-git clone https://github.com/RetricSu/offckb.git
-cd offckb && alias offckb='yarn start'
-```
-
-eventually you will do simple
-```sh
-npm install -g offckb // not yet, todo
+npm install -g @offckb/cli
 ```
 
 ## Usage
 
 ```sh
 offckb node // start the devnet of CKB 
-offckb init // init a typescript boilerplate with lumos to get started with to build CKB DAPP,think 'hardhat init'
-offckb list-hashes // list scripts hashes, equals `ckb list-hashes`
+offckb init <project-name> // init a typescript boilerplate with lumos to get started with to build CKB DAPP,think 'hardhat init'
 offckb accounts // list 20 accounts info with prefund CKB tokens
+offckb list-hashes // list scripts hashes, equals `ckb list-hashes`
 ```
+
+### Get started
+
+```sh
+offckb init my-awesome-ckb-dapp
+cd my-awesome-ckb-dapp
+yarn && yarn start
+
+## results
+yarn run v1.22.19
+$ parcel index.html
+Server running at http://localhost:1234
+✨ Built in 10ms
+```
+
+open another terminal and start the devnet:
+
+```sh
+offckb node
+```
+
+open another terminal and check the accounts to use:
+
+```sh
+offckb accounts
+```
+
+Copy some private keys and visit http://localhost:1234 to play basic CKB transfer!
 
 ### Built-in scripts
 
