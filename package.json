@@ -16,7 +16,7 @@
     "dist",
     "account",
     "docker",
-    "templates"
+    "template"
   ],
   "private": false,
   "publishConfig": {
