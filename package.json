@@ -1,5 +1,5 @@
 {
-  "name": "offckb",
+  "name": "@offckb/cli",
   "version": "0.1.0-rc1",
   "description": "ckb development environment for professionals",
   "author": "Retric Su <retric@cryptape.com>",
