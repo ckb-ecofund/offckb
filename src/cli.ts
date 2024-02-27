@@ -8,13 +8,14 @@ import { initChainIfNeeded } from './cmd/init-chain';
 import { buildLumosConfig } from './cmd/build-lumos-config';
 import { init } from './cmd/init';
 import { accounts } from './cmd/accounts';
+const version = require('../package.json').version;
 
 const program = new Command();
 
 program
   .name('offckb')
   .description('CLI to provide full ckb development environment for professionals')
-  .version('0.1.0');
+  .version(version);
 
 // Define the CLI commands and options
 program.command('install').description('Install the ckb dependency binary').action(installDependency);
