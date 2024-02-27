@@ -1,6 +1,6 @@
 {
   "name": "offckb",
-  "version": "0.1.0",
+  "version": "0.1.0-rc1",
   "description": "ckb development environment for professionals",
   "author": "Retric Su <retric@cryptape.com>",
   "license": "MIT",
