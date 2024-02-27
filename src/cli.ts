@@ -17,14 +17,23 @@ program
   .description('CLI to provide full ckb development environment for professionals')
   .version(version);
 
+program
+  .command('init')
+  .description('init dapp project with lumos')
+  .argument('<string>', 'name of the dapp')
+  .action((str) => {
+    const name = str ?? 'offckb-dapp';
+    return init(name);
+  });
+
+program.command('node').description('Use the CKB to start devnet').action(node);
+program.command('accounts').description('print account list info').action(accounts);
+program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
+
 // Define the CLI commands and options
 program.command('install').description('Install the ckb dependency binary').action(installDependency);
 
 program.command('genkey').description('generate 20 accounts').action(genkey);
-
-program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
-
-program.command('node').description('Use the CKB to start devnet').action(node);
 
 program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
 
@@ -36,17 +45,6 @@ program
   .command('print-account-issue-info')
   .description('print account issue cells config toml sections')
   .action(printIssueSectionForToml);
-
-program.command('accounts').description('print account list info').action(accounts);
-
-program
-  .command('init')
-  .description('init dapp project with lumos')
-  .argument('<string>', 'name of the dapp')
-  .action((str) => {
-    const name = str ?? 'offckb-dapp';
-    return init(name);
-  });
 
 // Parse command-line arguments
 program.parse(process.argv);
