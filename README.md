@@ -1,6 +1,6 @@
 ## OffCKB
 
-ckb development environment for professionals
+CKB local development environment for your first try
 
 ## Install
 
@@ -64,7 +64,7 @@ detail informations about each account are recorded in the `account/account.json
 
 update built-in scripts:
 
-update submodule inside `docker` and then run
+update submodule inside `ckb` and then run
 ```sh
 make all
 ```

@@ -107,5 +107,5 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["template", "docker", "account", "**/node_modules"]
+  "exclude": ["template", "ckb", "account", "**/node_modules"]
 }

@@ -1,6 +1,6 @@
 node_modules/
 target/
-docker/devnet/data/
+ckb/devnet/data/
 .DS_Store
 data/
 dist/

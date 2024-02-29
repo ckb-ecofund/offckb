@@ -1,9 +1,9 @@
-[submodule "docker/omnilock"]
-	path = docker/omnilock
+[submodule "ckb/omnilock"]
+	path = ckb/omnilock
 	url = https://github.com/cryptape/omnilock.git
-[submodule "docker/anyone-can-pay"]
-	path = docker/anyone-can-pay
+[submodule "ckb/anyone-can-pay"]
+	path = ckb/anyone-can-pay
 	url = https://github.com/cryptape/anyone-can-pay.git
-[submodule "docker/ckb-production-scripts"]
-	path = docker/ckb-production-scripts
+[submodule "ckb/ckb-production-scripts"]
+	path = ckb/ckb-production-scripts
 	url = https://github.com/nervosnetwork/ckb-production-scripts.git
