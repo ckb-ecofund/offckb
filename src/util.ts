@@ -16,22 +16,22 @@ export function isFolderExists(folderPath: string): boolean {
 }
 
 export function copyFolderSync(source: string, destination: string) {
-    if (!fs.existsSync(destination)) {
-        fs.mkdirSync(destination);
+  if (!fs.existsSync(destination)) {
+    fs.mkdirSync(destination);
+  }
+
+  const files = fs.readdirSync(source);
+
+  for (const file of files) {
+    const currentPath = path.join(source, file);
+    const destinationPath = path.join(destination, file);
+
+    if (fs.statSync(currentPath).isDirectory()) {
+      copyFolderSync(currentPath, destinationPath);
+    } else {
+      fs.copyFileSync(currentPath, destinationPath);
     }
-
-    const files = fs.readdirSync(source);
-
-    for (const file of files) {
-        const currentPath = path.join(source, file);
-        const destinationPath = path.join(destination, file);
-
-        if (fs.statSync(currentPath).isDirectory()) {
-            copyFolderSync(currentPath, destinationPath);
-        } else {
-            fs.copyFileSync(currentPath, destinationPath);
-        }
-    }
+  }
 }
 
 export async function copyFilesWithExclusion(sourceDir: string, destinationDir: string, excludedFolders: string[]) {
@@ -74,4 +74,3 @@ export async function copyRecursive(source: string, destination: string, exclude
     }
   }
 }
-

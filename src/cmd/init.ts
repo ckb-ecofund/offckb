@@ -4,6 +4,6 @@ import { copyFolderSync } from '../util';
 
 export function init(name: string) {
   const targetPath = path.resolve(currentExecPath, name);
-  copyFolderSync(dappTemplatePath, targetPath)
+  copyFolderSync(dappTemplatePath, targetPath);
   console.log(`init CKB dapp project with lumos: ${targetPath}`);
 }
