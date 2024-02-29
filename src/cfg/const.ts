@@ -6,7 +6,7 @@ export const currentExecPath = process.cwd();
 export const packageSrcPath = path.dirname(require.main!.filename);
 export const packageRootPath = path.resolve(packageSrcPath, '../');
 
-export const dappTemplatePath = path.resolve(packageRootPath, './template');
+export const dappTemplatePath = path.resolve(packageRootPath, './templates');
 export const targetEnvironmentPath = path.resolve(packageRootPath, './target');
 
 export const devnetSourcePath = path.resolve(packageRootPath, './ckb/devnet');

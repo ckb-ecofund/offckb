@@ -8,6 +8,7 @@ import { initChainIfNeeded } from './cmd/init-chain';
 import { buildLumosConfig } from './cmd/build-lumos-config';
 import { init } from './cmd/init';
 import { accounts } from './cmd/accounts';
+import {selectTemplate} from './cfg/select';
 const version = require('../package.json').version;
 
 const program = new Command();
@@ -18,12 +19,12 @@ program
   .version(version);
 
 program
-  .command('init')
+  .command('init [string]')
   .description('init dapp project with lumos')
-  .argument('<string>', 'name of the dapp')
-  .action((str) => {
-    const name = str ?? 'offckb-dapp';
-    return init(name);
+  .action(async (str) => {
+    const name = str ?? 'my-awesome-ckb-dapp';
+    const template = await selectTemplate();
+    return init(name, template);
   });
 
 program.command('node').description('Use the CKB to start devnet').action(node);

@@ -16,7 +16,7 @@
     "dist",
     "account",
     "ckb",
-    "template"
+    "templatess"
   ],
   "private": false,
   "publishConfig": {
@@ -26,9 +26,9 @@
     "build": "tsc",
     "start": "ts-node-dev --transpile-only src/cli.ts",
     "clean": "rm -rf ./target",
-    "lint": "eslint \"{src,template}/**/*.ts\" \"{src,template}/**/*.tsx\" --ignore-pattern 'node_modules/'",
-    "lint:fix": "eslint \"{src,template}/**/*.ts\" \"{src,template}/**/*.tsx\" --ignore-pattern 'node_modules/' --fix",
-    "fmt": "prettier --write '{src,template,account}/**/*.{js,jsx,ts,tsx,md,json}'"
+    "lint": "eslint \"{src,templates}/**/*.ts\" \"{src,templates}/**/*.tsx\" --ignore-pattern 'node_modules/'",
+    "lint:fix": "eslint \"{src,templates}/**/*.ts\" \"{src,templates}/**/*.tsx\" --ignore-pattern 'node_modules/' --fix",
+    "fmt": "prettier --write '{src,templates,account}/**/*.{js,jsx,ts,tsx,md,json}'"
   },
   "husky": {
     "hooks": {
@@ -36,7 +36,7 @@
     }
   },
   "lint-staged": {
-    "{src,template,account}/**/*.{js,jsx,ts,tsx,md,json}": "prettier --ignore-unknown --write"
+    "{src,templates,account}/**/*.{js,jsx,ts,tsx,md,json}": "prettier --ignore-unknown --write"
   },
   "eslintConfig": {
     "extends": [
@@ -59,6 +59,7 @@
   },
   "dependencies": {
     "@ckb-lumos/lumos": "0.21.1",
+    "@inquirer/prompts": "^4.1.0",
     "adm-zip": "^0.5.10",
     "axios": "^1.6.7",
     "child_process": "^1.0.2",
