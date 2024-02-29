@@ -8,7 +8,7 @@ import { initChainIfNeeded } from './cmd/init-chain';
 import { buildLumosConfig } from './cmd/build-lumos-config';
 import { init } from './cmd/init';
 import { accounts } from './cmd/accounts';
-import {selectTemplate} from './cfg/select';
+import { selectTemplate } from './cfg/select';
 const version = require('../package.json').version;
 
 const program = new Command();
