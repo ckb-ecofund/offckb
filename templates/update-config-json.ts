@@ -1,9 +1,7 @@
 import fs from 'fs';
-import path from 'path';
-import { dappTemplatePath } from '../cfg/const';
 import { RPC } from '@ckb-lumos/lumos';
 
-export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, secondTxHashInGenesisBlock: string) {
+function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, secondTxHashInGenesisBlock: string) {
   const devnetConfig = {
     PREFIX: 'ckt',
     SCRIPTS: {
@@ -70,7 +68,7 @@ export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, 
   return devnetConfig;
 }
 
-export async function buildLumosConfig() {
+async function buildLumosConfig() {
   const rpcUrl = 'http://127.0.0.1:8114';
   const rpc = new RPC(rpcUrl);
   const chainInfo = await rpc.getBlockchainInfo();
@@ -79,7 +77,7 @@ export async function buildLumosConfig() {
   const secondTxHashInGenesisBlock = genesisBlock.transactions[1].hash;
   if (chainInfo.chain === 'offckb') {
     const config = devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock, secondTxHashInGenesisBlock);
-    const filePath = path.resolve(dappTemplatePath, 'config.json');
+    const filePath = 'config.json';
     fs.writeFile(filePath, JSON.stringify(config, null, 2), 'utf8', (err) => {
       if (err) {
         return console.error('Error writing file:', err);
@@ -87,3 +85,5 @@ export async function buildLumosConfig() {
     });
   }
 }
+
+buildLumosConfig();
