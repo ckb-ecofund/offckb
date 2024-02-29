@@ -29,7 +29,7 @@ program
   });
 
 program.command('node').description('Use the CKB to start devnet').action(node);
-program.command('clean').description('Clean the devnet data').action(clean);
+program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('print account list info').action(accounts);
 program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
 

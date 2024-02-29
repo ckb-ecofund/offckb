@@ -11,10 +11,13 @@ npm install -g @offckb/cli
 ## Usage
 
 ```sh
-offckb node // start the devnet of CKB 
-offckb init <project-name> // init a CKB Dapp typescript boilerplate with multiple templates
-offckb accounts // list 20 accounts info with prefund CKB tokens
-offckb list-hashes // list built-in scripts hashes, equals `ckb list-hashes`
+offckb node # start the devnet of CKB, `ctrl-c` to stop running the chain
+offckb clean # clean the devnet data, needs to stop running the chain first
+
+offckb init <project-name> # init a CKB Dapp typescript boilerplate with multiple templates
+
+offckb accounts # list 20 accounts info with prefund CKB tokens
+offckb list-hashes # list built-in scripts hashes, equals `ckb list-hashes`
 ```
 
 ### Get started
@@ -27,6 +30,8 @@ offckb init my-awesome-ckb-dapp
 ❯ Transfer CKB
   Issue Coin With XUDT scripts
 a simple dapp to check CKB balance and transfer CKB from address to address
+init CKB dapp project: /Users/ckb/Desktop/offckb/my-awesome-ckb-dapp
+✨  Done in 7.52s.
 
 ## start running
 cd my-awesome-ckb-dapp
