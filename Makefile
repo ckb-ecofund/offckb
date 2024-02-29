@@ -4,17 +4,17 @@ all: omnilock anyone-can-pay xudt
 
 omnilock:
 	@echo "Building omnilock via submodule"
-	cd docker/omnilock && git submodule update --init && make all-via-docker
-	cp docker/omnilock/build/always_success docker/devnet/specs/
-	cp docker/omnilock/build/omni_lock docker/devnet/specs/
+	cd ckb/omnilock && git submodule update --init && make all-via-docker
+	cp ckb/omnilock/build/always_success ckb/devnet/specs/
+	cp ckb/omnilock/build/omni_lock ckb/devnet/specs/
 
 anyone-can-pay:
 	@echo "Building anyone-can-pay via submodule"
-	cd docker/anyone-can-pay && git submodule update --init && make all-via-docker
-	cp docker/anyone-can-pay/build/anyone_can_pay docker/devnet/specs/
+	cd ckb/anyone-can-pay && git submodule update --init && make all-via-docker
+	cp ckb/anyone-can-pay/build/anyone_can_pay ckb/devnet/specs/
 
 xudt:
 	@echo "Building xUDT via submodule"
-	cd docker/ckb-production-scripts && git submodule update --init && make all-via-docker
-	cp docker/ckb-production-scripts/build/xudt_rce docker/devnet/specs/
-	cp docker/ckb-production-scripts/build/simple_udt docker/devnet/specs/sudt
+	cd ckb/ckb-production-scripts && git submodule update --init && make all-via-docker
+	cp ckb/ckb-production-scripts/build/xudt_rce ckb/devnet/specs/
+	cp ckb/ckb-production-scripts/build/simple_udt ckb/devnet/specs/sudt

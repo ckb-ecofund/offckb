@@ -15,7 +15,7 @@
   "files": [
     "dist",
     "account",
-    "docker",
+    "ckb",
     "template"
   ],
   "private": false,
@@ -26,7 +26,6 @@
     "build": "tsc",
     "start": "ts-node-dev --transpile-only src/cli.ts",
     "clean": "rm -rf ./target",
-    "docker": "cd docker && docker-compose up",
     "lint": "eslint \"{src,template}/**/*.ts\" \"{src,template}/**/*.tsx\" --ignore-pattern 'node_modules/'",
     "lint:fix": "eslint \"{src,template}/**/*.ts\" \"{src,template}/**/*.tsx\" --ignore-pattern 'node_modules/' --fix",
     "fmt": "prettier --write '{src,template,account}/**/*.{js,jsx,ts,tsx,md,json}'"

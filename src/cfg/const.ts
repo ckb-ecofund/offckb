@@ -9,7 +9,7 @@ export const packageRootPath = path.resolve(packageSrcPath, '../');
 export const dappTemplatePath = path.resolve(packageRootPath, './template');
 export const targetEnvironmentPath = path.resolve(packageRootPath, './target');
 
-export const devnetSourcePath = path.resolve(packageRootPath, './docker/devnet');
+export const devnetSourcePath = path.resolve(packageRootPath, './ckb/devnet');
 export const devnetPath = path.resolve(targetEnvironmentPath, `devnet`);
 export const ckbFolderPath = path.resolve(targetEnvironmentPath, 'ckb');
 export const ckbBinPath = path.resolve(ckbFolderPath, 'ckb');

@@ -64,7 +64,7 @@ detail informations about each account are recorded in the `account/account.json
 
 update built-in scripts:
 
-update submodule inside `docker` and then run
+update submodule inside `ckb` and then run
 ```sh
 make all
 ```
