@@ -30,21 +30,27 @@ program.command('node').description('Use the CKB to start devnet').action(node);
 program.command('accounts').description('print account list info').action(accounts);
 program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
 
-// Define the CLI commands and options
-program.command('install').description('Install the ckb dependency binary').action(installDependency);
+// Add commands meant for developers
+if (process.env.NODE_ENV === 'development') {
+  // Define the CLI commands and options
+  program.command('install').description('Install the ckb dependency binary').action(installDependency);
 
-program.command('genkey').description('generate 20 accounts').action(genkey);
+  program.command('genkey').description('generate 20 accounts').action(genkey);
 
-program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
+  program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
 
-program.command('build-lumos-config').description('Use the CKB to generate lumos config.json').action(buildLumosConfig);
+  program
+    .command('build-lumos-config')
+    .description('Use the CKB to generate lumos config.json')
+    .action(buildLumosConfig);
 
-program.command('build-accounts').description('generate accounts with prefunded CKB tokens').action(buildAccounts);
+  program.command('build-accounts').description('generate accounts with prefunded CKB tokens').action(buildAccounts);
 
-program
-  .command('print-account-issue-info')
-  .description('print account issue cells config toml sections')
-  .action(printIssueSectionForToml);
+  program
+    .command('print-account-issue-info')
+    .description('print account issue cells config toml sections')
+    .action(printIssueSectionForToml);
+}
 
 // Parse command-line arguments
 program.parse(process.argv);
