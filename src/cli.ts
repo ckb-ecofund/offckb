@@ -9,6 +9,7 @@ import { buildLumosConfig } from './cmd/build-lumos-config';
 import { init } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { selectTemplate } from './cfg/select';
+import { clean } from './cmd/clean';
 const version = require('../package.json').version;
 
 const program = new Command();
@@ -28,6 +29,7 @@ program
   });
 
 program.command('node').description('Use the CKB to start devnet').action(node);
+program.command('clean').description('Clean the devnet data').action(clean);
 program.command('accounts').description('print account list info').action(accounts);
 program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
 

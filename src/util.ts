@@ -87,3 +87,20 @@ export async function copyRecursive(source: string, destination: string, exclude
     }
   }
 }
+
+export function removeFolderSync(folderPath: string) {
+  if (fs.existsSync(folderPath)) {
+    fs.readdirSync(folderPath).forEach((file) => {
+      const curPath = path.join(folderPath, file);
+      if (fs.lstatSync(curPath).isDirectory()) {
+        // Recursive call for directories
+        removeFolderSync(curPath);
+      } else {
+        // Delete files
+        fs.unlinkSync(curPath);
+      }
+    });
+    // Remove the directory itself
+    fs.rmdirSync(folderPath);
+  }
+}
