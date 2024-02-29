@@ -6,9 +6,9 @@ export function clean() {
     try {
       removeFolderSync(devnetDataPath);
       console.log(`Chain data cleaned.`);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`Did you stop running the chain first?`);
-      console.log(error.message);
+      console.log((error as Error).message);
     }
   } else {
     console.log(`${devnetDataPath} not found, unable to clean it.`);
