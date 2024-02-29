@@ -16,7 +16,7 @@
     "dist",
     "account",
     "ckb",
-    "templatess"
+    "templates"
   ],
   "private": false,
   "publishConfig": {
