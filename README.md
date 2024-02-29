@@ -1,6 +1,6 @@
 ## OffCKB
 
-ckb development environment for professionals
+CKB local development environment for your first try
 
 ## Install
 
