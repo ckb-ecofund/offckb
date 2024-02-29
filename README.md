@@ -12,15 +12,23 @@ npm install -g @offckb/cli
 
 ```sh
 offckb node // start the devnet of CKB 
-offckb init <project-name> // init a typescript boilerplate with lumos to get started with to build CKB DAPP,think 'hardhat init'
+offckb init <project-name> // init a CKB Dapp typescript boilerplate with multiple templates
 offckb accounts // list 20 accounts info with prefund CKB tokens
-offckb list-hashes // list scripts hashes, equals `ckb list-hashes`
+offckb list-hashes // list built-in scripts hashes, equals `ckb list-hashes`
 ```
 
 ### Get started
 
 ```sh
 offckb init my-awesome-ckb-dapp
+
+## select the template for your boilerplate
+? Select a dapp template (Use arrow keys)
+❯ Transfer CKB
+  Issue Coin With XUDT scripts
+a simple dapp to check CKB balance and transfer CKB from address to address
+
+## start running
 cd my-awesome-ckb-dapp
 yarn && yarn start
 
@@ -62,9 +70,4 @@ detail informations about each account are recorded in the `account/account.json
 
 ## Development
 
-update built-in scripts:
-
-update submodule inside `ckb` and then run
-```sh
-make all
-```
+check [development doc](/docs/develop.md)

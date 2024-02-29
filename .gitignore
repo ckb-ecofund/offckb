@@ -4,3 +4,4 @@ ckb/devnet/data/
 .DS_Store
 data/
 dist/
+.vscode

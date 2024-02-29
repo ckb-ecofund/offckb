@@ -1,9 +1,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { accountTargetDir } from '../cfg/const';
-import { Address, HashType, HexString, Script, config, hd, helpers } from '@ckb-lumos/lumos';
+import { Address, HashType, HexString, Script, hd, helpers } from '@ckb-lumos/lumos';
 import * as readline from 'readline';
-import { devnetConfig } from './build-lumos-config';
 
 interface Account {
   privkey: HexString;
@@ -73,15 +72,12 @@ export async function buildAccounts() {
 export function genAccount(privkey: HexString): Account {
   const pubkey = hd.key.privateToPublic(privkey);
   const args = hd.key.publicKeyToBlake160(pubkey);
-  const template = devnetConfig.SCRIPTS['SECP256K1_BLAKE160']!;
   const lockScript: Script = {
-    codeHash: template.CODE_HASH,
-    hashType: template.HASH_TYPE as HashType,
+    codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    hashType: 'type' as HashType,
     args: args,
   };
-  const address = helpers.encodeToAddress(lockScript, {
-    config: devnetConfig as config.Config,
-  });
+  const address = helpers.encodeToAddress(lockScript);
   return {
     privkey,
     pubkey,
