@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import { devnetPath, devnetSourcePath } from '../cfg/const';
 import path from 'path';
-import { isFolderExists } from '../util';
+import { copyFilesWithExclusion, isFolderExists } from '../util';
 
 export async function initChainIfNeeded() {
   if (!isFolderExists(devnetPath)) {
@@ -37,43 +37,3 @@ function copyAndEditMinerToml() {
   });
 }
 
-async function copyFilesWithExclusion(sourceDir: string, destinationDir: string, excludedFolders: string[]) {
-  try {
-    // Ensure the destination directory exists
-    await fs.promises.mkdir(destinationDir, { recursive: true });
-
-    // Start copying recursively from the source directory
-    await copyRecursive(sourceDir, destinationDir, excludedFolders);
-  } catch (error) {
-    console.error('An error occurred during copying files:', error);
-  }
-}
-
-// Function to recursively copy files and directories
-async function copyRecursive(source: string, destination: string, excludedFolders: string[]) {
-  // Get a list of all files and directories in the source directory
-  const files = await fs.promises.readdir(source);
-
-  // Iterate through each file or directory
-  for (const file of files) {
-    const sourcePath = path.join(source, file);
-    const destPath = path.join(destination, file);
-
-    // Get the file's stats
-    const stats = await fs.promises.stat(sourcePath);
-
-    // If it's a directory, recursively copy it (unless it's excluded)
-    if (stats.isDirectory()) {
-      if (excludedFolders.includes(file)) {
-        // Skipping directory: ${sourcePath}
-      } else {
-        // Ensure destination directory exists before copying
-        await fs.promises.mkdir(destPath, { recursive: true });
-        await copyRecursive(sourcePath, destPath, excludedFolders);
-      }
-    } else {
-      // Otherwise, copy the file
-      await fs.promises.copyFile(sourcePath, destPath);
-    }
-  }
-}
