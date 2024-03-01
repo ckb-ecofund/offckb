@@ -56,14 +56,18 @@ open another terminal and check the accounts to use:
 offckb accounts
 ```
 
-Copy some private keys and visit http://localhost:1234 to play basic CKB transfer!
+Copy some private keys and visit http://localhost:1234 to play your first CKB Dapp!
 
 ### Built-in scripts
 
 - [x] xUDT https://github.com/nervosnetwork/rfcs/pull/428
+  - commit id: 410b16c
 - [x] Omnilock https://github.com/cryptape/omnilock
+  - commit id: cd764d7
 - [x] AnyoneCanPay https://github.com/cryptape/anyone-can-pay
+  - commit id: b845b3b
 - [x] AlwaysSuccess https://github.com/nervosnetwork/ckb-production-scripts/blob/master/c/always_success.c
+  - commit id: 410b16c 
 - [ ] Spore https://github.com/sporeprotocol/spore-contract
 
 ### Accounts
@@ -72,6 +76,11 @@ Copy some private keys and visit http://localhost:1234 to play basic CKB transfe
 
 all the private keys are recorded in the `account/keys` file.
 detail informations about each account are recorded in the `account/account.json` file.
+
+
+## About Lumos
+
+`offckb` uses [Lumos](https://github.com/ckb-js/lumos) as the CKB Dapp framework to build the template projects.
 
 ## Development
 
