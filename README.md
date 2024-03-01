@@ -14,7 +14,7 @@ npm install -g @offckb/cli
 offckb node # start the devnet of CKB, `ctrl-c` to stop running the chain
 offckb clean # clean the devnet data, needs to stop running the chain first
 
-offckb init <project-name> # init a CKB Dapp typescript boilerplate with multiple templates
+offckb init <project-name> # init a CKB Dapp typescript boilerplate from multiple templates
 
 offckb accounts # list 20 accounts info with prefund CKB tokens
 offckb list-hashes # list built-in scripts hashes, equals `ckb list-hashes`
