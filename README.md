@@ -69,7 +69,7 @@ Copy some private keys and visit http://localhost:1234 to play your first CKB Da
 - [x] AlwaysSuccess https://github.com/nervosnetwork/ckb-production-scripts/blob/master/c/always_success.c
   - commit id: 410b16c 
 - [x] Spore https://github.com/sporeprotocol/spore-contract
-  - commit id: a824f47
+  - version: 0.2.2-beta.1
 
 ### Accounts
 
