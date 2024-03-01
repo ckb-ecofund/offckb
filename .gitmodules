@@ -7,3 +7,6 @@
 [submodule "ckb/ckb-production-scripts"]
 	path = ckb/ckb-production-scripts
 	url = https://github.com/nervosnetwork/ckb-production-scripts.git
+[submodule "ckb/spore-contract"]
+	path = ckb/spore-contract
+	url = https://github.com/sporeprotocol/spore-contract.git

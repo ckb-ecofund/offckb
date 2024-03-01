@@ -49,7 +49,21 @@ create_type_id = true
 [[genesis.system_cells]]
 file = { file = "always_success" }
 create_type_id = true
-
+[[genesis.system_cells]]
+file = { file = "spore-scripts/spore" }
+create_type_id = false
+[[genesis.system_cells]]
+file = { file = "spore-scripts/cluster" }
+create_type_id = false
+[[genesis.system_cells]]
+file = { file = "spore-scripts/cluster_agent" }
+create_type_id = false
+[[genesis.system_cells]]
+file = { file = "spore-scripts/cluster_proxy" }
+create_type_id = false
+[[genesis.system_cells]]
+file = { file = "spore-scripts/spore_extension_lua" }
+create_type_id = false
 
 [genesis.system_cells_lock]
 code_hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
