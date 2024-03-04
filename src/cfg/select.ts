@@ -6,21 +6,20 @@ export async function selectTemplate() {
     message: 'Select a dapp template',
     choices: [
       {
-        name: 'Transfer CKB',
+        name: 'View and Transfer Balance',
         value: 'transfer',
-        description: 'a simple dapp to check CKB balance and transfer CKB from address to address',
+        description: 'a simple dapp to check CKB balance and transfer CKB',
+      },
+      {
+        name: 'Issue Token via XUDT scripts',
+        value: 'xudt',
+        description: 'a simple dapp to issue your own token via XUDT scripts',
       },
       new Separator(),
       {
-        name: 'Issue Token With XUDT scripts(coming)',
+        name: 'Issue Token With Max Supply Limit via Omnilock And XUDT scripts(coming)',
         value: 'xudt',
-        description: 'a simple dapp to issue your own token with XUDT scripts(coming)',
-        disabled: true,
-      },
-      {
-        name: 'Issue Token With Max Supply via Omnilock And XUDT scripts(coming)',
-        value: 'xudt',
-        description: 'a simple dapp to issue your own token with XUDT scripts',
+        description: 'a simple dapp to issue your own token with max supply limit via XUDT scripts',
         disabled: true,
       },
       {

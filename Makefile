@@ -1,4 +1,4 @@
-.PHONY: all omnilock anyone-can-pay spore
+.PHONY: all omnilock anyone-can-pay xudt spore
 
 all: omnilock anyone-can-pay xudt spore
 

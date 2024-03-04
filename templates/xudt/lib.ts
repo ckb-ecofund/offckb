@@ -1,8 +1,9 @@
-import { bytes } from '@ckb-lumos/codec';
-import { helpers, Address, Script, hd, config, Cell, commons, WitnessArgs, BI } from '@ckb-lumos/lumos';
+import { helpers, Address, Script, hd, config, Cell, commons, BI, utils, CellDep } from '@ckb-lumos/lumos';
 import { values, blockchain } from '@ckb-lumos/base';
 import { indexer, lumosConfig, rpc } from './ckb';
-const { ScriptValue } = values;
+import { TransactionSkeletonType } from '@ckb-lumos/helpers';
+import { bytes, number } from '@ckb-lumos/codec';
+import { xudtWitnessType } from './scheme';
 
 config.initializeConfig(lumosConfig);
 
@@ -28,6 +29,11 @@ export const generateAccountFromPrivateKey = (privKey: string): Account => {
   };
 };
 
+export const computeLockScriptHashFromPrivateKey = (privkey: string) => {
+  const { lockScript } = generateAccountFromPrivateKey(privkey);
+  return utils.computeScriptHash(lockScript);
+};
+
 export async function capacityOf(address: string): Promise<BI> {
   const collector = indexer.collector({
     lock: helpers.parseAddress(address, { config: lumosConfig }),
@@ -41,33 +47,74 @@ export async function capacityOf(address: string): Promise<BI> {
   return balance;
 }
 
-interface Options {
-  from: string;
-  to: string;
-  amount: string;
-  privKey: string;
+export function addCellDep(txSkeleton: TransactionSkeletonType, newCellDep: CellDep): TransactionSkeletonType {
+  const cellDep = txSkeleton.get('cellDeps').find((cellDep) => {
+    return (
+      cellDep.depType === newCellDep.depType &&
+      new values.OutPointValue(cellDep.outPoint, { validate: false }).equals(
+        new values.OutPointValue(newCellDep.outPoint, { validate: false }),
+      )
+    );
+  });
+
+  if (!cellDep) {
+    txSkeleton = txSkeleton.update('cellDeps', (cellDeps) => {
+      return cellDeps.push({
+        outPoint: newCellDep.outPoint,
+        depType: newCellDep.depType,
+      });
+    });
+  }
+
+  return txSkeleton;
 }
 
-export async function transfer(options: Options): Promise<string> {
-  let txSkeleton = helpers.TransactionSkeleton({});
-  const fromScript = helpers.parseAddress(options.from, {
-    config: lumosConfig,
-  });
-  const toScript = helpers.parseAddress(options.to, { config: lumosConfig });
+export async function issueToken(privKey: string, amount: string) {
+  const { lockScript } = generateAccountFromPrivateKey(privKey);
+  const xudtDeps = lumosConfig.SCRIPTS.XUDT;
+  const lockDeps = lumosConfig.SCRIPTS.SECP256K1_BLAKE160;
 
-  if (BI.from(options.amount).lt(BI.from('6100000000'))) {
-    throw new Error(
-      `every cell's capacity must be at least 61 CKB, see https://medium.com/nervosnetwork/understanding-the-nervos-dao-and-cell-model-d68f38272c24`,
-    );
-  }
+  const xudtArgs = utils.computeScriptHash(lockScript) + '00000000';
+  const typeScript = {
+    codeHash: xudtDeps.CODE_HASH,
+    hashType: xudtDeps.HASH_TYPE,
+    args: xudtArgs,
+  };
+
+  let txSkeleton = helpers.TransactionSkeleton();
+  txSkeleton = addCellDep(txSkeleton, {
+    outPoint: {
+      txHash: lockDeps.TX_HASH,
+      index: lockDeps.INDEX,
+    },
+    depType: lockDeps.DEP_TYPE,
+  });
+  txSkeleton = addCellDep(txSkeleton, {
+    outPoint: {
+      txHash: xudtDeps.TX_HASH,
+      index: xudtDeps.INDEX,
+    },
+    depType: xudtDeps.DEP_TYPE,
+  });
+
+  const targetOutput: Cell = {
+    cellOutput: {
+      capacity: '0x0',
+      lock: lockScript,
+      type: typeScript,
+    },
+    data: bytes.hexify(number.Uint128LE.pack(amount)),
+  };
 
   // additional 0.001 ckb for tx fee
   // the tx fee could calculated by tx size
   // this is just a simple example
-  const neededCapacity = BI.from(options.amount).add(100000);
+  const capacity = helpers.minimalCellCapacity(targetOutput);
+  targetOutput.cellOutput.capacity = '0x' + capacity.toString(16);
+  const neededCapacity = BI.from(capacity.toString(10)).add(100000);
   let collectedSum = BI.from(0);
   const collected: Cell[] = [];
-  const collector = indexer.collector({ lock: fromScript, type: 'empty' });
+  const collector = indexer.collector({ lock: lockScript, type: 'empty' });
   for await (const cell of collector.collect()) {
     collectedSum = collectedSum.add(cell.cellOutput.capacity);
     collected.push(cell);
@@ -78,76 +125,55 @@ export async function transfer(options: Options): Promise<string> {
     throw new Error(`Not enough CKB, ${collectedSum} < ${neededCapacity}`);
   }
 
-  const transferOutput: Cell = {
-    cellOutput: {
-      capacity: BI.from(options.amount).toHexString(),
-      lock: toScript,
-    },
-    data: '0x',
-  };
-
   const changeOutput: Cell = {
     cellOutput: {
       capacity: collectedSum.sub(neededCapacity).toHexString(),
-      lock: fromScript,
+      lock: lockScript,
     },
     data: '0x',
   };
 
   txSkeleton = txSkeleton.update('inputs', (inputs) => inputs.push(...collected));
-  txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(transferOutput, changeOutput));
-  txSkeleton = txSkeleton.update('cellDeps', (cellDeps) =>
-    cellDeps.push({
-      outPoint: {
-        txHash: lumosConfig.SCRIPTS.SECP256K1_BLAKE160.TX_HASH,
-        index: lumosConfig.SCRIPTS.SECP256K1_BLAKE160.INDEX,
-      },
-      depType: lumosConfig.SCRIPTS.SECP256K1_BLAKE160.DEP_TYPE,
-    }),
-  );
+  txSkeleton = txSkeleton.update('outputs', (outputs) => outputs.push(targetOutput, changeOutput));
+  /* 65-byte zeros in hex */
+  const lockWitness =
+    '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+  const outputTypeWitness = xudtWitnessType.pack({ extension_data: [] });
+  const witnessArgs = blockchain.WitnessArgs.pack({ lock: lockWitness, outputType: outputTypeWitness });
+  const witness = bytes.hexify(witnessArgs);
+  txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.set(0, witness));
 
-  const firstIndex = txSkeleton
-    .get('inputs')
-    .findIndex((input) =>
-      new ScriptValue(input.cellOutput.lock, { validate: false }).equals(
-        new ScriptValue(fromScript, { validate: false }),
-      ),
-    );
-  if (firstIndex !== -1) {
-    while (firstIndex >= txSkeleton.get('witnesses').size) {
-      txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.push('0x'));
-    }
-    let witness: string = txSkeleton.get('witnesses').get(firstIndex)!;
-    const newWitnessArgs: WitnessArgs = {
-      /* 65-byte zeros in hex */
-      lock: '0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
-    };
-    if (witness !== '0x') {
-      const witnessArgs = blockchain.WitnessArgs.unpack(bytes.bytify(witness));
-      const lock = witnessArgs.lock;
-      if (!!lock && !!newWitnessArgs.lock && !bytes.equal(lock, newWitnessArgs.lock)) {
-        throw new Error('Lock field in first witness is set aside for signature!');
-      }
-      const inputType = witnessArgs.inputType;
-      if (inputType) {
-        newWitnessArgs.inputType = inputType;
-      }
-      const outputType = witnessArgs.outputType;
-      if (outputType) {
-        newWitnessArgs.outputType = outputType;
-      }
-    }
-    witness = bytes.hexify(blockchain.WitnessArgs.pack(newWitnessArgs));
-    txSkeleton = txSkeleton.update('witnesses', (witnesses) => witnesses.set(firstIndex, witness));
-  }
-
+  // signing
   txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
   const message = txSkeleton.get('signingEntries').get(0)?.message;
-  const Sig = hd.key.signRecoverable(message!, options.privKey);
+  const Sig = hd.key.signRecoverable(message!, privKey);
   const tx = helpers.sealTransaction(txSkeleton, [Sig]);
+  console.log(tx);
+
   const hash = await rpc.sendTransaction(tx, 'passthrough');
   console.log('The transaction hash is', hash);
   alert(`The transaction hash is ${hash}`);
+}
 
-  return hash;
+export async function queryIssuedTokenCells(privKey: string) {
+  const { lockScript } = generateAccountFromPrivateKey(privKey);
+  const xudtDeps = lumosConfig.SCRIPTS.XUDT;
+
+  const xudtArgs = utils.computeScriptHash(lockScript) + '00000000';
+  const typeScript = {
+    codeHash: xudtDeps.CODE_HASH,
+    hashType: xudtDeps.HASH_TYPE,
+    args: xudtArgs,
+  };
+
+  const collected: Cell[] = [];
+  const collector = indexer.collector({ type: typeScript });
+  for await (const cell of collector.collect()) {
+    collected.push(cell);
+  }
+  return collected;
+}
+
+export function readTokenAmount(amount: string) {
+  return number.Uint128LE.unpack(amount);
 }
