@@ -6,7 +6,7 @@ export async function selectTemplate() {
     message: 'Select a dapp template',
     choices: [
       {
-        name: 'Transfer CKB',
+        name: 'View and Transfer Balance',
         value: 'transfer',
         description: 'a simple dapp to check CKB balance and transfer CKB',
       },
