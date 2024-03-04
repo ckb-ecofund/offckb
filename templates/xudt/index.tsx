@@ -55,6 +55,15 @@ export function App() {
   const enabledCheck = privKey.length > 0;
   return (
     <div>
+      <h1>
+        Issue Custom Token{' '}
+        <small>
+          <a href="https://github.com/XuJiandong/rfcs/blob/xudt/rfcs/0052-extensible-udt/0052-extensible-udt.md#xudt-witness">
+            {'(xUDT specs)'}
+          </a>
+        </small>
+      </h1>
+      <p></p>
       <label htmlFor="private-key">Private Key: </label>&nbsp;
       <input id="private-key" type="text" onChange={onInputPrivKey} />
       <ul>
@@ -67,7 +76,7 @@ export function App() {
         <li>Total capacity: {(+balance).toLocaleString()}</li>
       </ul>
       <br />
-      <label htmlFor="amount">Amount</label>
+      <label htmlFor="amount">Token Amount</label>
       &nbsp;
       <input id="amount" type="text" onChange={(e) => setAmount(e.target.value)} />
       <br />
@@ -76,8 +85,8 @@ export function App() {
       </button>
       <br />
       <br />
-      <br />
       <hr />
+      <p>after issued token, click the below button to check it</p>
       <button disabled={!enabledCheck} onClick={() => queryIssuedTokenCells(privKey).then(setCells).catch(alert)}>
         Check issued token
       </button>

@@ -55,7 +55,7 @@ export function App() {
 
   return (
     <div>
-      <h1>Transfer CKB between addresses</h1>
+      <h1>View and Transfer Balance</h1>
       <label htmlFor="private-key">Private Key: </label>&nbsp;
       <input id="private-key" type="text" onChange={onInputPrivKey} />
       <ul>
