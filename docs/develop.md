@@ -1,8 +1,15 @@
 ## Development
 
-### Add templates
+### Add Dapp templates
 
-TODO
+Assuming you are trying to add a new template named `my-awesome-template` into `offckb`:
+
+1. add your typescript project inside the `templates` folder: `templates/my-awesome-template`
+2. copy `templates/ckb.ts` and `templates/config.json` into your project
+   - `cp templates/ckb.ts templates/my-awesome-template`
+   - `cp templates/config.json templates/my-awesome-template`
+3. finish your `my-awesome-template` with `ckb.ts` and `config.json`
+4. done
 
 ### Update built-in scripts
 

@@ -29,6 +29,11 @@ export const generateAccountFromPrivateKey = (privKey: string): Account => {
   };
 };
 
+export const computeLockScriptHashFromPrivateKey = (privkey: string) => {
+  const { lockScript } = generateAccountFromPrivateKey(privkey);
+  return utils.computeScriptHash(lockScript);
+};
+
 export async function capacityOf(address: string): Promise<BI> {
   const collector = indexer.collector({
     lock: helpers.parseAddress(address, { config: lumosConfig }),
@@ -66,13 +71,13 @@ export function addCellDep(txSkeleton: TransactionSkeletonType, newCellDep: Cell
 
 export async function issueToken(privKey: string, amount: string) {
   const { lockScript } = generateAccountFromPrivateKey(privKey);
-  const template = lumosConfig.SCRIPTS.XUDT;
+  const xudtDeps = lumosConfig.SCRIPTS.XUDT;
   const lockDeps = lumosConfig.SCRIPTS.SECP256K1_BLAKE160;
 
   const xudtArgs = utils.computeScriptHash(lockScript) + '00000000';
   const typeScript = {
-    codeHash: template.CODE_HASH,
-    hashType: template.HASH_TYPE,
+    codeHash: xudtDeps.CODE_HASH,
+    hashType: xudtDeps.HASH_TYPE,
     args: xudtArgs,
   };
 
@@ -86,10 +91,10 @@ export async function issueToken(privKey: string, amount: string) {
   });
   txSkeleton = addCellDep(txSkeleton, {
     outPoint: {
-      txHash: template.TX_HASH,
-      index: template.INDEX,
+      txHash: xudtDeps.TX_HASH,
+      index: xudtDeps.INDEX,
     },
-    depType: template.DEP_TYPE,
+    depType: xudtDeps.DEP_TYPE,
   });
 
   const targetOutput: Cell = {
@@ -148,4 +153,27 @@ export async function issueToken(privKey: string, amount: string) {
   const hash = await rpc.sendTransaction(tx, 'passthrough');
   console.log('The transaction hash is', hash);
   alert(`The transaction hash is ${hash}`);
+}
+
+export async function queryIssuedTokenCells(privKey: string) {
+  const { lockScript } = generateAccountFromPrivateKey(privKey);
+  const xudtDeps = lumosConfig.SCRIPTS.XUDT;
+
+  const xudtArgs = utils.computeScriptHash(lockScript) + '00000000';
+  const typeScript = {
+    codeHash: xudtDeps.CODE_HASH,
+    hashType: xudtDeps.HASH_TYPE,
+    args: xudtArgs,
+  };
+
+  const collected: Cell[] = [];
+  const collector = indexer.collector({ type: typeScript });
+  for await (const cell of collector.collect()) {
+    collected.push(cell);
+  }
+  return collected;
+}
+
+export function readTokenAmount(amount: string) {
+  return number.Uint128LE.unpack(amount);
 }
