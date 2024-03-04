@@ -92,7 +92,7 @@ export async function issueToken(privKey: string, amount: string) {
     depType: template.DEP_TYPE,
   });
 
-  let targetOutput: Cell = {
+  const targetOutput: Cell = {
     cellOutput: {
       capacity: '0x0',
       lock: lockScript,
