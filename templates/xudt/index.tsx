@@ -8,6 +8,7 @@ import {
   issueToken,
   queryIssuedTokenCells,
   readTokenAmount,
+  transferTokenToAddress,
 } from './lib';
 
 const app = document.getElementById('root');
@@ -21,6 +22,11 @@ export function App() {
 
   const [amount, setAmount] = useState('');
   const [cells, setCells] = useState<Cell[]>([]);
+
+  const [udtArgs, setUdtArgs] = useState<string>('');
+  const [senderPrivkey, setSenderPrivkey] = useState<string>('');
+  const [transferAmount, setTransferAmount] = useState('');
+  const [receiverAddress, setReceiverAddress] = useState('');
 
   useEffect(() => {
     const updateFromInfo = async () => {
@@ -44,6 +50,21 @@ export function App() {
     const isValid = privateKeyRegex.test(priv);
     if (isValid) {
       setPrivKey(priv);
+    } else {
+      alert(
+        `Invalid private key: must start with 0x and 32 bytes length. Ensure you're using a valid private key from the offckb accounts list.`,
+      );
+    }
+  };
+
+  const onInputSenderPrivKey = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Regular expression to match a valid private key with "0x" prefix
+    const priv = e.target.value;
+    const privateKeyRegex = /^0x[0-9a-fA-F]{64}$/;
+
+    const isValid = privateKeyRegex.test(priv);
+    if (isValid) {
+      setSenderPrivkey(priv);
     } else {
       alert(
         `Invalid private key: must start with 0x and 32 bytes length. Ensure you're using a valid private key from the offckb accounts list.`,
@@ -86,6 +107,7 @@ export function App() {
       <br />
       <br />
       <hr />
+      
       <p>after issued token, click the below button to check it</p>
       <button disabled={!enabledCheck} onClick={() => queryIssuedTokenCells(privKey).then(setCells).catch(alert)}>
         Check issued token
@@ -101,6 +123,28 @@ export function App() {
           <hr />
         </div>
       ))}
+      <br /><br /><br />
+      <hr />
+
+      <p>try transfer the issued token to some addresses</p>
+      <label htmlFor="sender-private-key">Private Key: </label>&nbsp;
+      <input id="sender-private-key" type="text" onChange={onInputSenderPrivKey} />
+      <label htmlFor="udt">UDT args</label>
+      &nbsp;
+      <input id="udt" type="text" onChange={(e) => setUdtArgs(e.target.value)} />
+      <br /> 
+      <label htmlFor="transferAmount">Transfer Token Amount</label>
+      &nbsp;
+      <input id="transferAmount" type="text" onChange={(e) => setTransferAmount(e.target.value)} />
+      <br />
+      <label htmlFor="receiverAddress">Receiver Address</label>
+      &nbsp;
+      <input id="receiverAddress" type="text" onChange={(e) => setReceiverAddress(e.target.value)} />
+      <br />
+
+      <button disabled={!enabledCheck} onClick={() => transferTokenToAddress(udtArgs, senderPrivkey, transferAmount, receiverAddress).catch(alert)}>
+        Transfer issued token
+      </button>
     </div>
   );
 }
