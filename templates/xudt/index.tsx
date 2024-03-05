@@ -1,33 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { Cell, Script } from '@ckb-lumos/lumos';
-import {
-  capacityOf,
-  computeLockScriptHashFromPrivateKey,
-  generateAccountFromPrivateKey,
-  issueToken,
-  queryIssuedTokenCells,
-  readTokenAmount,
-} from './lib';
+import { Cell, Script, Transaction, utils } from '@ckb-lumos/lumos';
+import { issueToken, queryIssuedTokenCells, transferTokenToAddress } from './lib';
+import { capacityOf, generateAccountFromPrivateKey, readTokenAmount } from './util';
 
 const app = document.getElementById('root');
 ReactDOM.render(<App />, app);
 
-export function App() {
+function IssuedToken() {
   const [privKey, setPrivKey] = useState('');
-  const [fromAddr, setFromAddr] = useState('');
-  const [fromLock, setFromLock] = useState<Script>();
+  const [lockScript, setLockScript] = useState<Script>();
   const [balance, setBalance] = useState('0');
-
   const [amount, setAmount] = useState('');
-  const [cells, setCells] = useState<Cell[]>([]);
+  const [issuedTokenCell, setIssuedTokenCell] = useState<Cell>();
+  const [txHash, setTxHash] = useState<string>();
 
   useEffect(() => {
     const updateFromInfo = async () => {
       const { lockScript, address } = generateAccountFromPrivateKey(privKey);
       const capacity = await capacityOf(address);
-      setFromAddr(address);
-      setFromLock(lockScript);
+      setLockScript(lockScript);
       setBalance(capacity.toString());
     };
 
@@ -37,7 +29,6 @@ export function App() {
   }, [privKey]);
 
   const onInputPrivKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Regular expression to match a valid private key with "0x" prefix
     const priv = e.target.value;
     const privateKeyRegex = /^0x[0-9a-fA-F]{64}$/;
 
@@ -50,57 +41,172 @@ export function App() {
       );
     }
   };
-
   const enabledIssue = +amount > 0 && +balance > 6100000000;
-  const enabledCheck = privKey.length > 0;
+
   return (
-    <div>
-      <h1>
-        Issue Custom Token{' '}
-        <small>
-          <a href="https://github.com/XuJiandong/rfcs/blob/xudt/rfcs/0052-extensible-udt/0052-extensible-udt.md#xudt-witness">
-            {'(xUDT specs)'}
-          </a>
-        </small>
-      </h1>
+    <>
+      <h2>Issue Custom Token</h2>
       <p></p>
       <label htmlFor="private-key">Private Key: </label>&nbsp;
       <input id="private-key" type="text" onChange={onInputPrivKey} />
       <ul>
-        <li>CKB Address: {fromAddr}</li>
+        <li>Balance(Total Capacity): {(+balance).toLocaleString()}</li>
         <li>
-          Current lock script:
-          <pre>{JSON.stringify(fromLock, null, 2)}</pre>
+          Lock Script:
+          <pre>{JSON.stringify(lockScript, null, 2)}</pre>
         </li>
-
-        <li>Total capacity: {(+balance).toLocaleString()}</li>
+        <li>Lock Script Hash: {lockScript && utils.computeScriptHash(lockScript)}</li>
       </ul>
       <br />
-      <label htmlFor="amount">Token Amount</label>
+      <label htmlFor="amount">Token Amount: </label>
       &nbsp;
-      <input id="amount" type="text" onChange={(e) => setAmount(e.target.value)} />
+      <input id="amount" type="number" onChange={(e) => setAmount(e.target.value)} />
       <br />
-      <button disabled={!enabledIssue} onClick={() => issueToken(privKey, amount).catch(alert)}>
-        Issue token
+      <button
+        disabled={!enabledIssue}
+        onClick={() =>
+          issueToken(privKey, amount)
+            .then((result) => {
+              setIssuedTokenCell(result.targetOutput);
+              setTxHash(result.hash);
+            })
+            .catch(alert)
+        }
+      >
+        Issue Token
       </button>
-      <br />
-      <br />
-      <hr />
-      <p>after issued token, click the below button to check it</p>
-      <button disabled={!enabledCheck} onClick={() => queryIssuedTokenCells(privKey).then(setCells).catch(alert)}>
-        Check issued token
+      <div>
+        {txHash && issuedTokenCell && (
+          <>
+            <h4>Result</h4>
+            <li>Transaction hash: {txHash}</li>
+            <li>
+              Token xUDT args: {issuedTokenCell.cellOutput.type.args}{' '}
+              <strong>
+                {
+                  '(Noticed that the xUDT args works like the unique id for your issued token, Think of it like an ERC20 contract address)'
+                }
+              </strong>
+            </li>
+            <li>
+              Token cell: <pre>{JSON.stringify(issuedTokenCell, null, 2)}</pre>
+            </li>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+function ViewIssuedToken() {
+  const [xudtArgs, setXudtArgs] = useState<string>();
+  const [cells, setCells] = useState<Cell[]>([]);
+  return (
+    <>
+      <h2>View Custom Token</h2>
+      <div>
+        <label htmlFor="xudt-args">xDUT args: </label>&nbsp;
+        <input id="xudt-args" type="text" onChange={(e) => setXudtArgs(e.target.value)} />
+      </div>
+
+      <button disabled={!xudtArgs} onClick={() => queryIssuedTokenCells(xudtArgs).then(setCells).catch(alert)}>
+        Query Issued Token
       </button>
       {cells.length > 0 && <h3>Result: all the cells which hosted this issued token</h3>}
       {cells.map((cell, index) => (
         <div key={index}>
           <p>Cell #{index}</p>
-          <p>token amount: {readTokenAmount(cell.data).toNumber()}</p>
-          <p>issuer lockScript Hash: {computeLockScriptHashFromPrivateKey(privKey)}</p>
-          <p>token xudt args: {cell.cellOutput.type.args}</p>
-          <p>token holder's lockScript args: {cell.cellOutput.lock.args}</p>
+          <li>Token amount: {readTokenAmount(cell.data).toNumber()}</li>
+          <li>Token xUDT args: {cell.cellOutput.type.args}</li>
+          <li>Token holder's lock script args: {cell.cellOutput.lock.args}</li>
           <hr />
         </div>
       ))}
+    </>
+  );
+}
+
+function TransferIssuedToken() {
+  const [udtArgs, setUdtArgs] = useState<string>('');
+  const [senderPrivkey, setSenderPrivkey] = useState<string>('');
+  const [transferAmount, setTransferAmount] = useState('');
+  const [receiverAddress, setReceiverAddress] = useState('');
+  const [tx, setTx] = useState<Transaction>();
+
+  const onInputSenderPrivKey = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const priv = e.target.value;
+    const privateKeyRegex = /^0x[0-9a-fA-F]{64}$/;
+    const isValid = privateKeyRegex.test(priv);
+    if (isValid) {
+      setSenderPrivkey(priv);
+    } else {
+      alert(
+        `Invalid private key: must start with 0x and 32 bytes length. Ensure you're using a valid private key from the offckb accounts list.`,
+      );
+    }
+  };
+
+  const enabledCheck =
+    senderPrivkey.length > 0 && udtArgs.length > 0 && transferAmount.length > 0 && receiverAddress.length > 0;
+
+  return (
+    <>
+      <h2>Transfer Custom Token</h2>
+      <label htmlFor="sender-private-key">Private Key: </label>&nbsp;
+      <input id="sender-private-key" type="text" onChange={onInputSenderPrivKey} />
+      <br />
+      <label htmlFor="udt">xUDT args: </label>
+      &nbsp;
+      <input id="udt" type="text" onChange={(e) => setUdtArgs(e.target.value)} />
+      <br />
+      <label htmlFor="transferAmount">Transfer Token Amount: </label>
+      &nbsp;
+      <input id="transferAmount" type="number" onChange={(e) => setTransferAmount(e.target.value)} />
+      <br />
+      <label htmlFor="receiverAddress">Receiver Address: </label>
+      &nbsp;
+      <input id="receiverAddress" type="text" onChange={(e) => setReceiverAddress(e.target.value)} />
+      <br />
+      <button
+        disabled={!enabledCheck}
+        onClick={() =>
+          transferTokenToAddress(udtArgs, senderPrivkey, transferAmount, receiverAddress)
+            .then((res) => setTx(res.tx))
+            .catch(alert)
+        }
+      >
+        Transfer Custom Token
+      </button>
+      <div>
+        {tx && (
+          <>
+            <h4>Result</h4>
+            <li>
+              Transaction: <pre>{JSON.stringify(tx, null, 2)}</pre>
+            </li>
+          </>
+        )}
+      </div>
+    </>
+  );
+}
+
+export function App() {
+  return (
+    <div>
+      <h1>
+        xUDT Scripts Dapp Example &nbsp;
+        <small>
+          <a href="https://github.com/XuJiandong/rfcs/blob/xudt/rfcs/0052-extensible-udt/0052-extensible-udt.md#xudt-witness">
+            {'(see xUDT specs)'}
+          </a>
+        </small>
+      </h1>
+      <IssuedToken />
+      <hr />
+      <ViewIssuedToken />
+      <hr />
+      <TransferIssuedToken />
     </div>
   );
 }
