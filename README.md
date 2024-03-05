@@ -23,6 +23,9 @@ Start building on Nervos blockchain, right now, right away!
 - [Install](#install)
 - [Usage](#usage)
 - [Get started](#get-started)
+  - [Step 1: Create A Project](#step-1-create-a-project)
+  - [Step 2: Start the Devnet](#step-2-start-the-devnet)
+  - [Step 3: Access Pre-funded Accounts](#step-3-access-pre-funded-accounts)
 - [Built-in scripts](#built-in-scripts)
 - [Accounts](#accounts)
 - [About Lumos](#about-lumos)
@@ -48,6 +51,8 @@ offckb list-hashes # list built-in scripts hashes, equals `ckb list-hashes`
 
 ## Get started
 
+### Step 1: Create A Project
+
 ```sh
 offckb init my-awesome-ckb-dapp
 
@@ -70,7 +75,9 @@ Server running at http://localhost:1234
 ✨ Built in 10ms
 ```
 
-open another terminal and start the devnet:
+### Step 2: Start the Devnet
+
+Open another terminal and run:
 
 ```sh
 offckb node
@@ -83,7 +90,11 @@ CKB-Miner: 2024-03-04 14:35:17.567 +00:00 client INFO ckb_miner::miner  Found! #
 #...
 ```
 
-open another terminal and check the accounts to use:
+You can leave this terminal open to keep the devnet running, feel free to `ctrl+c` to exit the terminal and stop the local blockchain.
+
+### Step 3: Access Pre-funded Accounts
+
+Open another terminal and check the accounts to use:
 
 ```sh
 offckb accounts
