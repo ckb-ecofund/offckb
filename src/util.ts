@@ -1,5 +1,7 @@
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
+import { dappTemplatePath } from './cfg/const';
 
 export function isFolderExists(folderPath: string): boolean {
   try {
@@ -103,4 +105,44 @@ export function removeFolderSync(folderPath: string) {
     // Remove the directory itself
     fs.rmdirSync(folderPath);
   }
+}
+
+export function gitCloneAndDownloadFolderSync(
+  repoUrl: string,
+  branch: string,
+  subFolderName: string,
+  targetPath: string,
+) {
+  console.log('start cloning the dapp template..');
+  const tempFolder = path.resolve(dappTemplatePath, 'temp-clone-folder');
+
+  // Empty the temp folder if it exists
+  if (fs.existsSync(tempFolder)) {
+    fs.rmdirSync(tempFolder, { recursive: true });
+  }
+
+  // Create the temp folder
+  fs.mkdirSync(tempFolder, { recursive: true });
+
+  const cloneCommand = `
+git clone -n --depth=1 --single-branch --branch ${branch} --filter=tree:0 \
+${repoUrl} ${tempFolder}
+cd ${tempFolder}
+git sparse-checkout set ${subFolderName}
+git checkout
+`;
+  execSync(cloneCommand);
+
+  // Ensure targetPath exists and is a directory
+  if (!fs.existsSync(targetPath) || !fs.statSync(targetPath).isDirectory()) {
+    fs.mkdirSync(targetPath, { recursive: true });
+  }
+  const source = path.resolve(tempFolder, subFolderName);
+  copyFolderSync(source, targetPath);
+
+  // Empty the temp folder if it exists
+  if (fs.existsSync(tempFolder)) {
+    fs.rmdirSync(tempFolder, { recursive: true });
+  }
+  console.log(`Folder ${subFolderName} downloaded successfully from ${repoUrl} and moved to ${targetPath}`);
 }
