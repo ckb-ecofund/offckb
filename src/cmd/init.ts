@@ -10,7 +10,7 @@ import { copyFileSync, gitCloneAndDownloadFolderSync } from '../util';
 
 export function init(name: string, template: string) {
   const targetPath = path.resolve(currentExecPath, name);
-  const dappTemplateFolderPath = path.resolve(dappTemplateGitSubfolderName, template);
+  const dappTemplateFolderPath = `${dappTemplateGitSubfolderName}/${template}`;
   gitCloneAndDownloadFolderSync(dappTemplateGitRepo, dappTemplateGitBranch, dappTemplateFolderPath, targetPath);
 
   // add some common code files

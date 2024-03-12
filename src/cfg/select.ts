@@ -7,7 +7,7 @@ export async function selectTemplate() {
     choices: [
       {
         name: 'View and Transfer Balance',
-        value: 'transfer',
+        value: 'simple-transfer',
         description: 'a simple dapp to check CKB balance and transfer CKB',
       },
       {
