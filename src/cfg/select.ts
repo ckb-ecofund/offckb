@@ -15,6 +15,11 @@ export async function selectTemplate() {
         value: 'xudt',
         description: 'a simple dapp to issue your own token via XUDT scripts',
       },
+      {
+        name: 'Write & Read Onchain Message',
+        value: 'write-and-read-message',
+        description: 'a simple dapp to store & retrieve data from a Cell',
+      },
       new Separator(),
       {
         name: 'Issue Token With Max Supply Limit via Omnilock And XUDT scripts(coming)',
