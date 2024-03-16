@@ -26,6 +26,11 @@ Start building on Nervos blockchain, right now, right away!
   - [Step 1: Create A Project](#step-1-create-a-project)
   - [Step 2: Start the Devnet](#step-2-start-the-devnet)
   - [Step 3: Access Pre-funded Accounts](#step-3-access-pre-funded-accounts)
+- [Dapp Templates](#dapp-templates)
+  - [View and transfer balance](#view-and-transfer-balance)
+  - [Write \& read on-chain messages](#write--read-on-chain-messages)
+  - [Issue custom token via xUDT scripts](#issue-custom-token-via-xudt-scripts)
+  - [Create on-chain digital object via Spore protocol](#create-on-chain-digital-object-via-spore-protocol)
 - [Built-in scripts](#built-in-scripts)
 - [Accounts](#accounts)
 - [About Lumos](#about-lumos)
@@ -120,6 +125,36 @@ Print account list, each account is funded with 42_000_000_00000000 capacity in 
 ```
 
 Copy some private keys and visit http://localhost:1234 to play your first CKB Dapp!
+
+## Dapp Templates
+
+`offckb` packs some basic minimal Dapp templates for you to learn and get started with. By running `offckb init`, you can select the different Dapp templates to quickly set up a local Dapp project targeting the local blockchain with built-in scripts and accounts.
+
+The Dapp templates often involve interaction with some most useful smart contracts on CKB like xUDT/Spore/Omnilock. The best thing is those Dapp examples also come with detailed tutorial documents from [docs.nervos.org](https://docs.nervos.org/).
+
+### View and transfer balance
+
+A simple Dapp to check CKB balance and transfer CKB.
+
+[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/view-and-transfer-balance)
+
+### Write & read on-chain messages
+
+A simple Dapp to issue your own token via XUDT scripts.
+
+[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/write-and-read-on-chain-message)
+
+### Issue custom token via xUDT scripts
+
+A simple Dapp to store & retrieve data from a Cell.
+
+[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/issue-custom-token)
+
+### Create on-chain digital object via Spore protocol
+
+A simple Dapp to create on-chain digital objects with spore scripts.
+
+[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/create-nft)
 
 ## Built-in scripts
 
