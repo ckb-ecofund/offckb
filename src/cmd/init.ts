@@ -1,11 +1,17 @@
-import { currentExecPath, dappTemplatePath } from '../cfg/const';
+import {
+  currentExecPath,
+  dappTemplateGitBranch,
+  dappTemplateGitRepo,
+  dappTemplateGitSubfolderName,
+  dappTemplatePath,
+} from '../cfg/const';
 import path from 'path';
-import { copyFileSync, copyFolderSync } from '../util';
+import { copyFileSync, gitCloneAndDownloadFolderSync } from '../util';
 
 export function init(name: string, template: string) {
   const targetPath = path.resolve(currentExecPath, name);
-  const sourcePath = path.resolve(dappTemplatePath, template);
-  copyFolderSync(sourcePath, targetPath);
+  const dappTemplateFolderPath = `${dappTemplateGitSubfolderName}/${template}`;
+  gitCloneAndDownloadFolderSync(dappTemplateGitRepo, dappTemplateGitBranch, dappTemplateFolderPath, targetPath);
 
   // add some common code files
   const ckbDotTs = path.resolve(dappTemplatePath, 'ckb.ts');

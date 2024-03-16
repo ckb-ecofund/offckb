@@ -19,3 +19,8 @@ export const accountTargetDir = path.join(packageRootPath, `account`);
 
 // Version
 export const minimalRequiredCKBVersion = '0.113.1';
+
+// url
+export const dappTemplateGitRepo = 'https://github.com/nervosnetwork/docs.nervos.org';
+export const dappTemplateGitBranch = 'develop-v2';
+export const dappTemplateGitSubfolderName = 'examples';
