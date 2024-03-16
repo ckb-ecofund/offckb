@@ -20,17 +20,16 @@ export async function selectTemplate() {
         value: 'write-and-read-message',
         description: 'a simple dapp to store & retrieve data from a Cell',
       },
+      {
+        name: 'Create Digital Object With Spore scripts',
+        value: 'create-nft',
+        description: 'a simple dapp to create on-chain digital object with spore scripts',
+      },
       new Separator(),
       {
         name: 'Issue Token With Max Supply Limit via Omnilock And XUDT scripts(coming)',
         value: 'xudt',
         description: 'a simple dapp to issue your own token with max supply limit via XUDT scripts',
-        disabled: true,
-      },
-      {
-        name: 'Create NFT With Spore scripts(coming)',
-        value: 'xudt',
-        description: 'a simple dapp to issue your own token with XUDT scripts',
         disabled: true,
       },
     ],
