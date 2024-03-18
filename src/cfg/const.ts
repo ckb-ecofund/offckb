@@ -21,6 +21,8 @@ export const accountTargetDir = path.join(packageRootPath, `account`);
 export const minimalRequiredCKBVersion = '0.113.1';
 
 // url
-export const dappTemplateGitRepo = 'https://github.com/nervosnetwork/docs.nervos.org';
+export const dappTemplateGitRepoUserAndName = 'nervosnetwork/docs.nervos.org';
+export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserAndName}`;
 export const dappTemplateGitBranch = 'develop-v2';
-export const dappTemplateGitSubfolderName = 'examples';
+export const dappTemplateGitFolder = 'examples';
+export const dappTemplateGitSelectOptionFile = 'options.json';

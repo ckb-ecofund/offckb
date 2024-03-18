@@ -2,6 +2,13 @@ import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import { dappTemplatePath } from './cfg/const';
+import axios from 'axios';
+import {
+  dappTemplateGitBranch,
+  dappTemplateGitSelectOptionFile,
+  dappTemplateGitRepoUserAndName,
+  dappTemplateGitFolder,
+} from './cfg/const';
 
 export function isFolderExists(folderPath: string): boolean {
   try {
@@ -145,4 +152,21 @@ git checkout
     fs.rmdirSync(tempFolder, { recursive: true });
   }
   console.log(`Folder ${subFolderName} downloaded successfully from ${repoUrl} and moved to ${targetPath}`);
+}
+
+export interface TemplateOption {
+  name: string;
+  value: string;
+  description: string;
+}
+
+export async function loadTemplateOpts(): Promise<Array<TemplateOption>> {
+  const githubUrl = `https://raw.githubusercontent.com/${dappTemplateGitRepoUserAndName}/${dappTemplateGitBranch}/${dappTemplateGitFolder}/${dappTemplateGitSelectOptionFile}`;
+
+  try {
+    const response = await axios.get(githubUrl);
+    return response.data as Array<TemplateOption>;
+  } catch (error: unknown) {
+    throw new Error(`Error fetching JSON: ${(error as Error).message}`);
+  }
 }
