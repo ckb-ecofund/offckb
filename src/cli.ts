@@ -6,9 +6,8 @@ import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/init-chain';
 import { buildLumosConfig } from './cmd/build-lumos-config';
-import { init } from './cmd/init';
+import { init, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
-import { selectTemplate } from './cfg/select';
 import { clean } from './cmd/clean';
 const version = require('../package.json').version;
 

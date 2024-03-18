@@ -5,11 +5,11 @@
 Assuming you are trying to add a new template named `my-awesome-template` into `offckb`:
 
 1. add your typescript project to the docs site's example folder: `https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples/my-awesome-template`
-2. copy `templates/ckb.ts` and `templates/config.json` from `offckb` github repo into your project
+2. copy `templates/ckb.ts` from `offckb` Github repo into your project
    - `cp offckb/templates/ckb.ts docs.nervos.org/examples/my-awesome-template`
-   - `cp offckb/templates/config.json docs.nervos.org/examples/my-awesome-template`
 3. finish your `my-awesome-template` with `ckb.ts`
-4. done
+4. update the `options.json` file: `https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples/options.json`
+5. done
 
 ##### Template Pattern
 
