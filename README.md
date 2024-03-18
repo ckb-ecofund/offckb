@@ -130,7 +130,7 @@ Copy some private keys and visit http://localhost:1234 to play your first CKB Da
 
 `offckb` packs some basic minimal Dapp templates for you to learn and get started with. By running `offckb init`, you can select the different Dapp templates to quickly set up a local Dapp project targeting the local blockchain with built-in scripts and accounts.
 
-The Dapp templates often involve interaction with some most useful smart contracts on CKB like xUDT/Spore/Omnilock. The best thing is those Dapp examples also come with detailed tutorial documents from [docs.nervos.org](https://docs.nervos.org/).
+The Dapp templates often involve interaction with some most useful smart contracts on CKB like xUDT/Spore/Omnilock. The best thing is those Dapp examples also come with detailed tutorial documents from [docs.nervos.org](https://docs.nervos.org/). The source codes of these templates are also maintained [here](https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples).
 
 ### View and transfer balance
 
