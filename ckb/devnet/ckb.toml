@@ -168,6 +168,9 @@ block_uncles_cache_size    = 30
 # # Indexing the pending txs in the ckb tx-pool
 # index_tx_pool = false
 
+# ckb miner / ckb faucet
+# private key: 0x650e256211f5e0beee9084596aa2cb84d11eb033cced5e2d5b191593a9f9f1d4
+# private key path: accounts/ckb-miner-and-faucet.key
 [block_assembler]
 code_hash = "0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8"
 args = "0xa1db2eef3f29f3ef6f86c8d2a0772c705c449f4a"

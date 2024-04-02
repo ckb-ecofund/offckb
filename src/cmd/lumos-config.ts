@@ -1,10 +1,12 @@
 import fs from 'fs';
 import path from 'path';
-import { dappTemplatePath } from '../cfg/const';
-import { RPC } from '@ckb-lumos/lumos';
+import { predefinedOffCKBConfigTsPath, dappTemplatePath, Network } from '../cfg/const';
+import { config } from '@ckb-lumos/lumos';
+import { updateScriptInfoInOffCKBConfigTs } from '../util';
+import { CKB } from '../cfg/ckb';
 
 export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, secondTxHashInGenesisBlock: string) {
-  const devnetConfig = {
+  const devnetConfig: config.Config = {
     PREFIX: 'ckt',
     SCRIPTS: {
       SECP256K1_BLAKE160: {
@@ -105,20 +107,29 @@ export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, 
   return devnetConfig;
 }
 
-export async function buildLumosConfig() {
-  const rpcUrl = 'http://127.0.0.1:8114';
-  const rpc = new RPC(rpcUrl);
+export async function fetchDevnetLumosConfig() {
+  const ckb = new CKB('devnet');
+  const rpc = ckb.rpc;
   const chainInfo = await rpc.getBlockchainInfo();
   const genesisBlock = await rpc.getBlockByNumber('0x0');
   const cellBaseTxHashInGenesisBlock = genesisBlock.transactions[0].hash;
   const secondTxHashInGenesisBlock = genesisBlock.transactions[1].hash;
   if (chainInfo.chain === 'offckb') {
     const config = devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock, secondTxHashInGenesisBlock);
-    const filePath = path.resolve(dappTemplatePath, 'config.json');
-    fs.writeFile(filePath, JSON.stringify(config, null, 2), 'utf8', (err) => {
-      if (err) {
-        return console.error('Error writing file:', err);
-      }
-    });
+    return config;
   }
+  throw new Error('not a devnet!');
+}
+
+export async function writePredefinedDevnetLumosConfig() {
+  const config = await fetchDevnetLumosConfig();
+  const filePath = path.resolve(dappTemplatePath, 'config.json');
+  fs.writeFile(filePath, JSON.stringify(config, null, 2), 'utf8', (err) => {
+    if (err) {
+      return console.error('Error writing file:', err);
+    }
+  });
+
+  // update the offckb.config.ts too
+  updateScriptInfoInOffCKBConfigTs(config, predefinedOffCKBConfigTsPath, Network.devnet);
 }

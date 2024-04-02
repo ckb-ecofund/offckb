@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { dappTemplatePath } from './cfg/const';
+import { Network, currentExecPath, dappTemplatePath, deployedContractInfoFolderPath } from './cfg/const';
 import axios from 'axios';
 import {
   dappTemplateGitBranch,
@@ -9,6 +9,7 @@ import {
   dappTemplateGitRepoUserAndName,
   dappTemplateGitFolder,
 } from './cfg/const';
+import { config } from '@ckb-lumos/lumos';
 
 export function isFolderExists(folderPath: string): boolean {
   try {
@@ -174,4 +175,236 @@ export async function loadTemplateOpts(): Promise<Array<TemplateOption>> {
   } catch (error: unknown) {
     throw new Error(`Error fetching JSON: ${(error as Error).message}`);
   }
+}
+
+export function validateTypescriptWorkspace() {
+  const cwd = currentExecPath;
+
+  // Check if package.json exists
+  const packageJsonPath = path.join(cwd, 'package.json');
+  if (!fs.existsSync(packageJsonPath)) {
+    throw new Error('package.json not found in the current directory');
+  }
+
+  // Check if tsconfig.json exists
+  const tsconfig = path.join(cwd, 'tsconfig.json');
+  if (!fs.existsSync(tsconfig)) {
+    throw new Error('tsconfig.json not found in the current directory');
+  }
+}
+
+export function validateExecDappEnvironment() {
+  const cwd = currentExecPath;
+
+  // Check if package.json and tsconfig.json exists
+  validateTypescriptWorkspace();
+
+  // Check if offckb.config.ts exists
+  const offCKBConfigPath = path.resolve(cwd, 'offckb.config.ts');
+  if (!fs.existsSync(offCKBConfigPath)) {
+    throw new Error('offckb.config.ts not found in the current directory');
+  }
+
+  // Read offckb.config.ts file
+  const offCKBConfigFile = fs.readFileSync(offCKBConfigPath, 'utf-8');
+
+  // Check if offckb.config.ts contains OffCKBConfig interface
+  if (!offCKBConfigFile.includes('export interface OffCKBConfig')) {
+    throw new Error('offckb.config.ts does not contain OffCKBConfig interface');
+  }
+
+  // Check if OffCKBConfig is exported
+  if (!offCKBConfigFile.includes('export default offCKBConfig;')) {
+    throw new Error('OffCKBConfig interface is not exported in offckb.config.ts');
+  }
+}
+
+export function isValidNetworkString(network: string) {
+  return ['devnet', 'testnet', 'mainnet'].includes(network);
+}
+
+export function validateNetworkOpt(network: string) {
+  if (!isValidNetworkString(network)) {
+    throw new Error('invalid network option, ' + network);
+  }
+
+  if (network === 'mainnet') {
+    console.log(
+      'Mainnet not support yet. Please use CKB-CLI to operate on mainnet for better security. Check https://github.com/nervosnetwork/ckb-cli',
+    );
+    process.exit(1);
+  }
+}
+
+export async function readFileToUint8Array(filePath: string): Promise<Uint8Array> {
+  return new Promise<Uint8Array>((resolve, reject) => {
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(new Uint8Array(data));
+    });
+  });
+}
+
+export function convertFilenameToUppercase(filePath: string): string {
+  // Extract the filename from the file path
+  const filename = path.basename(filePath);
+
+  // Convert the filename to uppercase
+  const uppercaseFilename = filename.toUpperCase();
+  return uppercaseFilename;
+}
+
+export function listBinaryFilesInFolder(folderPath: string): string[] {
+  // Check if the provided path is a directory
+  if (!fs.existsSync(folderPath) || !fs.lstatSync(folderPath).isDirectory()) {
+    throw new Error(`${folderPath} is not a valid directory.`);
+  }
+
+  // Read the contents of the directory
+  const files = fs.readdirSync(folderPath);
+
+  // Filter out only the binary files (assuming they have extensions like .exe, .bin, .dll, etc.)
+  const binaryFiles = files.filter((file) => {
+    const filePath = path.join(folderPath, file);
+    // Check if the file is a regular file and not a directory
+    return fs.statSync(filePath).isFile() && isBinaryFile(filePath);
+  });
+
+  return binaryFiles;
+}
+
+// Function to check if a file is binary
+export function isBinaryFile(filePath: string): boolean {
+  const buffer = fs.readFileSync(filePath);
+  for (let i = 0; i < buffer.length; i++) {
+    // If any byte has a value greater than 127, it's likely a binary file
+    if (buffer[i] > 127) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function updateScriptInfoInOffCKBConfigTs(newConfig: config.Config, filePath: string, network: Network): void {
+  // Read the content of the offckb.config.ts file
+  let fileContent = fs.readFileSync(filePath, 'utf-8');
+
+  if (network === Network.devnet) {
+    /// Define the regular expression pattern to match the JSON content
+    const regexPattern = /\/\/ ---devnet lumos config---([\s\S]*?)\/\/ ---end of devnet lumos config---/;
+
+    // Replace the old JSON content with the new JSON content using the regular expression
+    fileContent = fileContent.replace(
+      regexPattern,
+      `// ---devnet lumos config---\nconst lumosConfig: config.Config = ${JSON.stringify(newConfig, null, 2)} as config.Config;\n// ---end of devnet lumos config---`,
+    );
+
+    // Write the updated content back to the file
+    fs.writeFileSync(filePath, fileContent, 'utf-8');
+  }
+
+  if (network === Network.testnet) {
+    /// Define the regular expression pattern to match the JSON content
+    const regexPattern = /\/\/ ---testnet lumos config---([\s\S]*?)\/\/ ---end of testnet lumos config---/;
+
+    // Replace the old JSON content with the new JSON content using the regular expression
+    fileContent = fileContent.replace(
+      regexPattern,
+      `// ---testnet lumos config---\nconst testnetLumosConfig: config.Config = ${JSON.stringify(newConfig, null, 2)} as config.Config;\n// ---end of testnet lumos config---`,
+    );
+
+    // Write the updated content back to the file
+    fs.writeFileSync(filePath, fileContent, 'utf-8');
+  }
+
+  if (network === Network.mainnet) {
+    /// Define the regular expression pattern to match the JSON content
+    const regexPattern = /\/\/ ---mainnet lumos config---([\s\S]*?)\/\/ ---end of mainnet lumos config---/;
+
+    // Replace the old JSON content with the new JSON content using the regular expression
+    fileContent = fileContent.replace(
+      regexPattern,
+      `// ---mainnet lumos config---\nconst mainnetLumosConfig: config.Config = ${JSON.stringify(newConfig, null, 2)} as config.Config;\n// ---end of mainnet lumos config---`,
+    );
+
+    // Write the updated content back to the file
+    fs.writeFileSync(filePath, fileContent, 'utf-8');
+  }
+}
+
+export function readUserDeployedScriptsInfo(network: Network) {
+  const deployedScriptsInfo: Record<string, config.ScriptConfig> = {};
+
+  // Read all files in the folder
+  const folder = path.resolve(deployedContractInfoFolderPath, network);
+  const files = fs.readdirSync(folder);
+
+  // Iterate through each file
+  files.forEach((fileName) => {
+    // Construct the full file path
+    const filePath = path.join(folder, fileName);
+
+    // Check if the file is a JSON file
+    if (fileName.endsWith('.json')) {
+      try {
+        // Read the file content
+        const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+        // Parse the JSON content
+        const scriptContent = JSON.parse(fileContent);
+
+        const rawFileName = path.parse(fileName).name.replace(/-/g, '_');
+
+        // Add the file content to the result object with the file name as the key
+        deployedScriptsInfo[rawFileName] = scriptContent;
+      } catch (error) {
+        console.error(`Error reading or parsing file '${fileName}':`, error);
+      }
+    }
+  });
+
+  return deployedScriptsInfo;
+}
+
+export function readPredefinedDevnetLumosConfig() {
+  const filePath = path.resolve(dappTemplatePath, 'config.json');
+  try {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const jsonData = JSON.parse(fileContent);
+    return jsonData as config.Config;
+  } catch (error: unknown) {
+    throw new Error('Error reading the json file:' + (error as Error).message);
+  }
+}
+
+export function readPredefinedMainnetLumosConfig(): config.Config {
+  const predefined = config.predefined.LINA;
+  // add more example like spore;
+  return predefined;
+}
+
+export function readPredefinedTestnetLumosConfig(): config.Config {
+  const predefined = config.predefined.AGGRON4;
+  // add more example like spore;
+  return predefined;
+}
+
+export function buildFullLumosConfig(network: Network) {
+  const config =
+    network === Network.devnet
+      ? readPredefinedDevnetLumosConfig()
+      : network === Network.testnet
+        ? readPredefinedTestnetLumosConfig()
+        : readPredefinedMainnetLumosConfig();
+  const userDeployedScripts = readUserDeployedScriptsInfo(network);
+  const conf = JSON.parse(JSON.stringify(config));
+  conf.SCRIPTS = { ...config.SCRIPTS, ...userDeployedScripts };
+  return conf;
+}
+
+export function buildTestnetTxLink(txHash: string) {
+  return `https://pudge.explorer.nervos.org/transaction/${txHash}`;
 }
