@@ -5,6 +5,7 @@ import * as path from 'path';
 import semver from 'semver';
 import os from 'os';
 import AdmZip from 'adm-zip';
+import * as tar from 'tar';
 import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from '../cfg/const';
 
 const BINARY = ckbBinPath;
@@ -18,7 +19,6 @@ export async function installDependency() {
       console.log(
         `${BINARY} version ${version} is outdated, download and install the new version ${MINIMAL_VERSION}..`,
       );
-      console.log(buildDownloadUrl(MINIMAL_VERSION));
     } else {
       return;
     }
@@ -26,24 +26,24 @@ export async function installDependency() {
     console.log(`${BINARY} not found, download and install the new version ${MINIMAL_VERSION}..`);
   }
 
+  await downloadBinaryAndUnzip();
+}
+
+export async function downloadBinaryAndUnzip() {
   const arch = getArch();
   const osname = getOS();
+  const ext = getExtension();
   const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`;
   try {
-    const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
-    const response = await axios.get(downloadURL, {
-      responseType: 'arraybuffer',
-    });
-    const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.zip`);
-    fs.writeFileSync(tempFilePath, response.data);
+    const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.${ext}`);
+    downloadAndSaveCKBBinary(tempFilePath);
 
     // Unzip the file
-    const zip = new AdmZip(tempFilePath);
     const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
-    zip.extractAllTo(extractDir, /*overwrite*/ true);
-    const sourcePath = path.join(extractDir, ckbVersionOSName);
+    unZipFile(tempFilePath, extractDir, ext === 'tar.gz');
 
     // Install the extracted files
+    const sourcePath = path.join(extractDir, ckbVersionOSName);
     fs.renameSync(sourcePath, ckbFolderPath); // Move binary to desired location
     fs.chmodSync(ckbBinPath, '755'); // Make the binary executable
 
@@ -53,7 +53,46 @@ export async function installDependency() {
   }
 }
 
-function getInstalledVersion(): string | null {
+export async function downloadAndSaveCKBBinary(tempFilePath: string) {
+  const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
+  const response = await axios.get(downloadURL, {
+    responseType: 'arraybuffer',
+  });
+  fs.writeFileSync(tempFilePath, response.data);
+}
+
+export function unZipFile(filePath: string, extractDir: string, useTar: boolean = false) {
+  // Ensure the destination directory exists, if not create it
+  if (!fs.existsSync(extractDir)) {
+    fs.mkdirSync(extractDir);
+  }
+
+  if (useTar === true) {
+    return decompressTarGzSync(filePath, extractDir);
+  }
+
+  const zip = new AdmZip(filePath);
+  zip.extractAllTo(extractDir, true);
+}
+
+export function decompressTarGzSync(tarballPath: string, destinationDir: string): void {
+  // Create a readable stream from the .tar.gz file
+  const tarballStream = fs.createReadStream(tarballPath);
+
+  try {
+    // Extract the contents of the .tar.gz file to the destination directory
+    tarballStream.pipe(
+      tar.x({
+        cwd: destinationDir,
+      }),
+    );
+  } catch (error) {
+    console.error('Error extracting tarball:', error);
+    throw error;
+  }
+}
+
+export function getInstalledVersion(): string | null {
   try {
     const versionOutput = execSync(`${BINARY} --version`, {
       encoding: 'utf-8',
@@ -69,11 +108,11 @@ function getInstalledVersion(): string | null {
   }
 }
 
-function isVersionOutdated(installedVersion: string): boolean {
+export function isVersionOutdated(installedVersion: string): boolean {
   return semver.lt(installedVersion, MINIMAL_VERSION);
 }
 
-function getOS(): string {
+export function getOS(): string {
   const platform = os.platform();
   if (platform === 'darwin') {
     return 'apple-darwin';
@@ -86,7 +125,7 @@ function getOS(): string {
   }
 }
 
-function getArch(): string {
+export function getArch(): string {
   const arch = os.arch();
   if (arch === 'x64') {
     return 'x86_64';
@@ -97,8 +136,17 @@ function getArch(): string {
   }
 }
 
-function buildDownloadUrl(version: string): string {
-  const os = getOS();
-  const arch = getArch();
-  return `https://github.com/nervosnetwork/ckb/releases/download/v${version}/ckb_v${version}_${arch}-${os}.zip`;
+export function getExtension(): 'tar.gz' | 'zip' {
+  const platform = os.platform();
+  if (platform === 'linux') {
+    return 'tar.gz';
+  }
+  return 'zip';
+}
+
+export function buildDownloadUrl(version: string, opt: { os?: string; arch?: string; ext?: string } = {}): string {
+  const os = opt.os || getOS();
+  const arch = opt.arch || getArch();
+  const extension = opt.ext || getExtension();
+  return `https://github.com/nervosnetwork/ckb/releases/download/v${version}/ckb_v${version}_${arch}-${os}.${extension}`;
 }
