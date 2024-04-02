@@ -110,7 +110,7 @@ export function removeFolderSync(folderPath: string) {
       }
     });
     // Remove the directory itself
-    fs.rmdirSync(folderPath);
+    fs.rmSync(folderPath);
   }
 }
 
@@ -125,7 +125,7 @@ export function gitCloneAndDownloadFolderSync(
 
   // Empty the temp folder if it exists
   if (fs.existsSync(tempFolder)) {
-    fs.rmdirSync(tempFolder, { recursive: true });
+    fs.rmSync(tempFolder, { recursive: true });
   }
 
   // Create the temp folder
@@ -149,7 +149,7 @@ git checkout
 
   // Empty the temp folder if it exists
   if (fs.existsSync(tempFolder)) {
-    fs.rmdirSync(tempFolder, { recursive: true });
+    fs.rmSync(tempFolder, { recursive: true });
   }
   console.log(`Folder ${subFolderName} downloaded successfully from ${repoUrl} and moved to ${targetPath}`);
 }
