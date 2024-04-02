@@ -40,7 +40,7 @@ export async function downloadBinaryAndUnzip() {
 
     // Unzip the file
     const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
-    unZipFile(tempFilePath, extractDir, ext === 'tar.gz');
+    await unZipFile(tempFilePath, extractDir, ext === 'tar.gz');
 
     // Install the extracted files
     const sourcePath = path.join(extractDir, ckbVersionOSName);
@@ -61,35 +61,41 @@ export async function downloadAndSaveCKBBinary(tempFilePath: string) {
   fs.writeFileSync(tempFilePath, response.data);
 }
 
-export function unZipFile(filePath: string, extractDir: string, useTar: boolean = false) {
+export async function unZipFile(filePath: string, extractDir: string, useTar: boolean = false) {
   // Ensure the destination directory exists, if not create it
   if (!fs.existsSync(extractDir)) {
     fs.mkdirSync(extractDir);
   }
 
   if (useTar === true) {
-    return decompressTarGzSync(filePath, extractDir);
+    return await decompressTarGzAsync(filePath, extractDir);
   }
 
   const zip = new AdmZip(filePath);
   zip.extractAllTo(extractDir, true);
 }
 
-export function decompressTarGzSync(tarballPath: string, destinationDir: string): void {
-  // Create a readable stream from the .tar.gz file
-  const tarballStream = fs.createReadStream(tarballPath);
+export async function decompressTarGzAsync(tarballPath: string, destinationDir: string): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    // Create a readable stream from the .tar.gz file
+    const tarballStream = fs.createReadStream(tarballPath);
 
-  try {
     // Extract the contents of the .tar.gz file to the destination directory
-    tarballStream.pipe(
-      tar.x({
-        cwd: destinationDir,
-      }),
-    );
-  } catch (error) {
-    console.error('Error extracting tarball:', error);
-    throw error;
-  }
+    tarballStream
+      .pipe(
+        tar.x({
+          cwd: destinationDir,
+        }),
+      )
+      .on('error', (err) => {
+        console.error('Error extracting tarball:', err);
+        reject(err); // Reject with error if extraction fails
+      })
+      .on('finish', () => {
+        console.log('Extraction complete.');
+        resolve(); // Resolve when extraction completes
+      });
+  });
 }
 
 export function getInstalledVersion(): string | null {
