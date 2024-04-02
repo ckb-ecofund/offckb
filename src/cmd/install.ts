@@ -36,7 +36,7 @@ export async function downloadBinaryAndUnzip() {
   const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`;
   try {
     const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.${ext}`);
-    downloadAndSaveCKBBinary(tempFilePath);
+    await downloadAndSaveCKBBinary(tempFilePath);
 
     // Unzip the file
     const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
