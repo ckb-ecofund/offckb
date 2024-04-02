@@ -97,23 +97,6 @@ export async function copyRecursive(source: string, destination: string, exclude
   }
 }
 
-export function removeFolderSync(folderPath: string) {
-  if (fs.existsSync(folderPath)) {
-    fs.readdirSync(folderPath).forEach((file) => {
-      const curPath = path.join(folderPath, file);
-      if (fs.lstatSync(curPath).isDirectory()) {
-        // Recursive call for directories
-        removeFolderSync(curPath);
-      } else {
-        // Delete files
-        fs.unlinkSync(curPath);
-      }
-    });
-    // Remove the directory itself
-    fs.rmdirSync(folderPath);
-  }
-}
-
 export function gitCloneAndDownloadFolderSync(
   repoUrl: string,
   branch: string,
@@ -125,7 +108,7 @@ export function gitCloneAndDownloadFolderSync(
 
   // Empty the temp folder if it exists
   if (fs.existsSync(tempFolder)) {
-    fs.rmdirSync(tempFolder, { recursive: true });
+    fs.rmSync(tempFolder, { recursive: true });
   }
 
   // Create the temp folder
@@ -149,7 +132,7 @@ git checkout
 
   // Empty the temp folder if it exists
   if (fs.existsSync(tempFolder)) {
-    fs.rmdirSync(tempFolder, { recursive: true });
+    fs.rmSync(tempFolder, { recursive: true });
   }
   console.log(`Folder ${subFolderName} downloaded successfully from ${repoUrl} and moved to ${targetPath}`);
 }

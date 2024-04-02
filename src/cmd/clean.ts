@@ -1,10 +1,11 @@
 import { devnetDataPath } from '../cfg/const';
-import { isFolderExists, removeFolderSync } from '../util';
+import { isFolderExists } from '../util';
+import fs from 'fs';
 
 export function clean() {
   if (isFolderExists(devnetDataPath)) {
     try {
-      removeFolderSync(devnetDataPath);
+      fs.rmSync(devnetDataPath, { recursive: true });
       console.log(`Chain data cleaned.`);
     } catch (error: unknown) {
       console.log(`Did you stop running the chain first?`);
