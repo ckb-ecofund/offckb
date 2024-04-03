@@ -64,7 +64,7 @@ export async function downloadAndSaveCKBBinary(tempFilePath: string) {
 export async function unZipFile(filePath: string, extractDir: string, useTar: boolean = false) {
   // Ensure the destination directory exists, if not create it
   if (!fs.existsSync(extractDir)) {
-    fs.mkdirSync(extractDir);
+    fs.mkdirSync(extractDir, { recursive: true });
   }
 
   if (useTar === true) {
