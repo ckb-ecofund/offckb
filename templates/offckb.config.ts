@@ -135,20 +135,6 @@ const lumosConfig: config.Config = {
       INDEX: '0xe',
       DEP_TYPE: 'code',
     },
-    AUTH: {
-      CODE_HASH: '0x7e7ad21325f83a4678034838395a495a5b174bed241730a6cf13070bc167bcf4',
-      HASH_TYPE: 'data2',
-      TX_HASH: '0x35ad715ee3befc0c4eaa6578d777d1f5658127f755a0e75cffdc2868b865ae4f',
-      INDEX: '0x0',
-      DEP_TYPE: 'code',
-    },
-    NOSTR_BINDING: {
-      CODE_HASH: '0x2ffb46aca34e6f87d3d5a059f8a3c0a829e487ab7fb1b2599098a177b2128e09',
-      HASH_TYPE: 'data2',
-      TX_HASH: '0x9ea9af577b84b31c7e5caeff9b02e5964c3e269d54383f892de05e7e86ffa48b',
-      INDEX: '0x0',
-      DEP_TYPE: 'code',
-    },
   },
 } as config.Config;
 // ---end of devnet lumos config---
@@ -156,7 +142,7 @@ const lumosConfig: config.Config = {
 const testnetLumosConfig: config.Config = { ...config.predefined.AGGRON4, ...{} } as config.Config;
 // ---end of testnet lumos config---
 // ---mainnet lumos config---
-const mainnetLumosConfig: config.Config = { ...config.predefined.AGGRON4, ...{} } as config.Config;
+const mainnetLumosConfig: config.Config = { ...config.predefined.LINA, ...{} } as config.Config;
 // ---end of mainnet lumos config---
 
 const offCKBConfig: OffCKBConfig = {

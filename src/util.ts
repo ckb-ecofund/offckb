@@ -340,6 +340,10 @@ export function readUserDeployedScriptsInfo(network: Network) {
 
   // Read all files in the folder
   const folder = path.resolve(deployedContractInfoFolderPath, network);
+  if (!fs.existsSync(folder)) {
+    return deployedScriptsInfo;
+  }
+
   const files = fs.readdirSync(folder);
 
   // Iterate through each file

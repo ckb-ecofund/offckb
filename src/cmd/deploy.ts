@@ -48,7 +48,7 @@ export async function deploy(opt: DeployOptions = { network: 'devnet' }) {
 
 function getToDeployBinsPath() {
   const fileContent = fs.readFileSync(userOffCKBConfigPath, 'utf-8');
-  const match = fileContent.match(/contractBinFolder:\s*"([^"]+)"/);
+  const match = fileContent.match(/contractBinFolder:\s*['"]([^'"]+)['"]/);
   if (match && match[1]) {
     const binFolderPath = path.resolve(currentExecPath, match[1]);
     const bins = listBinaryFilesInFolder(binFolderPath);
