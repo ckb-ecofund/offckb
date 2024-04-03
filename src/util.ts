@@ -26,7 +26,7 @@ export function isFolderExists(folderPath: string): boolean {
 
 export function copyFolderSync(source: string, destination: string) {
   if (!fs.existsSync(destination)) {
-    fs.mkdirSync(destination);
+    fs.mkdirSync(destination, { recursive: true });
   }
 
   const files = fs.readdirSync(source);
