@@ -1,5 +1,4 @@
 import { commons, hd, helpers } from '@ckb-lumos/lumos';
-import { fetchDevnetLumosConfig } from './lumos-config';
 import fs from 'fs';
 import {
   buildFullLumosConfig,
@@ -14,7 +13,7 @@ import {
 import { Network, currentExecPath, deployedContractInfoFolderPath, userOffCKBConfigPath } from '../cfg/const';
 import path from 'path';
 import { Account, CKB } from '../cfg/ckb';
-import { AliceAccount } from '../cfg/account';
+import { deployerAccount } from '../cfg/account';
 
 export interface DeployOptions {
   network: 'devnet' | 'testnet' | 'mainnet';
@@ -26,8 +25,8 @@ export async function deploy(opt: DeployOptions = { network: 'devnet' }) {
 
   const ckb = new CKB(network);
 
-  // we use first account to deploy contract by default
-  const privateKey = AliceAccount.privkey;
+  // we use deployerAccount to deploy contract by default
+  const privateKey = deployerAccount.privkey;
   const lumosConfig = ckb.getLumosConfig();
   const from = CKB.generateAccountFromPrivateKey(privateKey, lumosConfig);
 
@@ -95,14 +94,13 @@ async function deployBinaries(binPaths: string[], from: Account, ckb: CKB) {
 }
 
 async function deployBinary(binPath: string, from: Account, ckb: CKB) {
-  const lumosConfig = await fetchDevnetLumosConfig();
   const bin = await readFileToUint8Array(binPath);
   const contractName = convertFilenameToUppercase(binPath);
   const result = await commons.deploy.generateDeployWithDataTx({
     cellProvider: ckb.indexer,
     fromInfo: from.address,
     scriptBinary: bin,
-    config: lumosConfig,
+    config: ckb.getLumosConfig(),
   });
 
   // send deploy tx

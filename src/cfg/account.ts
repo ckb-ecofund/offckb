@@ -52,3 +52,17 @@ export const CarolAccount = {
   address: 'ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqvarm0tahu0qfkq6ktuf3wd8azaas0h24c9myfz6',
   args: '0x9d1edebedf8f026c0d597c4c5cd3f45dec1f7557',
 };
+
+// we should keep deployerAccount with some testnet balance.
+// last account from account/account.json
+export const deployerAccount = {
+  privkey: '0xace08599f3174f4376ae51fdc30950d4f2d731440382bb0aa1b6b0bd3a9728cd',
+  pubkey: '0x0216bc7b5b0a30fb910c372062a7f8cfa89f3a231f5d4a975e60a787ea828aa49e',
+  lockScript: {
+    codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
+    hashType: 'type',
+    args: '0x4118c8c16749bf126b22468d030bf9de7da3717b',
+  },
+  address: 'ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsq2prryvze6fhufxkgjx35psh7w70k3hz7c3mtl4d',
+  args: '0x4118c8c16749bf126b22468d030bf9de7da3717b',
+};
