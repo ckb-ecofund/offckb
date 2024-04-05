@@ -74,7 +74,7 @@ async function recordDeployResult(results: DeployedInterfaceType[], network: Net
 
     const filePath = path.resolve(deployedContractInfoFolderPath, network, filename);
     if (!isFolderExists(path.resolve(deployedContractInfoFolderPath, network))) {
-      fs.mkdirSync(path.resolve(deployedContractInfoFolderPath, network));
+      fs.mkdirSync(path.resolve(deployedContractInfoFolderPath, network), { recursive: true });
     }
     fs.writeFileSync(filePath, jsonContent);
   }

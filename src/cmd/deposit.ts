@@ -25,7 +25,7 @@ export async function deposit(toAddress: string, amount: string, opt: DepositOpt
     {
       from: from.address,
       to: toAddress,
-      privKey: ckbDevnetMinerAccount.address,
+      privKey: from.privKey,
       amount,
     },
     lumosConfig,
