@@ -164,6 +164,7 @@ export interface TemplateOption {
   name: string;
   value: string;
   description: string;
+  type: 'tutorial' | 'template';
 }
 
 export async function loadTemplateOpts(): Promise<Array<TemplateOption>> {

@@ -6,7 +6,7 @@ import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/init-chain';
 import { writePredefinedDevnetLumosConfig } from './cmd/lumos-config';
-import { init, selectTemplate } from './cmd/init';
+import { init, initBare, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './encoding';
@@ -30,8 +30,14 @@ program.name('offckb').description(description).version(version);
 program
   .command('init [your-project-name]')
   .description('init dapp project with lumos')
-  .action(async (str) => {
+  .option('--bare', 'enable bare template mode')
+  .action(async (str, options) => {
     const name = str ?? 'my-awesome-ckb-dapp';
+    const isBare = options.bare || false; // Check if --bare option is present
+    if (isBare) {
+      return initBare(name);
+    }
+
     const template = await selectTemplate();
     return init(name, template);
   });
