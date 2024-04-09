@@ -1,6 +1,7 @@
-import { CKB } from '../cfg/ckb';
-import { Network, NetworkOption } from '../cfg/const';
-import { buildTestnetTxLink, validateNetworkOpt } from '../util';
+import { CKB } from '../util/ckb';
+import { NetworkOption, Network } from '../util/type';
+import { buildTestnetTxLink } from '../util/link';
+import { validateNetworkOpt } from '../util/validator';
 
 export interface TransferOptions extends NetworkOption {}
 

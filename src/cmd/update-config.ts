@@ -1,5 +1,7 @@
-import { Network, userOffCKBConfigPath } from '../cfg/const';
-import { validateExecDappEnvironment, updateScriptInfoInOffCKBConfigTs, buildFullLumosConfig } from '../util';
+import { userOffCKBConfigPath } from '../cfg/const';
+import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
+import { Network } from '../util/type';
+import { validateExecDappEnvironment } from '../util/validator';
 
 export function updateConfig() {
   validateExecDappEnvironment();

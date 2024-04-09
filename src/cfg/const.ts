@@ -30,14 +30,3 @@ export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserA
 export const dappTemplateGitBranch = 'add-dapp-bare-template';
 export const dappTemplateGitFolder = 'examples';
 export const dappTemplateGitSelectOptionFile = 'options.json';
-
-// network
-export enum Network {
-  devnet = 'devnet',
-  testnet = 'testnet',
-  mainnet = 'mainnet',
-}
-
-export interface NetworkOption {
-  network: Network;
-}

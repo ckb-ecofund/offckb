@@ -6,10 +6,10 @@ import {
   dappTemplatePath,
 } from '../cfg/const';
 import path from 'path';
-import { TemplateOption, copyFileSync, gitCloneAndDownloadFolderSync } from '../util';
 import select from '@inquirer/select';
-import { loadTemplateOpts } from '../util';
-import { updateVersionInTSFile } from '../util/file';
+import { TemplateOption, loadTemplateOpts } from '../util/template';
+import { copyFileSync, updateVersionInTSFile } from '../util/fs';
+import { gitCloneAndDownloadFolderSync } from '../util/git';
 const version = require('../../package.json').version;
 
 export function init(name: string, template: TemplateOption) {

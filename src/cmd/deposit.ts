@@ -1,9 +1,10 @@
-import { buildTestnetTxLink, validateNetworkOpt } from '../util';
-import { CKB } from '../cfg/ckb';
+import { CKB } from '../util/ckb';
 import axios, { AxiosRequestConfig } from 'axios';
 import { generateHex } from './develop/genkey';
 import { ckbDevnetMinerAccount } from '../cfg/account';
-import { Network, NetworkOption } from '../cfg/const';
+import { NetworkOption, Network } from '../util/type';
+import { buildTestnetTxLink } from '../util/link';
+import { validateNetworkOpt } from '../util/validator';
 
 export interface DepositOptions extends NetworkOption {}
 

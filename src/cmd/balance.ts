@@ -1,7 +1,7 @@
 import { BI } from '@ckb-lumos/lumos';
-import { CKB } from '../cfg/ckb';
-import { validateNetworkOpt } from '../util';
-import { Network, NetworkOption } from '../cfg/const';
+import { CKB } from '../util/ckb';
+import { validateNetworkOpt } from '../util/validator';
+import { NetworkOption, Network } from '../util/type';
 
 export interface BalanceOption extends NetworkOption {}
 

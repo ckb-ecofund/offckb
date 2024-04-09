@@ -1,25 +1,13 @@
 import { commons, hd, helpers } from '@ckb-lumos/lumos';
 import fs from 'fs';
-import {
-  buildFullLumosConfig,
-  convertFilenameToUppercase,
-  isFolderExists,
-  listBinaryFilesInFolder,
-  readFileToUint8Array,
-  updateScriptInfoInOffCKBConfigTs,
-  validateExecDappEnvironment,
-  validateNetworkOpt,
-} from '../util';
-import {
-  Network,
-  NetworkOption,
-  currentExecPath,
-  deployedContractInfoFolderPath,
-  userOffCKBConfigPath,
-} from '../cfg/const';
+import { currentExecPath, deployedContractInfoFolderPath, userOffCKBConfigPath } from '../cfg/const';
+import { NetworkOption, Network } from '../util/type';
 import path from 'path';
-import { Account, CKB } from '../cfg/ckb';
+import { Account, CKB } from '../util/ckb';
 import { deployerAccount } from '../cfg/account';
+import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
+import { listBinaryFilesInFolder, isFolderExists, readFileToUint8Array, convertFilenameToUppercase } from '../util/fs';
+import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validator';
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;

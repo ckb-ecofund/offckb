@@ -1,8 +1,9 @@
 import { Address, BI, Cell, Indexer, RPC, Script, WitnessArgs, commons, config, hd, helpers } from '@ckb-lumos/lumos';
 import { blockchain, values } from '@ckb-lumos/base';
 import { bytes } from '@ckb-lumos/codec';
-import { readPredefinedDevnetLumosConfig, isValidNetworkString } from '../util';
-import { Network } from './const';
+import { readPredefinedDevnetLumosConfig } from './config';
+import { isValidNetworkString } from './validator';
+import { Network } from './type';
 const { ScriptValue } = values;
 
 export type Account = {

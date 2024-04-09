@@ -1,19 +1,10 @@
 import path from 'path';
-import {
-  predefinedOffCKBConfigTsPath,
-  currentExecPath,
-  Network,
-  userOffCKBConfigPath,
-  defaultLumosVersion,
-} from '../cfg/const';
-import {
-  buildFullLumosConfig,
-  copyFileSync,
-  updateScriptInfoInOffCKBConfigTs,
-  validateTypescriptWorkspace,
-} from '../util';
+import { predefinedOffCKBConfigTsPath, currentExecPath, userOffCKBConfigPath, defaultLumosVersion } from '../cfg/const';
 import { execSync } from 'child_process';
-import fs from 'fs';
+import fs, { copyFileSync } from 'fs';
+import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
+import { validateTypescriptWorkspace } from '../util/validator';
+import { Network } from '../util/type';
 
 export function injectConfig() {
   const targetPath = currentExecPath;

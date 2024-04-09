@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { predefinedOffCKBConfigTsPath, dappTemplatePath, Network } from '../../cfg/const';
+import { predefinedOffCKBConfigTsPath, dappTemplatePath } from '../../cfg/const';
 import { config } from '@ckb-lumos/lumos';
-import { updateScriptInfoInOffCKBConfigTs } from '../../util';
-import { CKB } from '../../cfg/ckb';
+import { updateScriptInfoInOffCKBConfigTs } from '../../util/config';
+import { CKB } from '../../util/ckb';
+import { Network } from '../../util/type';
 
 export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, secondTxHashInGenesisBlock: string) {
   const devnetConfig: config.Config = {
