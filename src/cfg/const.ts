@@ -25,9 +25,9 @@ export const minimalRequiredCKBVersion = '0.113.1';
 export const defaultLumosVersion = '0.21.0';
 
 // url
-export const dappTemplateGitRepoUserAndName = 'nervosnetwork/docs.nervos.org';
+export const dappTemplateGitRepoUserAndName = 'retricsu/docs.nervos.org';
 export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserAndName}`;
-export const dappTemplateGitBranch = 'develop-v2';
+export const dappTemplateGitBranch = 'add-dapp-bare-template';
 export const dappTemplateGitFolder = 'examples';
 export const dappTemplateGitSelectOptionFile = 'options.json';
 

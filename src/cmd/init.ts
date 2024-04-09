@@ -9,6 +9,8 @@ import path from 'path';
 import { TemplateOption, copyFileSync, gitCloneAndDownloadFolderSync } from '../util';
 import select from '@inquirer/select';
 import { loadTemplateOpts } from '../util';
+import { updateVersionInTSFile } from '../util/file';
+const version = require('../../package.json').version;
 
 export function init(name: string, template: TemplateOption) {
   const targetPath = path.resolve(currentExecPath, name);
@@ -29,7 +31,11 @@ export async function initBare(name: string) {
   const bareTemplateOpt = opts.find((opt) => opt.type === 'template');
   if (!bareTemplateOpt) throw new Error('no valid bare template option!');
 
-  return init(name, bareTemplateOpt);
+  init(name, bareTemplateOpt);
+
+  // update the version
+  const targetPath = path.resolve(currentExecPath, name, "offckb.config.ts");
+  updateVersionInTSFile(version, targetPath);
 }
 
 export async function selectTemplate() {
