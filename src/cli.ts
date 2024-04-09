@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { installDependency } from './cmd/install';
-import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/genkey';
+import { installDependency } from './cmd/develop/install';
+import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/genkey';
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
-import { initChainIfNeeded } from './cmd/init-chain';
-import { writePredefinedDevnetLumosConfig } from './cmd/lumos-config';
+import { initChainIfNeeded } from './cmd/develop/init-chain';
+import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
 import { init, initBare, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
@@ -16,7 +16,7 @@ import { DeployOptions, deploy } from './cmd/deploy';
 import { updateConfig } from './cmd/update-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
-import { buildAccount } from './cmd/buildAccount';
+import { buildAccount } from './cmd/develop/build-account';
 const version = require('../package.json').version;
 const description = require('../package.json').description;
 

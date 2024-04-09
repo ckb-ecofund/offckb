@@ -1,15 +1,14 @@
 import { CKB } from '../cfg/ckb';
+import { Network, NetworkOption } from '../cfg/const';
 import { buildTestnetTxLink, validateNetworkOpt } from '../util';
 
-export interface TransferOptions {
-  network: 'devnet' | 'testnet' | 'mainnet';
-}
+export interface TransferOptions extends NetworkOption {}
 
 export async function transfer(
   privateKey: string,
   toAddress: string,
   amount: string,
-  opt: TransferOptions = { network: 'devnet' },
+  opt: TransferOptions = { network: Network.devnet },
 ) {
   const network = opt.network;
   validateNetworkOpt(network);

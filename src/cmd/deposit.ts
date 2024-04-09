@@ -1,14 +1,13 @@
 import { buildTestnetTxLink, validateNetworkOpt } from '../util';
 import { CKB } from '../cfg/ckb';
 import axios, { AxiosRequestConfig } from 'axios';
-import { generateHex } from './genkey';
+import { generateHex } from './develop/genkey';
 import { ckbDevnetMinerAccount } from '../cfg/account';
+import { Network, NetworkOption } from '../cfg/const';
 
-export interface DepositOptions {
-  network: 'devnet' | 'testnet' | 'mainnet';
-}
+export interface DepositOptions extends NetworkOption {}
 
-export async function deposit(toAddress: string, amount: string, opt: DepositOptions = { network: 'devnet' }) {
+export async function deposit(toAddress: string, amount: string, opt: DepositOptions = { network: Network.devnet }) {
   const network = opt.network;
   validateNetworkOpt(network);
 

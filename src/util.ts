@@ -229,7 +229,7 @@ export function validateNetworkOpt(network: string) {
     throw new Error('invalid network option, ' + network);
   }
 
-  if (network === 'mainnet') {
+  if (network === Network.mainnet) {
     console.log(
       'Mainnet not support yet. Please use CKB-CLI to operate on mainnet for better security. Check https://github.com/nervosnetwork/ckb-cli',
     );

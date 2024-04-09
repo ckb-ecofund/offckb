@@ -37,3 +37,7 @@ export enum Network {
   testnet = 'testnet',
   mainnet = 'mainnet',
 }
+
+export interface NetworkOption {
+  network: Network;
+}

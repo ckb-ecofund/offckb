@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { accountTargetDir } from '../cfg/const';
+import { accountTargetDir } from '../../cfg/const';
 import { Address, HashType, HexString, Script, hd, helpers } from '@ckb-lumos/lumos';
 import * as readline from 'readline';
 

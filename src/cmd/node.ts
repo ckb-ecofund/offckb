@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { ckbBinPath, devnetPath } from '../cfg/const';
-import { initChainIfNeeded } from './init-chain';
-import { installDependency } from './install';
+import { initChainIfNeeded } from './develop/init-chain';
+import { installDependency } from './develop/install';
 
 export async function node() {
   await installDependency();

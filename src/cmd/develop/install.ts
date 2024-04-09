@@ -6,7 +6,7 @@ import semver from 'semver';
 import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
-import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from '../cfg/const';
+import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from '../../cfg/const';
 
 const BINARY = ckbBinPath;
 const MINIMAL_VERSION = minimalRequiredCKBVersion;

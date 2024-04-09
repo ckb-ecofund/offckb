@@ -1,12 +1,11 @@
 import { BI } from '@ckb-lumos/lumos';
 import { CKB } from '../cfg/ckb';
 import { validateNetworkOpt } from '../util';
+import { Network, NetworkOption } from '../cfg/const';
 
-export interface BalanceOption {
-  network: 'devnet' | 'testnet' | 'mainnet';
-}
+export interface BalanceOption extends NetworkOption {}
 
-export async function balanceOf(address: string, opt: BalanceOption = { network: 'devnet' }) {
+export async function balanceOf(address: string, opt: BalanceOption = { network: Network.devnet }) {
   const network = opt.network;
   validateNetworkOpt(network);
 

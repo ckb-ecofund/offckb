@@ -2,6 +2,7 @@ import { Address, BI, Cell, Indexer, RPC, Script, WitnessArgs, commons, config, 
 import { blockchain, values } from '@ckb-lumos/base';
 import { bytes } from '@ckb-lumos/codec';
 import { readPredefinedDevnetLumosConfig, isValidNetworkString } from '../util';
+import { Network } from './const';
 const { ScriptValue } = values;
 
 export type Account = {
@@ -37,12 +38,12 @@ const networks = {
 };
 
 export class CKB {
-  network: 'devnet' | 'testnet' | 'mainnet';
+  network: Network;
   rpc_url: string;
   rpc: RPC;
   indexer: Indexer;
 
-  constructor(network: 'devnet' | 'testnet' | 'mainnet' = 'devnet') {
+  constructor(network: Network = Network.devnet) {
     if (!isValidNetworkString(network)) {
       throw new Error('invalid network option');
     }
@@ -72,10 +73,10 @@ export class CKB {
   }
 
   getLumosConfig() {
-    if (this.network === 'devnet') {
+    if (this.network === Network.devnet) {
       return readPredefinedDevnetLumosConfig();
     }
-    if (this.network === 'testnet') {
+    if (this.network === Network.testnet) {
       return config.predefined.AGGRON4;
     }
     return config.predefined.LINA;

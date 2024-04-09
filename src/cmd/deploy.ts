@@ -10,16 +10,20 @@ import {
   validateExecDappEnvironment,
   validateNetworkOpt,
 } from '../util';
-import { Network, currentExecPath, deployedContractInfoFolderPath, userOffCKBConfigPath } from '../cfg/const';
+import {
+  Network,
+  NetworkOption,
+  currentExecPath,
+  deployedContractInfoFolderPath,
+  userOffCKBConfigPath,
+} from '../cfg/const';
 import path from 'path';
 import { Account, CKB } from '../cfg/ckb';
 import { deployerAccount } from '../cfg/account';
 
-export interface DeployOptions {
-  network: 'devnet' | 'testnet' | 'mainnet';
-}
+export interface DeployOptions extends NetworkOption {}
 
-export async function deploy(opt: DeployOptions = { network: 'devnet' }) {
+export async function deploy(opt: DeployOptions = { network: Network.devnet }) {
   const network = opt.network as Network;
   validateNetworkOpt(network);
 

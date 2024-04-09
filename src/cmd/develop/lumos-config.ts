@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { predefinedOffCKBConfigTsPath, dappTemplatePath, Network } from '../cfg/const';
+import { predefinedOffCKBConfigTsPath, dappTemplatePath, Network } from '../../cfg/const';
 import { config } from '@ckb-lumos/lumos';
-import { updateScriptInfoInOffCKBConfigTs } from '../util';
-import { CKB } from '../cfg/ckb';
+import { updateScriptInfoInOffCKBConfigTs } from '../../util';
+import { CKB } from '../../cfg/ckb';
 
 export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, secondTxHashInGenesisBlock: string) {
   const devnetConfig: config.Config = {
@@ -108,7 +108,7 @@ export function devnetLumosConfigTemplate(cellBaseTxHashInGenesisBlock: string, 
 }
 
 export async function fetchDevnetLumosConfig() {
-  const ckb = new CKB('devnet');
+  const ckb = new CKB(Network.devnet);
   const rpc = ckb.rpc;
   const chainInfo = await rpc.getBlockchainInfo();
   const genesisBlock = await rpc.getBlockByNumber('0x0');
