@@ -34,7 +34,7 @@ export async function initBare(name: string) {
   init(name, bareTemplateOpt);
 
   // update the version
-  const targetPath = path.resolve(currentExecPath, name, "offckb.config.ts");
+  const targetPath = path.resolve(currentExecPath, name, 'offckb.config.ts');
   updateVersionInTSFile(version, targetPath);
 }
 

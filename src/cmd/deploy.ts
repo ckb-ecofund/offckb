@@ -21,9 +21,11 @@ import path from 'path';
 import { Account, CKB } from '../cfg/ckb';
 import { deployerAccount } from '../cfg/account';
 
-export interface DeployOptions extends NetworkOption {}
+export interface DeployOptions extends NetworkOption {
+  target: string | null | undefined;
+}
 
-export async function deploy(opt: DeployOptions = { network: Network.devnet }) {
+export async function deploy(opt: DeployOptions = { network: Network.devnet, target: null }) {
   const network = opt.network as Network;
   validateNetworkOpt(network);
 
@@ -33,6 +35,18 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet }) {
   const privateKey = deployerAccount.privkey;
   const lumosConfig = ckb.getLumosConfig();
   const from = CKB.generateAccountFromPrivateKey(privateKey, lumosConfig);
+
+  const targetFolder = opt.target;
+  if (targetFolder) {
+    const binFolder = path.resolve(currentExecPath, targetFolder);
+    const bins = listBinaryFilesInFolder(binFolder);
+    const binPaths = bins.map((bin) => path.resolve(binFolder, bin));
+    const results = await deployBinaries(binPaths, from, ckb);
+
+    // record the deployed contract infos
+    recordDeployResult(results, network);
+    return;
+  }
 
   // check if target workspace is valid
   try {
