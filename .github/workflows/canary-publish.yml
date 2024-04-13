@@ -22,15 +22,13 @@ jobs:
       - name: Build
         run: yarn run build
 
-      - name: Extract short commit ID
-        run: echo "::set-env name=SHORT_COMMIT_ID::$(git log -1 --pretty=format:%h)"
+      - name: Update package version
+        run: |
+          SHORT_COMMIT_ID=$(git log -1 --pretty=format:%h)
+          npm version prerelease --preid="canary-$SHORT_COMMIT_ID"
 
-      - name: Set package version
-        run: echo "VERSION=canary-${{ env.SHORT_COMMIT_ID }}" >> $GITHUB_ENV
-        
       - name: Canary release to npm
         run: |
           npm publish --access public --tag canary
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-          VERSION: ${{ env.VERSION }}
