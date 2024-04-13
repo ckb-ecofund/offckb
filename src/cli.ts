@@ -9,7 +9,11 @@ import { buildLumosConfig } from './cmd/build-lumos-config';
 import { init, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
+import { setUTF8EncodingForWindows } from './encoding';
 const version = require('../package.json').version;
+
+// fix windows terminal encoding of simplified chinese text
+setUTF8EncodingForWindows();
 
 const program = new Command();
 
