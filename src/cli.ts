@@ -9,7 +9,7 @@ import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
 import { init, initBare, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
-import { setUTF8EncodingForWindows } from './encoding';
+import { setUTF8EncodingForWindows } from './util/encoding';
 import { injectConfig } from './cmd/inject-config';
 import { DepositOptions, deposit } from './cmd/deposit';
 import { DeployOptions, deploy } from './cmd/deploy';
