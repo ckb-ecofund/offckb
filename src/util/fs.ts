@@ -101,7 +101,7 @@ export function updateVersionInTSFile(newVersion: string, filePath: string): voi
       // Replace the version value with the new value
       const updatedContents = fileContents.replace(
         regex,
-        `const offCKBConfig: OffCKBConfig = {\n  version: '${newVersion}',`,
+        `const offCKBConfig: OffCKBConfig = {\n  version: '${newVersion}'`,
       );
 
       // Write the updated contents back to the file
@@ -169,4 +169,24 @@ export function isBinaryFile(filePath: string): boolean {
 
 export function isAbsolutePath(filePath: string): boolean {
   return path.isAbsolute(filePath);
+}
+
+export function findFileInFolder(folderPath: string, fileName: string): string | null {
+  const files = fs.readdirSync(folderPath);
+
+  for (const file of files) {
+    const filePath = path.join(folderPath, file);
+    const stats = fs.statSync(filePath);
+
+    if (stats.isDirectory()) {
+      const foundFilePath = findFileInFolder(filePath, fileName);
+      if (foundFilePath) {
+        return foundFilePath;
+      }
+    } else if (file === fileName) {
+      return filePath;
+    }
+  }
+
+  return null;
 }
