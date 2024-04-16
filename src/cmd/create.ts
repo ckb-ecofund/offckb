@@ -25,7 +25,7 @@ export async function selectBareTemplate() {
       return {
         name: opt.name,
         value: opt.value,
-        description: opt.description,
+        description: `${opt.description}, \n[${opt.tag.toString()}]`,
       };
     }),
   });
