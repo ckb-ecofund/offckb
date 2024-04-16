@@ -39,7 +39,7 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
     const results = await deployBinaries(binPaths, from, ckb);
 
     // record the deployed contract infos
-    recordDeployResult(results, network);
+    recordDeployResult(results, network, false); // we don't update offCKB.config since we don't know where the file is
     return;
   }
 
@@ -78,7 +78,7 @@ type DeployBinaryReturnType = ReturnType<typeof deployBinary>;
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 type DeployedInterfaceType = UnwrapPromise<DeployBinaryReturnType>;
 
-async function recordDeployResult(results: DeployedInterfaceType[], network: Network) {
+async function recordDeployResult(results: DeployedInterfaceType[], network: Network, updateOffCKBConfig = true) {
   if (results.length === 0) {
     return;
   }
@@ -96,11 +96,18 @@ async function recordDeployResult(results: DeployedInterfaceType[], network: Net
   }
 
   // update lumos config in offckb.config.ts
-  const newLumosConfig = buildFullLumosConfig(network);
-  updateScriptInfoInOffCKBConfigTs(newLumosConfig, userOffCKBConfigPath, network);
+  if (updateOffCKBConfig) {
+    const newLumosConfig = buildFullLumosConfig(network);
+    updateScriptInfoInOffCKBConfigTs(newLumosConfig, userOffCKBConfigPath, network);
+  }
+
+  console.log('done.');
 }
 
 async function deployBinaries(binPaths: string[], from: Account, ckb: CKB) {
+  if (binPaths.length === 0) {
+    console.log('No binary to deploy.');
+  }
   const results: DeployedInterfaceType[] = [];
   for (const bin of binPaths) {
     const result = await deployBinary(bin, from, ckb);
@@ -131,6 +138,7 @@ async function deployBinary(binPath: string, from: Account, ckb: CKB) {
   //todo: upgrade lumos
   // indexer.waitForSync has a bug, we use negative number to workaround.
   // the negative number presents the block difference from current tip to wait
+  console.log('wait 4 blocks..');
   await ckb.indexer.waitForSync(-4);
 
   return {

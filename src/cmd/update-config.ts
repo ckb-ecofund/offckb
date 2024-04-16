@@ -14,4 +14,5 @@ export function updateConfig() {
   updateScriptInfoInOffCKBConfigTs(devnetFullLumosConfig, userOffCKBConfigPath, Network.devnet);
   updateScriptInfoInOffCKBConfigTs(testnetFullLumosConfig, userOffCKBConfigPath, Network.testnet);
   updateScriptInfoInOffCKBConfigTs(mainnetFullLumosConfig, userOffCKBConfigPath, Network.mainnet);
+  console.log('offCKB config updated.');
 }
