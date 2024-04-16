@@ -6,13 +6,14 @@ import {
   dappTemplatePath,
 } from '../cfg/const';
 import path from 'path';
-import { copyFileSync, gitCloneAndDownloadFolderSync } from '../util';
 import select from '@inquirer/select';
-import { loadTemplateOpts } from '../util';
+import { TutorialOption, loadTutorialOpts } from '../util/template';
+import { copyFileSync } from '../util/fs';
+import { gitCloneAndDownloadFolderSync } from '../util/git';
 
-export function init(name: string, template: string) {
+export function init(name: string, template: TutorialOption) {
   const targetPath = path.resolve(currentExecPath, name);
-  const dappTemplateFolderPath = `${dappTemplateGitFolder}/${template}`;
+  const dappTemplateFolderPath = `${dappTemplateGitFolder}/${template.value}`;
   gitCloneAndDownloadFolderSync(dappTemplateGitUrl, dappTemplateGitBranch, dappTemplateFolderPath, targetPath);
 
   // add some common code files
@@ -25,11 +26,18 @@ export function init(name: string, template: string) {
 }
 
 export async function selectTemplate() {
-  const opts = await loadTemplateOpts();
+  const opts = await loadTutorialOpts();
+
   const answer = await select({
-    message: 'Select a Dapp template',
-    choices: opts,
+    message: 'Select an example dApp',
+    choices: opts.map((opt) => {
+      return {
+        name: opt.name,
+        value: opt.value,
+        description: opt.description,
+      };
+    }),
   });
 
-  return answer as string;
+  return opts.find((opt) => opt.value === answer)!;
 }
