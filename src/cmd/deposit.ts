@@ -34,7 +34,7 @@ export async function deposit(toAddress: string, amount: string, opt: DepositOpt
 }
 
 async function depositFromTestnetFaucet(ckbAddress: string, ckb: CKB) {
-  console.log('testnet faucet only supports fixed-amount claim. Start with 300000 CKB..');
+  console.log('testnet faucet only supports fixed-amount claim: 10,000 CKB');
 
   const lumosConfig = ckb.getLumosConfig();
   const randomAccountPrivateKey = '0x' + generateHex(64);
