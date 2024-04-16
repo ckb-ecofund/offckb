@@ -3,17 +3,19 @@ import { NetworkOption, Network } from '../util/type';
 import { buildTestnetTxLink } from '../util/link';
 import { validateNetworkOpt } from '../util/validator';
 
-export interface TransferOptions extends NetworkOption {}
+export interface TransferOptions extends NetworkOption {
+  privkey?: string | null;
+}
 
-export async function transfer(
-  privateKey: string,
-  toAddress: string,
-  amount: string,
-  opt: TransferOptions = { network: Network.devnet },
-) {
+export async function transfer(toAddress: string, amount: string, opt: TransferOptions = { network: Network.devnet }) {
   const network = opt.network;
   validateNetworkOpt(network);
 
+  if (opt.privkey == null) {
+    throw new Error('--privkey is required!');
+  }
+
+  const privateKey = opt.privkey;
   const ckb = new CKB(network);
   const lumosConfig = ckb.getLumosConfig();
   const from = CKB.generateAccountFromPrivateKey(privateKey, lumosConfig);

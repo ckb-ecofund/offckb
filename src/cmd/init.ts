@@ -12,6 +12,10 @@ import { copyFileSync, updateVersionInTSFile } from '../util/fs';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 const version = require('../../package.json').version;
 
+export interface InitOption {
+  bare?: boolean;
+}
+
 export function init(name: string, template: TemplateOption) {
   const targetPath = path.resolve(currentExecPath, name);
   const dappTemplateFolderPath = `${dappTemplateGitFolder}/${template.value}`;
