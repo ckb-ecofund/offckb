@@ -6,7 +6,13 @@ import path from 'path';
 import { Account, CKB } from '../util/ckb';
 import { deployerAccount } from '../cfg/account';
 import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
-import { listBinaryFilesInFolder, isFolderExists, readFileToUint8Array, convertFilenameToUppercase } from '../util/fs';
+import {
+  listBinaryFilesInFolder,
+  isFolderExists,
+  readFileToUint8Array,
+  convertFilenameToUppercase,
+  isAbsolutePath,
+} from '../util/fs';
 import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validator';
 
 export interface DeployOptions extends NetworkOption {
@@ -27,7 +33,7 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
 
   const targetFolder = opt.target;
   if (targetFolder) {
-    const binFolder = path.resolve(currentExecPath, targetFolder);
+    const binFolder = isAbsolutePath(targetFolder) ? targetFolder : path.resolve(currentExecPath, targetFolder);
     const bins = listBinaryFilesInFolder(binFolder);
     const binPaths = bins.map((bin) => path.resolve(binFolder, bin));
     const results = await deployBinaries(binPaths, from, ckb);
@@ -56,7 +62,10 @@ function getToDeployBinsPath() {
   const fileContent = fs.readFileSync(userOffCKBConfigPath, 'utf-8');
   const match = fileContent.match(/contractBinFolder:\s*['"]([^'"]+)['"]/);
   if (match && match[1]) {
-    const binFolderPath = path.resolve(currentExecPath, match[1]);
+    const contractBinFolderValue = match[1];
+    const binFolderPath = isAbsolutePath(contractBinFolderValue)
+      ? contractBinFolderValue
+      : path.resolve(currentExecPath, contractBinFolderValue);
     const bins = listBinaryFilesInFolder(binFolderPath);
     return bins.map((bin) => path.resolve(binFolderPath, bin));
   } else {

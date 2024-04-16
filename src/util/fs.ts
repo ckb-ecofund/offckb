@@ -166,3 +166,7 @@ export function isBinaryFile(filePath: string): boolean {
   }
   return false;
 }
+
+export function isAbsolutePath(filePath: string): boolean {
+  return path.isAbsolute(filePath);
+}
