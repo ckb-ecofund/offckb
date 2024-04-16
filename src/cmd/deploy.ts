@@ -11,6 +11,7 @@ import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validat
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
+  privkey?: string | null;
 }
 
 export async function deploy(opt: DeployOptions = { network: Network.devnet, target: null }) {
@@ -20,7 +21,7 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
   const ckb = new CKB(network);
 
   // we use deployerAccount to deploy contract by default
-  const privateKey = deployerAccount.privkey;
+  const privateKey = opt.privkey || deployerAccount.privkey;
   const lumosConfig = ckb.getLumosConfig();
   const from = CKB.generateAccountFromPrivateKey(privateKey, lumosConfig);
 

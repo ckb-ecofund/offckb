@@ -77,7 +77,8 @@ program
   .command('deploy')
   .description('deploy contracts to different networks, only supports devnet and testnet')
   .option('--network <network>', 'specify the network to deploy to', 'devnet')
-  .option('--target <network>', 'specify the relative bin target folder to deploy to')
+  .option('--target <target>', 'specify the relative bin target folder to deploy to')
+  .option('--privkey <privkey>', 'specify the private key to deploy scripts')
   .action((options: DeployOptions) => deploy(options));
 
 // Add commands meant for developers
