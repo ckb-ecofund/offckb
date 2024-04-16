@@ -6,7 +6,7 @@ import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/develop/init-chain';
 import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
-import { InitOption, init, initBare, selectTemplate } from './cmd/init';
+import { init, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -17,6 +17,7 @@ import { updateConfig } from './cmd/update-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
+import { create, selectBareTemplate } from './cmd/create';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -30,17 +31,20 @@ program.name('offckb').description(description).version(version);
 
 program
   .command('init [your-project-name]')
-  .description('Init a dapp template with lumos.js')
-  .option('--bare', 'Enable bare template mode')
-  .action(async (projectName: string, options: InitOption) => {
+  .description('Init a example dApp to learn and run')
+  .action(async (projectName: string) => {
     const name = projectName ?? 'my-awesome-ckb-dapp';
-    const isBare = options.bare || false; // Check if --bare option is present
-    if (isBare) {
-      return initBare(name);
-    }
-
     const template = await selectTemplate();
     return init(name, template);
+  });
+
+program
+  .command('create [your-project-name]')
+  .description('Create a new dApp from bare templates')
+  .action(async (projectName: string) => {
+    const name = projectName ?? 'my-first-ckb-project';
+    const template = await selectBareTemplate();
+    return create(name, template);
   });
 
 program.command('node').description('Use the CKB to start devnet').action(node);

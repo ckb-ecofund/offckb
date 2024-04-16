@@ -7,16 +7,11 @@ import {
 } from '../cfg/const';
 import path from 'path';
 import select from '@inquirer/select';
-import { TemplateOption, loadTemplateOpts } from '../util/template';
-import { copyFileSync, updateVersionInTSFile } from '../util/fs';
+import { TutorialOption, loadTutorialOpts } from '../util/template';
+import { copyFileSync } from '../util/fs';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
-const version = require('../../package.json').version;
 
-export interface InitOption {
-  bare?: boolean;
-}
-
-export function init(name: string, template: TemplateOption) {
+export function init(name: string, template: TutorialOption) {
   const targetPath = path.resolve(currentExecPath, name);
   const dappTemplateFolderPath = `${dappTemplateGitFolder}/${template.value}`;
   gitCloneAndDownloadFolderSync(dappTemplateGitUrl, dappTemplateGitBranch, dappTemplateFolderPath, targetPath);
@@ -30,23 +25,11 @@ export function init(name: string, template: TemplateOption) {
   console.log(`init CKB dapp project: ${targetPath}`);
 }
 
-export async function initBare(name: string) {
-  const opts = await loadTemplateOpts();
-  const bareTemplateOpt = opts.find((opt) => opt.type === 'template');
-  if (!bareTemplateOpt) throw new Error('no valid bare template option!');
-
-  init(name, bareTemplateOpt);
-
-  // update the version
-  const targetPath = path.resolve(currentExecPath, name, 'offckb.config.ts');
-  updateVersionInTSFile(version, targetPath);
-}
-
 export async function selectTemplate() {
-  const opts = await loadTemplateOpts();
+  const opts = await loadTutorialOpts();
 
   const answer = await select({
-    message: 'Select a Dapp template',
+    message: 'Select an example dApp',
     choices: opts.map((opt) => {
       return {
         name: opt.name,
