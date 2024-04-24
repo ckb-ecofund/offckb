@@ -27,7 +27,7 @@ export const defaultLumosVersion = '0.21.0';
 // url
 export const dappTemplateGitRepoUserAndName = 'nervosnetwork/docs.nervos.org';
 export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserAndName}`;
-export const dappTemplateGitBranch = 'v2';
+export const dappTemplateGitBranch = 'develop';
 export const dappTemplateGitFolder = 'examples';
 export const dappTemplateGitSelectOptionFile = 'options.json';
 export const bareTemplateGitSelectOptionFile = 'template.json';
