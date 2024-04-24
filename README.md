@@ -11,8 +11,8 @@
 - One-line command to start a devnet
 - no docker required
 - pre-funded test accounts
-- packed with the most useful scripts like Omnilock and Spore-contract
-- multiple minimal Dapp templates to learn and get your hands dirty
+- built-in scripts like [Omnilock](https://github.com/cryptape/omnilock) and [Spore-contract](https://github.com/sporeprotocol/spore-contract)
+- multiple minimal dApp templates to learn and get your hands dirty
 
 Start building on Nervos blockchain, right now, right away!
 
@@ -23,10 +23,11 @@ Start building on Nervos blockchain, right now, right away!
 - [Install](#install)
 - [Usage](#usage)
 - [Get started](#get-started)
-  - [Step 1: Create A Project](#step-1-create-a-project)
+- [Run A dApp Example](#run-a-dapp-example) 
+  - [Step 1: Select A dApp To Init](#step-1-select-a-dapp-to-init)
   - [Step 2: Start the Devnet](#step-2-start-the-devnet)
   - [Step 3: Access Pre-funded Accounts](#step-3-access-pre-funded-accounts)
-- [Dapp Templates](#dapp-templates)
+- [dApp Examples with Detailed Tutorial](#dapp-examples-with-detailed-tutorial)
   - [View and transfer balance](#view-and-transfer-balance)
   - [Write \& read on-chain messages](#write--read-on-chain-messages)
   - [Issue custom token via xUDT scripts](#issue-custom-token-via-xudt-scripts)
@@ -42,26 +43,55 @@ Start building on Nervos blockchain, right now, right away!
 npm install -g @offckb/cli
 ```
 
+*We recommand using [LTS](https://nodejs.org/en/download/package-manager) version of Node to run `offckb`*
+
 ## Usage
 
 ```sh
-offckb node # start the devnet of CKB, `ctrl-c` to stop running the chain
-offckb clean # clean the devnet data, needs to stop running the chain first
+Usage: offckb [options] [command]
 
-offckb init <project-name> # init a CKB Dapp typescript boilerplate from multiple templates
+ckb development network for your first try
 
-offckb accounts # list 20 accounts info with prefund CKB tokens
-offckb list-hashes # list built-in scripts hashes, equals `ckb list-hashes`
+Options:
+  -V, --version                                     output the version number
+  -h, --help                                        display help for command
+
+Commands:
+  init [your-project-name]                          Init a example dApp to learn and run
+  create [your-project-name]                        Create a new dApp from bare templates
+  node                                              Use the CKB to start devnet
+  clean                                             Clean the devnet data, need to stop running the chain first
+  accounts                                          Print account list info
+  list-hashes                                       Use the CKB to list blockchain scripts hashes
+  inject-config                                     Add offckb.config.ts to your workspace
+  update-config                                     Update offckb.config.ts in your workspace
+  deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
+  transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
+  balance [options] [toAddress]                     Check account balance, only devnet and testnet
+  deploy [options]                                  Deploy contracts to different networks, only supports devnet and testnet
+  help [command]                                    display help for command
 ```
+
+*Use `offckb [command] -h` to learn more about a specific command.*
 
 ## Get started
 
-### Step 1: Create A Project
+Create a new project from predefined boilerplates.
 
 ```sh
-offckb init my-awesome-ckb-dapp
+offckb create <your-project-name, eg:my-first-ckb-project>
+```
 
-## select the template for your boilerplate
+The boilerplate can be targeting on different CKB networks. Check README.md in the project to get started.
+
+## Run A dApp Example
+
+### Step 1: Select A dApp To Init
+
+```sh
+offckb init <your-project-name, eg:my-awesome-ckb-dapp>
+
+## Select an example dApp
 ? Select a dapp template (Use arrow keys)
 ❯ Transfer CKB
   Issue Coin With XUDT scripts
@@ -104,57 +134,66 @@ Open another terminal and check the accounts to use:
 ```sh
 offckb accounts
 
-# result
-Print account list, each account is funded with 42_000_000_00000000 capacity in the genesis block.
-[
-  {
-    privkey: '0x6109170b275a09ad54877b82f7d9930f88cab5717d484fb4741ae9d1dd078cd6',
-    pubkey: '0x02025fa7b61b2365aa459807b84df065f1949d58c0ae590ff22dd2595157bffefa',
-    lockScript: {
-      codeHash: '0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8',
-      hashType: 'type',
-      args: '0x8e42b1999f265a0078503c4acec4d5e134534297'
-    },
-    address: 'ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqvwg2cen8extgq8s5puft8vf40px3f599cytcyd8',
-    args: '0x8e42b1999f265a0078503c4acec4d5e134534297'
-  },
-  {
-    privkey: '0x9f315d5a9618a39fdc487c7a67a8581d40b045bd7a42d83648ca80ef3b2cb4a1',
-    pubkey: '0x026efa0579f09cc7c1129b78544f70098c90b2ab155c10746316f945829c034a2d',
-    lockScript: {
+# results
+
+#### ALL ACCOUNTS ARE FOR TEST AND DEVELOP ONLY  ####
+#### DON'T USE THESE ACCOUNTS ON MAINNET         ####
+#### OTHERWISE YOU WILL LOOSE YOUR MONEY         ####
+
+Print account list, each account is funded with 42_000_000_00000000 capacity in the devnet genesis block.
+
+- "#": 0
+address: ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqvwg2cen8extgq8s5puft8vf40px3f599cytcyd8
+privkey: 0x6109170b275a09ad54877b82f7d9930f88cab5717d484fb4741ae9d1dd078cd6
+pubkey: 0x02025fa7b61b2365aa459807b84df065f1949d58c0ae590ff22dd2595157bffefa
+lock_arg: 0x8e42b1999f265a0078503c4acec4d5e134534297
+lockScript:
+    codeHash: 0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
+    hashType: type
+    args: 0x8e42b1999f265a0078503c4acec4d5e134534297
+
+- "#": 1
+address: ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqt435c3epyrupszm7khk6weq5lrlyt52lg48ucew
+privkey: 0x9f315d5a9618a39fdc487c7a67a8581d40b045bd7a42d83648ca80ef3b2cb4a1
+pubkey: 0x026efa0579f09cc7c1129b78544f70098c90b2ab155c10746316f945829c034a2d
+lock_arg: 0x758d311c8483e0602dfad7b69d9053e3f917457d
+lockScript:
+    codeHash: 0x9bd7e06f3ecf4be0f2fcd2188b23f1b9fcc88e5d4b65a8637b17723bbda3cce8
+    hashType: type
+    args: 0x758d311c8483e0602dfad7b69d9053e3f917457d
 ```
 
-Copy some private keys and visit http://localhost:1234 to play your first CKB Dapp!
+Copy some private keys and visit http://localhost:1234 to play your first CKB dApp!
 
-## Dapp Templates
+## dApp Examples with Detailed Tutorial
 
-`offckb` packs some basic minimal Dapp templates for you to learn and get started with. By running `offckb init`, you can select the different Dapp templates to quickly set up a local Dapp project targeting the local blockchain with built-in scripts and accounts.
+`offckb` packs some basic minimal dApp examples for you to learn and get started with. By running `offckb init`, you can select the different dApp examples to quickly set up a local dApp project targeting the local blockchain with built-in scripts and accounts.
 
-The Dapp templates often involve interaction with some most useful smart contracts on CKB like xUDT/Spore/Omnilock. The best thing is those Dapp examples also come with detailed tutorial documents from [docs.nervos.org](https://docs.nervos.org/). The source codes of these templates are also maintained [here](https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples).
+The dApp examples often involve interaction with some most useful smart contracts on CKB like xUDT/Spore/Omnilock. The best thing is those dApp examples also come with detailed tutorial documents from [docs.nervos.org](https://docs.nervos.org/). The source codes of these templates are also maintained [here](https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples).
 
 ### View and transfer balance
 
-A simple Dapp to check CKB balance and transfer CKB.
+A simple dApp to check CKB balance and transfer CKB.
 
-[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/view-and-transfer-balance)
+[Tutorial](https://docs.nervos.org/docs/getting-started/transfer-ckb)
 
 ### Write & read on-chain messages
 
-A simple Dapp to issue your own token via XUDT scripts.
+A simple dApp to issue your own token via XUDT scripts.
 
-[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/write-and-read-on-chain-message)
+[Tutorial](https://docs.nervos.org/docs/getting-started/write-message)
 
 ### Issue custom token via xUDT scripts
 
-A simple Dapp to store & retrieve data from a Cell.
+A simple dApp to store & retrieve data from a Cell.
 
-[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/issue-custom-token)
+[Tutorial](https://docs.nervos.org/docs/getting-started/create-token)
 
 ### Create on-chain digital object via Spore protocol
 
-A simple Dapp to create on-chain digital objects with spore scripts.
+A simple dApp to create on-chain digital objects with spore scripts.
 
-[Tutorial](https://nervos-ckb-docs-git-develop-v2-cryptape.vercel.app/docs/dapp/create-nft)
+[Tutorial](https://docs.nervos.org/docs/getting-started/create-dob)
 
 ## Built-in scripts
 
@@ -180,7 +219,7 @@ detail informations about each account are recorded in the `account/account.json
 
 ## About Lumos
 
-`offckb` uses [Lumos](https://github.com/ckb-js/lumos) as the CKB Dapp framework to build the template projects.
+`offckb` uses [Lumos](https://github.com/ckb-js/lumos) as the CKB dApp framework to build the template projects.
 
 ## Contributing
 
