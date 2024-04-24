@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { accountTargetDir } from '../cfg/const';
+import { accountTargetDir } from '../../cfg/const';
 import { Address, HashType, HexString, Script, hd, helpers } from '@ckb-lumos/lumos';
 import * as readline from 'readline';
 
@@ -19,7 +19,7 @@ export function genkey() {
   console.log(`Generated ${numKeys} keys in keys file.`);
 }
 
-function generateHex(length: number) {
+export function generateHex(length: number) {
   const characters = 'abcdef0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {

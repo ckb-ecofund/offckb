@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import { devnetPath, devnetSourcePath } from '../cfg/const';
+import { devnetPath, devnetSourcePath } from '../../cfg/const';
 import path from 'path';
-import { copyFilesWithExclusion, isFolderExists } from '../util';
+import { isFolderExists, copyFilesWithExclusion } from '../../util/fs';
 
 export async function initChainIfNeeded() {
   if (!isFolderExists(devnetPath)) {
