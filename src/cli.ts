@@ -44,8 +44,8 @@ program
   .option('-s, --script', 'Only create the script project')
   .action(async (projectName: string, option: CreateOption) => {
     const name = projectName ?? 'my-first-ckb-project';
-    if (option.script){
-	return await createScriptProject(name);
+    if (option.script) {
+      return await createScriptProject(name);
     }
 
     const template = await selectBareTemplate();
