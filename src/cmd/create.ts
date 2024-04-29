@@ -11,10 +11,10 @@ export interface CreateOption {
   script: boolean;
 }
 
-export async function createScriptProject(name: string) {
+export function createScriptProject(name: string) {
   const cmd = `cargo generate gh:cryptape/ckb-script-templates workspace --name ${name}`;
   try {
-    execSync(cmd);
+    execSync(cmd, { encoding: 'utf-8', stdio: 'inherit' });
   } catch (error: unknown) {
     console.error('create script project failed, ', (error as Error).message);
   }
