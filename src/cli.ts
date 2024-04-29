@@ -18,6 +18,7 @@ import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
+import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -91,6 +92,12 @@ program
   .option('--target <target>', 'Specify the relative bin target folder to deploy to')
   .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
   .action((options: DeployOptions) => deploy(options));
+
+program
+  .command('deployed-scripts')
+  .description('Show deployed contracts info on different networks, only supports devnet and testnet')
+  .option('--network <network>', 'Specify the network to deploy to', 'devnet')
+  .action((options: DeployedScriptOption) => deployedScripts(options));
 
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {
