@@ -17,7 +17,8 @@ import { updateConfig } from './cmd/update-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
-import { create, selectBareTemplate } from './cmd/create';
+import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
+import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -41,8 +42,13 @@ program
 program
   .command('create [your-project-name]')
   .description('Create a new dApp from bare templates')
-  .action(async (projectName: string) => {
+  .option('-s, --script', 'Only create the script project')
+  .action(async (projectName: string, option: CreateOption) => {
     const name = projectName ?? 'my-first-ckb-project';
+    if (option.script) {
+      return await createScriptProject(name);
+    }
+
     const template = await selectBareTemplate();
     return create(name, template);
   });
@@ -86,6 +92,12 @@ program
   .option('--target <target>', 'Specify the relative bin target folder to deploy to')
   .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
   .action((options: DeployOptions) => deploy(options));
+
+program
+  .command('deployed-scripts')
+  .description('Show deployed contracts info on different networks, only supports devnet and testnet')
+  .option('--network <network>', 'Specify the network to deploy to', 'devnet')
+  .action((options: DeployedScriptOption) => deployedScripts(options));
 
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {
