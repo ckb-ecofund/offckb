@@ -76,13 +76,25 @@ Commands:
 
 ## Get started
 
+### Create a full-stack Project 
+
 Create a new project from predefined boilerplates.
 
 ```sh
 offckb create <your-project-name, eg:my-first-ckb-project>
 ```
 
-The boilerplate can be targeting on different CKB networks. Check README.md in the project to get started.
+The boilerplate can be targeting on different CKB networks. Check [README.md](https://github.com/nervosnetwork/docs.nervos.org/blob/develop/examples/remix-vite-template/readme.md) in the project to get started.
+
+### Create a script-only Project
+
+You can create a new script project without a frontend. This is useful when you only want to develop smart contracts for CKB.
+
+```sh
+offckb create <your-project-name> --script
+```
+
+Note: you need to have rust/cargo/cargo-generate/clang 16+ installed in your environment to use this command. offckb doesn't do anything really, it just call [ckb-script-template](https://github.com/cryptape/ckb-script-tempaltes) to do all the magic. 
 
 ## Run A dApp Example
 
