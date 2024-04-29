@@ -17,7 +17,7 @@ import { updateConfig } from './cmd/update-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
-import { create, selectBareTemplate } from './cmd/create';
+import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -41,8 +41,13 @@ program
 program
   .command('create [your-project-name]')
   .description('Create a new dApp from bare templates')
-  .action(async (projectName: string) => {
+  .option('-s, --script', 'Only create the script project')
+  .action(async (projectName: string, option: CreateOption) => {
     const name = projectName ?? 'my-first-ckb-project';
+    if (option.script){
+	return await createScriptProject(name);
+    }
+
     const template = await selectBareTemplate();
     return create(name, template);
   });

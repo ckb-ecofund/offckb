@@ -4,7 +4,21 @@ import { findFileInFolder, updateVersionInTSFile } from '../util/fs';
 import { BareTemplateOption, loadBareTemplateOpts } from '../util/template';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
+import { execSync } from 'child_process';
 const version = require('../../package.json').version;
+
+export interface CreateOption {
+    script: boolean;
+}
+
+export async function createScriptProject(name: string){
+    const cmd = `cargo generate gh:cryptape/ckb-script-templates workspace --name ${name}`;
+    try{
+	execSync(cmd);
+    }catch(error: unknown){
+	console.error("create script project failed, ", (error as Error).message);
+    }
+}
 
 export async function create(name: string, template: BareTemplateOption) {
   const targetPath = path.resolve(currentExecPath, name);
