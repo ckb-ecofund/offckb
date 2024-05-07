@@ -23,7 +23,9 @@ Start building on Nervos blockchain, right now, right away!
 - [Install](#install)
 - [Usage](#usage)
 - [Get started](#get-started)
-- [Run A dApp Example](#run-a-dapp-example) 
+  - [Create a full-stack Project](#create-a-full-stack-project)
+  - [Create a script-only Project](#create-a-script-only-project)
+- [Run A dApp Example](#run-a-dapp-example)
   - [Step 1: Select A dApp To Init](#step-1-select-a-dapp-to-init)
   - [Step 2: Start the Devnet](#step-2-start-the-devnet)
   - [Step 3: Access Pre-funded Accounts](#step-3-access-pre-funded-accounts)
@@ -64,7 +66,7 @@ Commands:
   accounts                                          Print account list info
   list-hashes                                       Use the CKB to list blockchain scripts hashes
   inject-config                                     Add offckb.config.ts to your workspace
-  update-config                                     Update offckb.config.ts in your workspace
+  sync-config                                       sync offckb.config.ts in your workspace
   deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
   transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
   balance [options] [toAddress]                     Check account balance, only devnet and testnet
@@ -74,6 +76,13 @@ Commands:
 ```
 
 *Use `offckb [command] -h` to learn more about a specific command.*
+
+Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
+
+```sh
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+npm install -g @offckb/cli
+```
 
 ## Get started
 
