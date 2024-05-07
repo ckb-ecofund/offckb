@@ -77,6 +77,13 @@ Commands:
 
 *Use `offckb [command] -h` to learn more about a specific command.*
 
+Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
+
+```sh
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+npm install -g @offckb/cli
+```
+
 ## Get started
 
 ### Create a full-stack Project 
