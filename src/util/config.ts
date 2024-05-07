@@ -3,6 +3,15 @@ import * as path from 'path';
 import { dappTemplatePath, deployedContractInfoFolderPath } from '../cfg/const';
 import { config } from '@ckb-lumos/lumos';
 import { Network } from './type';
+const version = require('../../package.json').version;
+
+export function updateOffCKBConfigVersion(filePath: string) {
+  const versionTarget = 'update-me-offckb-config-version';
+  let fileContent = fs.readFileSync(filePath, 'utf-8');
+  fileContent = fileContent.replace(versionTarget, version);
+  // Write the updated content back to the file
+  fs.writeFileSync(filePath, fileContent, 'utf-8');
+}
 
 export function updateScriptInfoInOffCKBConfigTs(newConfig: config.Config, filePath: string, network: Network): void {
   // Read the content of the offckb.config.ts file
