@@ -3,7 +3,7 @@ import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/
 import { Network } from '../util/type';
 import { validateExecDappEnvironment } from '../util/validator';
 
-export function updateConfig() {
+export function syncConfig() {
   validateExecDappEnvironment();
 
   // update the offckb.config.ts file in users workspace
