@@ -13,7 +13,7 @@ import { setUTF8EncodingForWindows } from './util/encoding';
 import { injectConfig } from './cmd/inject-config';
 import { DepositOptions, deposit } from './cmd/deposit';
 import { DeployOptions, deploy } from './cmd/deploy';
-import { updateConfig } from './cmd/update-config';
+import { syncConfig } from './cmd/sync-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
@@ -58,7 +58,7 @@ program.command('clean').description('Clean the devnet data, need to stop runnin
 program.command('accounts').description('Print account list info').action(accounts);
 program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
 program.command('inject-config').description('Add offckb.config.ts to your workspace').action(injectConfig);
-program.command('update-config').description('Update offckb.config.ts in your workspace').action(updateConfig);
+program.command('sync-config').description('Sync offckb.config.ts in your workspace').action(syncConfig);
 
 program
   .command('deposit [toAddress] [amountInShannon]')
