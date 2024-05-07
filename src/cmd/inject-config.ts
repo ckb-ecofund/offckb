@@ -2,18 +2,19 @@ import path from 'path';
 import { predefinedOffCKBConfigTsPath, currentExecPath, userOffCKBConfigPath, defaultLumosVersion } from '../cfg/const';
 import { execSync } from 'child_process';
 import fs, { copyFileSync } from 'fs';
-import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
+import { buildFullLumosConfig, updateOffCKBConfigVersion, updateScriptInfoInOffCKBConfigTs } from '../util/config';
 import { validateTypescriptWorkspace } from '../util/validator';
 import { Network } from '../util/type';
 
 export function injectConfig() {
-  const targetPath = currentExecPath;
-
   validateTypescriptWorkspace();
 
   // inject the offckb.config.ts file into users workspace
   // copy config template
-  copyFileSync(predefinedOffCKBConfigTsPath, targetPath);
+  copyFileSync(predefinedOffCKBConfigTsPath, userOffCKBConfigPath);
+  // update the version in the offckb.config.ts
+  updateOffCKBConfigVersion(userOffCKBConfigPath);
+
   // update the config
   const devnetFullLumosConfig = buildFullLumosConfig(Network.devnet);
   const testnetFullLumosConfig = buildFullLumosConfig(Network.testnet);
@@ -35,7 +36,7 @@ export function injectConfig() {
   const indexer = offCKB.indexer;
   const rpc = offCKB.rpc;
 
-Check example at https://github.com/nervosnetwork/docs.nervos.org/tree/develop-v2/examples/create-dob
+Check example at https://github.com/nervosnetwork/docs.nervos.org/tree/develop/examples/simple-transfer
   `);
 }
 
