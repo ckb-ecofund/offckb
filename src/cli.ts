@@ -6,7 +6,6 @@ import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/develop/init-chain';
 import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
-import { init, selectTemplate } from './cmd/init';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -29,15 +28,6 @@ setUTF8EncodingForWindows();
 const program = new Command();
 
 program.name('offckb').description(description).version(version);
-
-program
-  .command('init [your-project-name]')
-  .description('Init a example dApp to learn and run')
-  .action(async (projectName: string) => {
-    const name = projectName ?? 'my-awesome-ckb-dapp';
-    const template = await selectTemplate();
-    return init(name, template);
-  });
 
 program
   .command('create [your-project-name]')

@@ -5,6 +5,4 @@ ckb/devnet/data/
 data/
 dist/
 .vscode
-templates/*/ckb.ts
-templates/*/config.json
 templates/temp-clone-folder
