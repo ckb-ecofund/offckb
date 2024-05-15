@@ -94,10 +94,10 @@ const lumosConfig: config.Config = {
       DEP_TYPE: 'code',
     },
     ALWAYS_SUCCESS: {
-      CODE_HASH: '0x99fec0913973df203da92189a52da99ff1ac87d6628e47bb94c9a52b289b4864',
-      HASH_TYPE: 'data2',
-      TX_HASH: '0x11ab1fed0dfca25e99f3caa5bb7339d0bfb58e936f98a44c9f0f7f05e760e2af',
-      INDEX: '0x0',
+      CODE_HASH: '0xbb4469004225b39e983929db71fe2253cba1d49a76223e9e1d212cdca1f79f28',
+      HASH_TYPE: 'type',
+      TX_HASH: '0x1dbed8dcfe0f18359c65c5e9546fd15cd69de73ea0a502345be30180649c9467',
+      INDEX: '0x9',
       DEP_TYPE: 'code',
     },
     SPORE: {
@@ -253,7 +253,7 @@ const mainnetLumosConfig: config.Config = {
 const offCKBConfig: OffCKBConfig = {
   version: '0.2.2',
   lumosVersion: '0.21.0',
-  contractBinFolder: '../../build/release',
+  contractBinFolder: '../build/release',
   network: {
     devnet: {
       lumosConfig,

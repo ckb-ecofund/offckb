@@ -25,7 +25,7 @@ export interface OffCKBConfig {
 function readEnvNetwork(): 'devnet' | 'testnet' | 'mainnet' {
   // you may need to update the env method
   // according to your frontend framework
-  const defaultNetwork = 'testnet';
+  const defaultNetwork = 'devnet';
   let network = defaultNetwork;
   if (typeof window != null) {
     //@ts-ignore
@@ -248,9 +248,9 @@ const mainnetLumosConfig: config.Config = {
 // ---end of mainnet lumos config---
 
 const offCKBConfig: OffCKBConfig = {
-  version: '0.1.0-rc7',
+  version: '0.2.2',
   lumosVersion: '0.21.0',
-  contractBinFolder: '../../build/release',
+  contractBinFolder: '../build/release',
   network: {
     devnet: {
       lumosConfig,

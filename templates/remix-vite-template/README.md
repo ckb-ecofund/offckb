@@ -9,7 +9,7 @@ Offckb does not do the magic. It just wraps the new CKB smart contract template 
 
 ## Smart contract development
 
-By default, this template comes with a single simple smart contract `always-success`: `contracts/always-success/src/main.rs`.
+By default, this template comes with a single simple smart contract `hello-world`: `contracts/hello-world/src/main.rs`.
 
 The smart contract is written in Rust lang. In order to develop, the following dependencies are required:
 
@@ -38,6 +38,12 @@ run test:
 
 ```sh
 make test
+```
+
+run test with contract-debug logs:
+
+```sh
+cargo test -- --nocapture
 ```
 
 For more detail, check out [ckb-script-templates](https://github.com/cryptape/ckb-script-templates)

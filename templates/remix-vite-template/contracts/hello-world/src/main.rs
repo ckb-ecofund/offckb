@@ -12,7 +12,7 @@ ckb_std::entry!(program_entry);
 default_alloc!();
 
 pub fn program_entry() -> i8 {
-    ckb_std::debug!("This is a sample contract!");
+    ckb_std::debug!("Hello world! This is a sample contract!");
 
     0
 }
