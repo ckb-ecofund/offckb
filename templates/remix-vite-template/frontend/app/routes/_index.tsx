@@ -39,7 +39,7 @@ export default function Index() {
       </li>
 
       <p>CKB indexer url: {ckbIndexerUrl}</p>
-      <p>HELLO_WORLD Script code hash: {helloWorldCodeHash ? helloWorldCodeHash : "Not Found, deploy script first."}</p>
+      <p>HELLO_WORLD Script code hash: {helloWorldCodeHash ? helloWorldCodeHash : 'Not Found, deploy script first.'}</p>
     </div>
   );
 }
