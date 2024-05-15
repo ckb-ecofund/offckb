@@ -10,11 +10,11 @@ use ckb_testtool::{
 const MAX_CYCLES: u64 = 10_000_000;
 
 #[test]
-fn test_always_success() {
+fn test_hello_world() {
     // deploy contract
     let mut context = Context::default();
     let loader = Loader::default();
-    let my_contract_bin = loader.load_binary("always-success");
+    let my_contract_bin = loader.load_binary("hello-world");
     let my_contract_out_point = context.deploy_cell(my_contract_bin);
 
     // prepare scripts

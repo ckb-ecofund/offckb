@@ -29,13 +29,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "always-success"
-version = "0.1.0"
-dependencies = [
- "ckb-std",
-]
-
-[[package]]
 name = "anyhow"
 version = "1.0.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -691,6 +684,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1679e6ea370dee694f91f1dc469bf94cf8f52051d147aec3e1f9497c6fc22461"
 dependencies = [
  "winapi",
+]
+
+[[package]]
+name = "hello-world"
+version = "0.1.0"
+dependencies = [
+ "ckb-std",
 ]
 
 [[package]]

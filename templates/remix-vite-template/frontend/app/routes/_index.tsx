@@ -8,11 +8,13 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const [ckbIndexerUrl, setCkbIndexerUrl] = useState<string>();
+  const [helloWorldCodeHash, setHelloWorldCodeHash] = useState<string>();
 
   useEffect(() => {
     // use NETWORK env to switch to different CKB network with different indexer/rpc
     // eg: NETWORK=devnet yarn dev
     setCkbIndexerUrl(offckb.indexer.ckbIndexerUrl);
+    setHelloWorldCodeHash(offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.CODE_HASH);
   }, []);
 
   return (
@@ -37,6 +39,7 @@ export default function Index() {
       </li>
 
       <p>CKB indexer url: {ckbIndexerUrl}</p>
+      <p>HELLO_WORLD Script code hash: {helloWorldCodeHash ? helloWorldCodeHash : "Not Found, deploy script first."}</p>
     </div>
   );
 }
