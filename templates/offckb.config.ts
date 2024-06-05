@@ -1,28 +1,35 @@
 import { Indexer, RPC, config } from '@ckb-lumos/lumos';
 
+export type Network = 'devnet' | 'testnet' | 'mainnet';
+export type AddressPrefix = "ckb" | "ckt"; 
+
 export interface NetworkConfig {
   lumosConfig: config.Config;
   rpc_url: string;
   rpc: RPC;
   indexer: Indexer;
+  addressPrefix: AddressPrefix;
 }
 
 export interface OffCKBConfig {
-  version: string;
-  lumosVersion: string;
-  contractBinFolder: string;
-  network: {
+  readonly version: string;
+  readonly lumosVersion: string;
+  readonly contractBinFolder: string;
+  readonly networks: {
     devnet: NetworkConfig;
     testnet: NetworkConfig;
     mainnet: NetworkConfig;
   };
+  currentNetwork: Network;
   initializeLumosConfig: () => void;
   readonly rpc: RPC;
+  readonly rpcUrl: string;
   readonly indexer: Indexer;
   readonly lumosConfig: config.Config;
+  readonly addressPrefix: AddressPrefix;
 }
 
-function readEnvNetwork(): 'devnet' | 'testnet' | 'mainnet' {
+export function readEnvNetwork(): Network {
   // you may need to update the env method
   // according to your frontend framework
   const network = process.env.NETWORK;
@@ -33,7 +40,7 @@ function readEnvNetwork(): 'devnet' | 'testnet' | 'mainnet' {
     return defaultNetwork;
   }
 
-  return network as 'devnet' | 'testnet' | 'mainnet';
+  return network as Network;
 }
 
 // please do not alter the following structure
@@ -149,44 +156,64 @@ const offCKBConfig: OffCKBConfig = {
   version: 'update-me-offckb-config-version',
   lumosVersion: '0.22.2',
   contractBinFolder: '../build/release',
-  network: {
+  networks: {
     devnet: {
       lumosConfig,
       rpc_url: 'http://127.0.0.1:8114',
       rpc: new RPC('http://127.0.0.1:8114'),
       indexer: new Indexer('http://127.0.0.1:8114'),
+      addressPrefix: "ckt",
     },
     testnet: {
       lumosConfig: testnetLumosConfig,
       rpc_url: 'https://testnet.ckb.dev/rpc',
       rpc: new RPC('https://testnet.ckb.dev/rpc'),
       indexer: new Indexer('https://testnet.ckb.dev/rpc'),
+      addressPrefix: "ckt",
     },
     mainnet: {
       lumosConfig: mainnetLumosConfig,
       rpc_url: 'https://mainnet.ckb.dev/rpc',
       rpc: new RPC('https://mainnet.ckb.dev/rpc'),
       indexer: new Indexer('https://mainnet.ckb.dev/rpc'),
+      addressPrefix: "ckb"
     },
   },
-  initializeLumosConfig: () => {
+
+  initializeLumosConfig(){
     const network = readEnvNetwork();
-    const lumosConfig = offCKBConfig.network[network].lumosConfig;
+    const lumosConfig = this.networks[network].lumosConfig;
     return config.initializeConfig(lumosConfig);
   },
+
+  get currentNetwork(){
+    const network = readEnvNetwork();
+    return network; 
+  },
+
+  get addressPrefix(){
+    const network = readEnvNetwork();
+    return this.networks[network].addressPrefix;
+  },
+
+  get rpcUrl() {
+    const network = readEnvNetwork();
+    return this.networks[network].rpc_url;
+  },
+
   get rpc() {
     const network = readEnvNetwork();
-    return offCKBConfig.network[network].rpc;
+    return this.networks[network].rpc;
   },
 
   get indexer() {
     const network = readEnvNetwork();
-    return offCKBConfig.network[network].indexer;
+    return this.networks[network].indexer;
   },
 
   get lumosConfig() {
     const network = readEnvNetwork();
-    return offCKBConfig.network[network].lumosConfig;
+    return this.networks[network].lumosConfig;
   },
 };
 
