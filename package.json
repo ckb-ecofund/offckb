@@ -60,7 +60,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@ckb-lumos/lumos": "0.21.1",
+    "@ckb-lumos/lumos": "0.22.2",
     "@inquirer/prompts": "^4.1.0",
     "adm-zip": "^0.5.10",
     "axios": "^1.6.7",
