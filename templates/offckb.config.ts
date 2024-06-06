@@ -20,8 +20,8 @@ export interface OffCKBConfig {
     testnet: NetworkConfig;
     mainnet: NetworkConfig;
   };
-  currentNetwork: Network;
   initializeLumosConfig: () => void;
+  readonly currentNetwork: Network;
   readonly rpc: RPC;
   readonly rpcUrl: string;
   readonly indexer: Indexer;
