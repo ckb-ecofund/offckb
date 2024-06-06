@@ -1,7 +1,7 @@
 import { Indexer, RPC, config } from '@ckb-lumos/lumos';
 
 export type Network = 'devnet' | 'testnet' | 'mainnet';
-export type AddressPrefix = "ckb" | "ckt"; 
+export type AddressPrefix = 'ckb' | 'ckt';
 
 export interface NetworkConfig {
   lumosConfig: config.Config;
@@ -166,36 +166,36 @@ const offCKBConfig: OffCKBConfig = {
       rpc_url: 'http://127.0.0.1:8114',
       rpc: new RPC('http://127.0.0.1:8114'),
       indexer: new Indexer('http://127.0.0.1:8114'),
-      addressPrefix: "ckt",
+      addressPrefix: 'ckt',
     },
     testnet: {
       lumosConfig: testnetLumosConfig,
       rpc_url: 'https://testnet.ckb.dev/rpc',
       rpc: new RPC('https://testnet.ckb.dev/rpc'),
       indexer: new Indexer('https://testnet.ckb.dev/rpc'),
-      addressPrefix: "ckt",
+      addressPrefix: 'ckt',
     },
     mainnet: {
       lumosConfig: mainnetLumosConfig,
       rpc_url: 'https://mainnet.ckb.dev/rpc',
       rpc: new RPC('https://mainnet.ckb.dev/rpc'),
       indexer: new Indexer('https://mainnet.ckb.dev/rpc'),
-      addressPrefix: "ckb"
+      addressPrefix: 'ckb',
     },
   },
 
-  initializeLumosConfig(){
+  initializeLumosConfig() {
     const network = readEnvNetwork();
     const lumosConfig = this.networks[network].lumosConfig;
     return config.initializeConfig(lumosConfig);
   },
 
-  get currentNetwork(){
+  get currentNetwork() {
     const network = readEnvNetwork();
-    return network; 
+    return network;
   },
 
-  get addressPrefix(){
+  get addressPrefix() {
     const network = readEnvNetwork();
     return this.networks[network].addressPrefix;
   },

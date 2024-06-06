@@ -18,7 +18,10 @@ function WalletIcon({ wallet, className }: { wallet: ccc.Wallet; className?: str
 
 function Button(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <button {...props} className={`flex items-center rounded-full bg-orange-600 px-5 py-3 text-white ${props.className}`} />
+    <button
+      {...props}
+      className={`flex items-center rounded-full bg-orange-600 px-5 py-3 text-white ${props.className}`}
+    />
   );
 }
 
