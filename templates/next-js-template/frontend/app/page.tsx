@@ -1,123 +1,107 @@
 'use client';
 
-import Image from 'next/image';
 import offckb from '@/offckb.config';
 import { ccc } from '@ckb-ccc/connector-react';
 import Wallet from './wallet';
 
 export default function Home() {
+  const isScriptDeployed = offckb.lumosConfig.SCRIPTS['HELLO_WORLD'] != null;
   return (
     <ccc.Provider>
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-          <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-            Get started by editing&nbsp;
-            <code className="font-mono font-bold">app/page.tsx</code>
-          </p>
-          <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-            <a
-              className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By <Image src="/vercel.svg" alt="Vercel Logo" className="dark:invert" width={100} height={24} priority />
-            </a>
-          </div>
+      <div className="max-w-screen-md mx-auto mt-10">
+        <div className="text-3xl font-bold">Minimal Template for CKB DApp</div>
+        <div>
+          <a href="https://docs.nervos.org/docs/getting-started/quick-start" target="_blank" rel="noopener noreferrer">
+            Development docs
+          </a>
         </div>
 
-        <div className="relative z-[-1] place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-          <p>This is a simple CKB dApp boilerplate based on Next.js framework created by offckb.</p>
-          <hr />
-          <div className="my-4">
-            <p>
-              Current Network: {offckb.currentNetwork}, CKB rpc url: {offckb.rpcUrl}
-            </p>
-            <p>
-              HELLO_WORLD Script code hash:{' '}
-              {offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.CODE_HASH
-                ? offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.CODE_HASH
-                : 'Not Found, deploy script first.'}
-            </p>
-          </div>
-          <p>
-            Below is a simple CKB wallet connector powered by{' '}
+        <div className="my-6">
+          <div className="text-xl font-semibold my-2">Tech Stack</div>
+          <li>
+            <a target="_blank" href="https://github.com/cryptape/ckb-script-templates" rel="noreferrer">
+              ckb-scripts-template
+            </a>{' '}
+            for smart contract development in Rust
+          </li>
+          <li>
+            <a target="_blank" href="https://nextjs.org/" rel="noreferrer">
+              Next.js 
+            </a>{' '}
+            and{'  '}
+            <a target="_blank" href="https://github.com/ckb-js/lumos" rel="noreferrer">
+              Lumos
+            </a>{' '}
+            for off-chain Javascript frontend framework
+          </li>
+          <li>
             <a href="https://github.com/ckb-ecofund/ccc" target="_blank" rel="noopener noreferrer">
               CCC
+            </a>{' '}
+            for CKB wallet connector
+          </li>
+        </div>
+
+        <div className="my-6">
+          <div className="text-xl font-semibold my-2">CKB Blockchain</div>
+          <li>
+            Current Network: {offckb.currentNetwork}, Address Prefix: {offckb.addressPrefix}
+          </li>
+          <li>
+            CKB RPC URL:{' '}
+            <a href={offckb.rpcUrl} target="_blank" rel="noopener noreferrer">
+              {offckb.rpcUrl}
             </a>
-          </p>
+          </li>
+          <li>
+            Switch different networks with .env <a href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/frontend/.env" target="_blank" rel="noopener noreferrer">NEXT_PUBLIC_NETWORK</a>
+          </li>
         </div>
 
-        <Wallet />
-
-        <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className="mb-3 text-2xl font-semibold">
-              Docs{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
+        <div className="my-6">
+          <div className="text-xl font-semibold my-2">Smart Contract</div>
+          <div>
+            HELLO_WORLD Script{' '}
+            {isScriptDeployed ? (
+              <div>
+                <li>code_hash: {offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.CODE_HASH}</li>
+                <li>hash_type: {offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.HASH_TYPE}</li>
+                <li>
+                  outpoint: {offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.TX_HASH}:
+                  {offckb.lumosConfig.SCRIPTS['HELLO_WORLD']?.INDEX}
+                </li>
+              </div>
+            ) : (
+              <span>
+                Not Found,{' '}
+                <a
+                  href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/README.md#deploy-to-devnettestnet-with-offckb"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  deploy
+                </a>{' '}
+                it first.
               </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Find in-depth information about Next.js features and API.
-            </p>
-          </a>
+            )}
+          </div>
+        </div>
 
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className="mb-3 text-2xl font-semibold">
-              Learn{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
+        <div className="my-6">
+          <div className="text-xl font-semibold my-2">Wallet Connector</div>
+          <div className="text-left">
+            <Wallet />
+          </div>
+        </div>
 
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className="mb-3 text-2xl font-semibold">
-              Templates{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-sm opacity-50">Explore starter templates for Next.js.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2 className="mb-3 text-2xl font-semibold">
-              Deploy{' '}
-              <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-                -&gt;
-              </span>
-            </h2>
-            <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-              Instantly deploy your Next.js site to a shareable URL with Vercel.
-            </p>
+        <div className="my-12 text-gray-500 italic">
+          <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700" />
+          This template is created by{' '}
+          <a href="https://github.com/RetricSu/offckb" target="_blank" rel="noopener noreferrer">
+            offckb
           </a>
         </div>
-      </main>
+      </div>
     </ccc.Provider>
   );
 }
