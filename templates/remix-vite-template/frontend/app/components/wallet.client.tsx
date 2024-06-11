@@ -173,13 +173,13 @@ export function Wallet() {
   }, [offckb.currentNetwork]);
 
   return (
-    <div className="flex flex-col items-center justify-center p-24">
+    <div>
       {wallet ? (
         <>
           <WalletIcon wallet={wallet} className="mb-1" />
           <p className="mb-1">Connected to {wallet.name}</p>
           <p className="mb-1">{internalAddress}</p>
-          <p className="mb-1 text-balance break-all text-center">{address}</p>
+          <p className="mb-1 text-balance">{address}</p>
           <Sign />
           <Transfer />
           <Button className="mt-4" onClick={disconnect}>
