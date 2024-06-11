@@ -26,7 +26,7 @@ export default function Home() {
           </li>
           <li>
             <a target="_blank" href="https://nextjs.org/" rel="noreferrer">
-              Next.js 
+              Next.js
             </a>{' '}
             and{'  '}
             <a target="_blank" href="https://github.com/ckb-js/lumos" rel="noreferrer">
@@ -54,7 +54,14 @@ export default function Home() {
             </a>
           </li>
           <li>
-            Switch different networks with .env <a href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/frontend/.env" target="_blank" rel="noopener noreferrer">NEXT_PUBLIC_NETWORK</a>
+            Switch different networks with .env{' '}
+            <a
+              href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/frontend/.env"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              NEXT_PUBLIC_NETWORK
+            </a>
           </li>
         </div>
 

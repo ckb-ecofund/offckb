@@ -52,7 +52,14 @@ export default function Home() {
             </a>
           </li>
           <li>
-            Switch different networks with Env <a href="https://github.com/RetricSu/offckb/blob/master/templates/remix-vite-template/README.md#dapp-frontend-development" target="_blank" rel="noopener noreferrer">NETWORK</a>
+            Switch different networks with Env{' '}
+            <a
+              href="https://github.com/RetricSu/offckb/blob/master/templates/remix-vite-template/README.md#dapp-frontend-development"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              NETWORK
+            </a>
           </li>
         </div>
 
