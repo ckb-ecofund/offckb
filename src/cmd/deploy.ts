@@ -119,7 +119,7 @@ async function deployBinaries(binPaths: string[], from: Account, ckb: CKB) {
 async function deployBinary(binPath: string, from: Account, ckb: CKB) {
   const bin = await readFileToUint8Array(binPath);
   const contractName = convertFilenameToUppercase(binPath);
-  const result = await commons.deploy.generateDeployWithDataTx({
+  const result = await commons.deploy.generateDeployWithTypeIdTx({
     cellProvider: ckb.indexer,
     fromInfo: from.address,
     scriptBinary: bin,

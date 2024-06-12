@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, json, useLoaderData } from '@remix-run/react';
 import { Buffer } from 'buffer';
+import './root.css';
 
 globalThis.Buffer = Buffer as unknown as BufferConstructor;
 

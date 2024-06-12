@@ -59,20 +59,20 @@ cd frontend
 start the app:
 
 ```sh
-yarn && yarn dev
+npm i && npm run dev
 ```
 
 change the CKB blockchain network:
 
 ```sh
 export NETWORK=devnet # or testnet, mainnet
-yarn dev
+npm run dev
 ```
 
 or
 
 ```sh
-NETWORK=devnet yarn dev
+NETWORK=devnet npm run dev
 ```
 
 ## Deploy to devnet/testnet with offckb
@@ -117,7 +117,7 @@ and start your frontend Dapp targeting Testnet:
 
 ```sh
 cd frontend
-NETWORK=testnet yarn dev
+NETWORK=testnet npm run dev
 ```
 
 Note that the `mainnet` network is not supported in `offckb` since `offckb` is focusing on building a friendly development environment for CKB. To gain better security, it is recommended to use production tools like [ckb-cli](https://github.com/nervosnetwork/ckb-cli) to deploy smart contracts and do transactions for the CKB mainnet.

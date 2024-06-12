@@ -1,8 +1,6 @@
-'use client';
-
-import offckb from '@/offckb.config';
+import { Wallet } from './wallet.client';
 import { ccc } from '@ckb-ccc/connector-react';
-import Wallet from './wallet';
+import offckb from 'offckb.config';
 
 export default function Home() {
   const isScriptDeployed = offckb.lumosConfig.SCRIPTS['HELLO_WORLD'] != null;
@@ -25,8 +23,8 @@ export default function Home() {
             for smart contract development in Rust
           </li>
           <li>
-            <a target="_blank" href="https://nextjs.org/" rel="noreferrer">
-              Next.js
+            <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
+              remix-vite
             </a>{' '}
             and{'  '}
             <a target="_blank" href="https://github.com/ckb-js/lumos" rel="noreferrer">
@@ -54,13 +52,13 @@ export default function Home() {
             </a>
           </li>
           <li>
-            Switch different networks with .env{' '}
+            Switch different networks with Env{' '}
             <a
-              href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/frontend/.env"
+              href="https://github.com/RetricSu/offckb/blob/master/templates/remix-vite-template/README.md#dapp-frontend-development"
               target="_blank"
               rel="noopener noreferrer"
             >
-              NEXT_PUBLIC_NETWORK
+              NETWORK
             </a>
           </li>
         </div>
@@ -82,7 +80,7 @@ export default function Home() {
               <span>
                 Not Found,{' '}
                 <a
-                  href="https://github.com/RetricSu/offckb/blob/master/templates/next-js-template/README.md#deploy-to-devnettestnet-with-offckb"
+                  href="https://github.com/RetricSu/offckb/blob/master/templates/remix-vite-template/README.md#deploy-to-devnettestnet-with-offckb"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
