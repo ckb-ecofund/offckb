@@ -170,7 +170,7 @@ export function Wallet() {
 
   useEffect(() => {
     setClient(new WalletClient());
-  }, [offckb.currentNetwork]);
+  }, [offckb.currentNetwork, setClient]);
 
   return (
     <div>
