@@ -4,6 +4,8 @@ import offckb from '@/offckb.config';
 import { ccc } from '@ckb-ccc/connector-react';
 import Wallet from './wallet';
 
+offckb.initializeLumosConfig();
+
 export default function Home() {
   const isScriptDeployed = offckb.lumosConfig.SCRIPTS['HELLO_WORLD'] != null;
   return (
