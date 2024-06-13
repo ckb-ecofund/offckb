@@ -151,7 +151,7 @@ function Transfer() {
 }
 
 export default function Wallet() {
-  const { wallet, open, disconnect, setClient, status } = ccc.useCcc();
+  const { wallet, open, disconnect, setClient } = ccc.useCcc();
   const signer = ccc.useSigner();
 
   const [internalAddress, setInternalAddress] = useState('');
@@ -172,7 +172,7 @@ export default function Wallet() {
 
   useEffect(() => {
     setClient(new WalletClient());
-  }, [offckb.currentNetwork]);
+  }, [offckb.currentNetwork, setClient]);
 
   return (
     <div>
