@@ -84,7 +84,7 @@ function Transfer() {
             type="text"
             value={amount}
             onInput={(e) => setAmount(e.currentTarget.value)}
-            placeholder="Enter amount to transfer"
+            placeholder="Enter amount in CKB to transfer"
           />
           <textarea
             className="mt-1 rounded-3xl border border-black px-4 py-2"
