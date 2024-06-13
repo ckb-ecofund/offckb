@@ -1,6 +1,6 @@
 {
   "name": "@offckb/cli",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "ckb development network for your first try",
   "author": "Retric Su <retric@cryptape.com>",
   "license": "MIT",
