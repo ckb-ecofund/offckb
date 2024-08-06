@@ -1,5 +1,5 @@
 import * as path from 'path';
-
+// todo: move some to user settings
 // path
 export const currentExecPath = process.cwd();
 
