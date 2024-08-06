@@ -105,6 +105,10 @@ offckb config set proxy http://127.0.0.1:1086
 > save new settings
 offckb config get proxy
 > http://127.0.0.1:1086
+offckb config rm proxy
+> save new settings
+offckb config get proxy
+> No Proxy.
 ```
 
 ## Built-in scripts

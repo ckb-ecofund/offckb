@@ -4,6 +4,7 @@ import { Request } from '../util/request';
 export enum ConfigAction {
   get = 'get',
   set = 'set',
+  rm = 'rm',
 }
 
 export enum ConfigSection {
@@ -14,7 +15,8 @@ export async function Config(action: ConfigAction, section: ConfigSection, value
   if (action === ConfigAction.get) {
     switch (section) {
       case ConfigSection.proxy: {
-        const proxy = Request.proxy;
+        const settings = readSettings();
+        const proxy = settings.proxy;
         if (proxy == null) {
           console.log(`No Proxy.`);
           process.exit(0);
@@ -40,6 +42,19 @@ export async function Config(action: ConfigAction, section: ConfigSection, value
         } catch (error: unknown) {
           return console.error(`invalid proxyURL, `, (error as Error).message);
         }
+      }
+
+      default:
+        break;
+    }
+  }
+
+  if (action === ConfigAction.rm) {
+    switch (section) {
+      case ConfigSection.proxy: {
+        const settings = readSettings();
+        settings.proxy = undefined;
+        return writeSettings(settings);
       }
 
       default:
