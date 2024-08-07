@@ -4,8 +4,8 @@ import { ccc } from '@ckb-ccc/connector-react';
 import React, { useEffect, useState } from 'react';
 import { common } from '@ckb-lumos/common-scripts';
 import { TransactionSkeleton } from '@ckb-lumos/helpers';
-import offckb from '@/offckb.config';
-import { WalletClient } from './wallet-client';
+import offckb, { readEnvNetwork } from '@/offckb.config';
+import { buildCccClient } from './wallet-client';
 
 const { indexer } = offckb;
 
@@ -52,7 +52,7 @@ function Sign() {
             if (!signer) {
               return;
             }
-            setSignature(await signer.signMessage(messageToSign));
+            setSignature((await signer.signMessage(messageToSign)).signature);
           }}
         >
           Sign
@@ -171,7 +171,8 @@ export default function Wallet() {
   }, [signer]);
 
   useEffect(() => {
-    setClient(new WalletClient());
+    const network = readEnvNetwork();
+    setClient(buildCccClient(network));
   }, [offckb.currentNetwork, setClient]);
 
   return (
