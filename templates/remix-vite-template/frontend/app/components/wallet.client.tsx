@@ -29,7 +29,7 @@ function Sign() {
   const [signature, setSignature] = useState<string>('');
 
   return (
-    <>
+    <div className="my-6 mx-2">
       {signature !== '' ? (
         <>
           <p className="mb-1">Signature</p>
@@ -56,7 +56,7 @@ function Sign() {
           Sign
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -68,7 +68,7 @@ function Transfer() {
   const [data, setData] = useState<string>('');
 
   return (
-    <>
+    <div className="my-6 mx-2">
       {hash !== '' ? <p className="mb-1 w-full whitespace-normal text-balance break-all text-center">{hash}</p> : <></>}
       <div className="mb-1 flex items-center">
         <div className="flex flex-col">
@@ -144,7 +144,7 @@ function Transfer() {
           Transfer
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -177,12 +177,16 @@ export function Wallet() {
     <div>
       {wallet ? (
         <>
-          <WalletIcon wallet={wallet} className="mb-1" />
-          <p className="mb-1">Connected to {wallet.name}</p>
-          <p className="mb-1">{internalAddress}</p>
-          <p className="mb-1 text-balance">{address}</p>
+          <div className="my-6 mx-2">
+            <WalletIcon wallet={wallet} className="mb-1" />
+            <p className="mb-1">Connected to {wallet.name}</p>
+            <p className="mb-1">{internalAddress}</p>
+            <p className="mb-1 text-balance">{address}</p>
+          </div>
           <Sign />
+          <hr />
           <Transfer />
+          <hr />
           <Button className="mt-4" onClick={disconnect}>
             Disconnect
           </Button>
