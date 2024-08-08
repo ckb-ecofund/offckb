@@ -146,10 +146,10 @@ const lumosConfig: config.Config = {
 } as config.Config;
 // ---end of devnet lumos config---
 // ---testnet lumos config---
-const testnetLumosConfig: config.Config = { ...config.predefined.AGGRON4, ...{} } as config.Config;
+const testnetLumosConfig: config.Config = { ...config.TESTNET, ...{} } as config.Config;
 // ---end of testnet lumos config---
 // ---mainnet lumos config---
-const mainnetLumosConfig: config.Config = { ...config.predefined.LINA, ...{} } as config.Config;
+const mainnetLumosConfig: config.Config = { ...config.MAINNET, ...{} } as config.Config;
 // ---end of mainnet lumos config---
 
 const offCKBConfig: OffCKBConfig = {
