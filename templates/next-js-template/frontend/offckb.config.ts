@@ -154,7 +154,7 @@ const mainnetLumosConfig: config.Config = { ...config.predefined.LINA, ...{} } a
 
 const offCKBConfig: OffCKBConfig = {
   version: 'update-me-offckb-config-version',
-  lumosVersion: '0.22.2',
+  lumosVersion: '0.23.0',
   contractBinFolder: '../build/release',
   networks: {
     devnet: {
