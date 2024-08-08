@@ -15,7 +15,7 @@ use ckb_testtool::context::Context;
 fn test_hello() {
     // deploy contract
     let mut context = Context::default();
-    let contract_bin: Bytes = Loader::default().load_binary("hello");
+    let contract_bin: Bytes = Loader::default().load_binary("hello-world");
     let out_point = context.deploy_cell(contract_bin);
 
     // prepare scripts
