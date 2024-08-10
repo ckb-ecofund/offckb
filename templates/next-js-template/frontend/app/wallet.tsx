@@ -6,6 +6,10 @@ import { common } from '@ckb-lumos/common-scripts';
 import { TransactionSkeleton } from '@ckb-lumos/helpers';
 import offckb, { readEnvNetwork } from '@/offckb.config';
 import { buildCccClient } from './wallet-client';
+import {
+  registerCustomLockScriptInfos,
+} from "@ckb-lumos/common-scripts/lib/common";
+import { generateDefaultScriptInfos } from "@ckb-ccc/lumos-patches";
 
 const { indexer } = offckb;
 
@@ -104,23 +108,28 @@ function Transfer() {
             // Verify address
             await ccc.Address.fromString(transferTo, signer.client);
 
+            const fromAddresses = await signer.getAddresses();
             // === Composing transaction with Lumos ===
+            //@ts-expect-error "lockScriptInfo Type"
+            registerCustomLockScriptInfos(generateDefaultScriptInfos());
             let txSkeleton = new TransactionSkeleton({
               cellProvider: indexer,
             });
             txSkeleton = await common.transfer(
               txSkeleton,
-              [await signer.getRecommendedAddress()],
+              fromAddresses,
               transferTo,
               ccc.fixedPointFrom(amount),
               undefined,
               undefined,
+              {config: offckb.lumosConfig}
             );
             txSkeleton = await common.payFeeByFeeRate(
               txSkeleton,
-              [await signer.getRecommendedAddress()],
+              fromAddresses,
               BigInt(1500),
               undefined,
+              {config: offckb.lumosConfig}
             );
             // ======
 
@@ -130,7 +139,7 @@ function Transfer() {
             const dataBytes = (() => {
               try {
                 return ccc.bytesFrom(data);
-              } catch (e) {}
+              } catch (e) {alert((e as unknown as Error).message)}
 
               return ccc.bytesFrom(data, 'utf8');
             })();

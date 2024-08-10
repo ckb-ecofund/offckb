@@ -1,9 +1,12 @@
 import { ccc } from '@ckb-ccc/connector-react';
 import React, { useEffect, useState } from 'react';
-import { common } from '@ckb-lumos/common-scripts';
 import { TransactionSkeleton } from '@ckb-lumos/helpers';
 import offckb, { readEnvNetwork } from 'offckb.config';
 import { buildCccClient } from './wallet-client.client';
+import common, {
+  registerCustomLockScriptInfos,
+} from "@ckb-lumos/common-scripts/lib/common";
+import { generateDefaultScriptInfos } from "@ckb-ccc/lumos-patches";
 
 const { indexer } = offckb;
 
@@ -102,23 +105,28 @@ function Transfer() {
             // Verify address
             await ccc.Address.fromString(transferTo, signer.client);
 
+            const fromAddresses = await signer.getAddresses();
             // === Composing transaction with Lumos ===
+            //@ts-expect-error "lockScriptInfo Type"
+            registerCustomLockScriptInfos(generateDefaultScriptInfos());
             let txSkeleton = new TransactionSkeleton({
               cellProvider: indexer,
             });
             txSkeleton = await common.transfer(
               txSkeleton,
-              [await signer.getRecommendedAddress()],
+              fromAddresses,
               transferTo,
               ccc.fixedPointFrom(amount),
               undefined,
               undefined,
+              {config: offckb.lumosConfig}
             );
             txSkeleton = await common.payFeeByFeeRate(
               txSkeleton,
-              [await signer.getRecommendedAddress()],
+              fromAddresses,
               BigInt(1500),
               undefined,
+              {config: offckb.lumosConfig}
             );
             // ======
 
