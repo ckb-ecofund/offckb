@@ -6,10 +6,8 @@ import { common } from '@ckb-lumos/common-scripts';
 import { TransactionSkeleton } from '@ckb-lumos/helpers';
 import offckb, { readEnvNetwork } from '@/offckb.config';
 import { buildCccClient } from './wallet-client';
-import {
-  registerCustomLockScriptInfos,
-} from "@ckb-lumos/common-scripts/lib/common";
-import { generateDefaultScriptInfos } from "@ckb-ccc/lumos-patches";
+import { registerCustomLockScriptInfos } from '@ckb-lumos/common-scripts/lib/common';
+import { generateDefaultScriptInfos } from '@ckb-ccc/lumos-patches';
 
 const { indexer } = offckb;
 
@@ -122,15 +120,11 @@ function Transfer() {
               ccc.fixedPointFrom(amount),
               undefined,
               undefined,
-              {config: offckb.lumosConfig}
+              { config: offckb.lumosConfig },
             );
-            txSkeleton = await common.payFeeByFeeRate(
-              txSkeleton,
-              fromAddresses,
-              BigInt(1500),
-              undefined,
-              {config: offckb.lumosConfig}
-            );
+            txSkeleton = await common.payFeeByFeeRate(txSkeleton, fromAddresses, BigInt(1500), undefined, {
+              config: offckb.lumosConfig,
+            });
             // ======
 
             const tx = ccc.Transaction.fromLumosSkeleton(txSkeleton);
@@ -139,7 +133,9 @@ function Transfer() {
             const dataBytes = (() => {
               try {
                 return ccc.bytesFrom(data);
-              } catch (e) {alert((e as unknown as Error).message)}
+              } catch (e) {
+                alert((e as unknown as Error).message);
+              }
 
               return ccc.bytesFrom(data, 'utf8');
             })();
@@ -188,14 +184,13 @@ export default function Wallet() {
     <div>
       {wallet ? (
         <>
-                  <div className="my-6 mx-2">
-                  <WalletIcon wallet={wallet} className="mb-1" />
-          <p className="mb-1">Connected to {wallet.name}</p>
-          <p className="mb-1">{internalAddress}</p>
-          <p className="mb-1 text-balance">{address}</p>
+          <div className="my-6 mx-2">
+            <WalletIcon wallet={wallet} className="mb-1" />
+            <p className="mb-1">Connected to {wallet.name}</p>
+            <p className="mb-1">{internalAddress}</p>
+            <p className="mb-1 text-balance">{address}</p>
+          </div>
 
-                  </div>
-          
           <Sign />
           <hr />
           <Transfer />
