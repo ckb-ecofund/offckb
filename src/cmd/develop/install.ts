@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,6 +6,7 @@ import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
 import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from '../../cfg/const';
+import { Request } from '../../util/request';
 
 const BINARY = ckbBinPath;
 const MINIMAL_VERSION = minimalRequiredCKBVersion;
@@ -55,7 +55,7 @@ export async function downloadBinaryAndUnzip() {
 
 export async function downloadAndSaveCKBBinary(tempFilePath: string) {
   const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
-  const response = await axios.get(downloadURL, {
+  const response = await Request.get(downloadURL, {
     responseType: 'arraybuffer',
   });
   fs.writeFileSync(tempFilePath, response.data);

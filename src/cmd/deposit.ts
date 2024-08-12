@@ -1,10 +1,11 @@
 import { CKB } from '../util/ckb';
-import axios, { AxiosRequestConfig } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 import { generateHex } from './develop/genkey';
 import { ckbDevnetMinerAccount } from '../cfg/account';
 import { NetworkOption, Network } from '../util/type';
 import { buildTestnetTxLink } from '../util/link';
 import { validateNetworkOpt } from '../util/validator';
+import { Request } from '../util/request';
 
 export interface DepositOptions extends NetworkOption {}
 
@@ -83,7 +84,7 @@ async function sendClaimRequest(toAddress: string) {
   };
 
   try {
-    const response = await axios(config);
+    const response = await Request.send(config);
     console.log('send claim request, status: ', response.status); // Handle the response data here
   } catch (error) {
     console.error('Error:', error);

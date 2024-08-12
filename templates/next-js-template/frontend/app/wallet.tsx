@@ -4,8 +4,10 @@ import { ccc } from '@ckb-ccc/connector-react';
 import React, { useEffect, useState } from 'react';
 import { common } from '@ckb-lumos/common-scripts';
 import { TransactionSkeleton } from '@ckb-lumos/helpers';
-import offckb from '@/offckb.config';
-import { WalletClient } from './wallet-client';
+import offckb, { readEnvNetwork } from '@/offckb.config';
+import { buildCccClient } from './wallet-client';
+import { registerCustomLockScriptInfos } from '@ckb-lumos/common-scripts/lib/common';
+import { generateDefaultScriptInfos } from '@ckb-ccc/lumos-patches';
 
 const { indexer } = offckb;
 
@@ -31,7 +33,7 @@ function Sign() {
   const [signature, setSignature] = useState<string>('');
 
   return (
-    <>
+    <div className="my-6 mx-2">
       {signature !== '' ? (
         <>
           <p className="mb-1">Signature</p>
@@ -52,13 +54,13 @@ function Sign() {
             if (!signer) {
               return;
             }
-            setSignature(await signer.signMessage(messageToSign));
+            setSignature((await signer.signMessage(messageToSign)).signature);
           }}
         >
           Sign
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -70,7 +72,7 @@ function Transfer() {
   const [data, setData] = useState<string>('');
 
   return (
-    <>
+    <div className="my-6 mx-2">
       {hash !== '' ? <p className="mb-1 w-full whitespace-normal text-balance break-all text-center">{hash}</p> : <></>}
       <div className="mb-1 flex items-center">
         <div className="flex flex-col">
@@ -104,24 +106,25 @@ function Transfer() {
             // Verify address
             await ccc.Address.fromString(transferTo, signer.client);
 
+            const fromAddresses = await signer.getAddresses();
             // === Composing transaction with Lumos ===
+            //@ts-expect-error "lockScriptInfo Type"
+            registerCustomLockScriptInfos(generateDefaultScriptInfos());
             let txSkeleton = new TransactionSkeleton({
               cellProvider: indexer,
             });
             txSkeleton = await common.transfer(
               txSkeleton,
-              [await signer.getRecommendedAddress()],
+              fromAddresses,
               transferTo,
               ccc.fixedPointFrom(amount),
               undefined,
               undefined,
+              { config: offckb.lumosConfig },
             );
-            txSkeleton = await common.payFeeByFeeRate(
-              txSkeleton,
-              [await signer.getRecommendedAddress()],
-              BigInt(1500),
-              undefined,
-            );
+            txSkeleton = await common.payFeeByFeeRate(txSkeleton, fromAddresses, BigInt(1500), undefined, {
+              config: offckb.lumosConfig,
+            });
             // ======
 
             const tx = ccc.Transaction.fromLumosSkeleton(txSkeleton);
@@ -130,7 +133,9 @@ function Transfer() {
             const dataBytes = (() => {
               try {
                 return ccc.bytesFrom(data);
-              } catch (e) {}
+              } catch (e) {
+                alert((e as unknown as Error).message);
+              }
 
               return ccc.bytesFrom(data, 'utf8');
             })();
@@ -146,7 +151,7 @@ function Transfer() {
           Transfer
         </Button>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -171,19 +176,25 @@ export default function Wallet() {
   }, [signer]);
 
   useEffect(() => {
-    setClient(new WalletClient());
+    const network = readEnvNetwork();
+    setClient(buildCccClient(network));
   }, [offckb.currentNetwork, setClient]);
 
   return (
     <div>
       {wallet ? (
         <>
-          <WalletIcon wallet={wallet} className="mb-1" />
-          <p className="mb-1">Connected to {wallet.name}</p>
-          <p className="mb-1">{internalAddress}</p>
-          <p className="mb-1 text-balance">{address}</p>
+          <div className="my-6 mx-2">
+            <WalletIcon wallet={wallet} className="mb-1" />
+            <p className="mb-1">Connected to {wallet.name}</p>
+            <p className="mb-1">{internalAddress}</p>
+            <p className="mb-1 text-balance">{address}</p>
+          </div>
+
           <Sign />
+          <hr />
           <Transfer />
+          <hr />
           <Button className="mt-4" onClick={disconnect}>
             Disconnect
           </Button>

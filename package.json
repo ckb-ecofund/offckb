@@ -1,6 +1,6 @@
 {
   "name": "@offckb/cli",
-  "version": "0.2.6",
+  "version": "0.2.0-canary.0",
   "description": "ckb development network for your first try",
   "author": "Retric Su <retric@cryptape.com>",
   "license": "MIT",
@@ -17,7 +17,8 @@
     "account",
     "ckb",
     "templates/config.json",
-    "templates/offckb.config.ts"
+    "templates/offckb.config.ts",
+    "templates/template.json"
   ],
   "private": false,
   "publishConfig": {
@@ -60,7 +61,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@ckb-lumos/lumos": "0.22.2",
+    "@ckb-lumos/lumos": "0.23.0",
     "@inquirer/prompts": "^4.1.0",
     "adm-zip": "^0.5.10",
     "axios": "^1.6.7",

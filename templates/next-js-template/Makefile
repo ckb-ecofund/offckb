@@ -94,12 +94,20 @@ generate:
 		cargo generate $(TEMPLATE_TYPE) $(TEMPLATE_REPO) $(TEMPLATE) \
 			--destination $(DESTINATION); \
 		GENERATED_DIR=$$(ls -dt $(DESTINATION)/* | head -n 1); \
+		if [ -f "$$GENERATED_DIR/.cargo-generate/tests.rs" ]; then \
+			cat $$GENERATED_DIR/.cargo-generate/tests.rs >> tests/src/tests.rs; \
+			rm -rf $$GENERATED_DIR/.cargo-generate/; \
+		fi; \
 		sed "s,@@INSERTION_POINT@@,@@INSERTION_POINT@@\n  \"$$GENERATED_DIR\"\,," Cargo.toml > Cargo.toml.new; \
 		mv Cargo.toml.new Cargo.toml; \
 	else \
 		cargo generate $(TEMPLATE_TYPE) $(TEMPLATE_REPO) $(TEMPLATE) \
 			--destination $(DESTINATION) \
 			--name $(CRATE); \
+		if [ -f "$(DESTINATION)/$(CRATE)/.cargo-generate/tests.rs" ]; then \
+			cat $(DESTINATION)/$(CRATE)/.cargo-generate/tests.rs >> tests/src/tests.rs; \
+			rm -rf $(DESTINATION)/$(CRATE)/.cargo-generate/; \
+		fi; \
 		sed '/@@INSERTION_POINT@@/s/$$/\n  "$(DESTINATION)\/$(CRATE)",/' Cargo.toml > Cargo.toml.new; \
 		mv Cargo.toml.new Cargo.toml; \
 	fi
@@ -110,6 +118,6 @@ prepare:
 # Generate checksum info for reproducible build
 CHECKSUM_FILE := build/checksums-$(MODE).txt
 checksum: build
-	sha256sum build/$(MODE)/* > $(CHECKSUM_FILE)
+	shasum -a 256 build/$(MODE)/* > $(CHECKSUM_FILE)
 
 .PHONY: build test check clippy fmt cargo clean prepare checksum

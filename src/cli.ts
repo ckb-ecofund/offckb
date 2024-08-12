@@ -18,6 +18,7 @@ import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
+import { Config, ConfigSection } from './cmd/config';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -88,6 +89,11 @@ program
   .description('Show deployed contracts info on different networks, only supports devnet and testnet')
   .option('--network <network>', 'Specify the network to deploy to', 'devnet')
   .action((options: DeployedScriptOption) => deployedScripts(options));
+
+program
+  .command('config <action> <section> [value]')
+  .description('do a configuration action')
+  .action((action, section, value) => Config(action, section as ConfigSection, value));
 
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {

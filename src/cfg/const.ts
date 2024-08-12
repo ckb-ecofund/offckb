@@ -1,5 +1,5 @@
 import * as path from 'path';
-
+// todo: move some to user settings
 // path
 export const currentExecPath = process.cwd();
 
@@ -29,4 +29,3 @@ export const dappTemplateGitRepoUserAndName = 'RetricSu/offckb';
 export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserAndName}`;
 export const dappTemplateGitBranch = 'develop';
 export const dappTemplateGitFolder = 'templates';
-export const bareTemplateGitSelectOptionFile = 'template.json';

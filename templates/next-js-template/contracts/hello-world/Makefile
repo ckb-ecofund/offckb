@@ -18,6 +18,7 @@ MODE := release
 # Tweak this to change the clang version to use for building C code. By default
 # we use a bash script with somes heuristics to find clang in current system.
 CLANG := $(shell $(TOP)/scripts/find_clang)
+AR := $(subst clang,llvm-ar,$(CLANG))
 # When this is set to some value, the generated binaries will be copied over
 BUILD_DIR :=
 # Generated binaries to copy. By convention, a Rust crate's directory name will
@@ -33,7 +34,7 @@ endif
 default: build test
 
 build:
-	RUSTFLAGS="$(FULL_RUSTFLAGS)" TARGET_CC="$(CLANG)" \
+	RUSTFLAGS="$(FULL_RUSTFLAGS)" TARGET_CC="$(CLANG)" TARGET_AR="$(AR)" \
 		cargo build --target=riscv64imac-unknown-none-elf $(MODE_ARGS) $(CARGO_ARGS)
 	@set -eu; \
 	if [ "x$(BUILD_DIR)" != "x" ]; then \
