@@ -17,7 +17,8 @@
     "account",
     "ckb",
     "templates/config.json",
-    "templates/offckb.config.ts"
+    "templates/offckb.config.ts",
+    "templates/template.json"
   ],
   "private": false,
   "publishConfig": {
