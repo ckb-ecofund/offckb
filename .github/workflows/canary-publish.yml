@@ -2,7 +2,7 @@ name: Canary release on new commit
 on:
   push:
     branches:
-      - develop
+      - 'v0.*.x' 
     paths-ignore:
       - '**/package.json'
 
