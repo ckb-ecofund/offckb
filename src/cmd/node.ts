@@ -2,15 +2,15 @@ import { exec } from 'child_process';
 import { initChainIfNeeded } from './develop/init-chain';
 import { installDependency } from './develop/install';
 import { readSettings } from '../cfg/setting';
-import { encodePathForTerminal } from '../util/encoding';
+import { encodeBinPathForTerminal } from '../util/encoding';
 
 export async function node() {
   await installDependency();
   await initChainIfNeeded();
 
   const settings = readSettings();
-  const ckbBinPath = encodePathForTerminal(settings.devnet.CKBBinaryPath);
-  const devnetConfigPath = encodePathForTerminal(settings.devnet.configPath);
+  const ckbBinPath = encodeBinPathForTerminal(settings.devnet.CKBBinaryPath);
+  const devnetConfigPath = encodeBinPathForTerminal(settings.devnet.configPath);
 
   const ckbCmd = `${ckbBinPath} run -C ${devnetConfigPath}`;
   const minerCmd = `${ckbBinPath} miner -C ${devnetConfigPath}`;

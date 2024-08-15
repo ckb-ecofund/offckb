@@ -18,7 +18,7 @@ import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
-import { Config, ConfigSection } from './cmd/config';
+import { Config, ConfigItem } from './cmd/config';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -91,9 +91,9 @@ program
   .action((options: DeployedScriptOption) => deployedScripts(options));
 
 program
-  .command('config <action> [section] [value]')
+  .command('config <action> [item] [value]')
   .description('do a configuration action')
-  .action((action, section, value) => Config(action, section as ConfigSection, value));
+  .action((action, item, value) => Config(action, item as ConfigItem, value));
 
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {

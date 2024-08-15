@@ -7,12 +7,12 @@ import AdmZip from 'adm-zip';
 import * as tar from 'tar';
 import { Request } from '../../util/request';
 import { settings } from '../../cfg/setting';
-import { encodePathForTerminal } from '../../util/encoding';
+import { encodeBinPathForTerminal } from '../../util/encoding';
 
 const BINARY_FOLDER = settings.devnet.binaryFolderPath;
-const BINARY = encodePathForTerminal(settings.devnet.CKBBinaryPath);
+const BINARY = settings.devnet.CKBBinaryPath;
 const MINIMAL_VERSION = settings.devnet.minimalRequiredCKBVersion;
-const DOWNLOAD_PATH = encodePathForTerminal(settings.devnet.downloadPath);
+const DOWNLOAD_PATH = settings.devnet.downloadPath;
 
 // Function to download and install the dependency binary
 export async function installDependency() {
@@ -47,6 +47,7 @@ export async function downloadBinaryAndUnzip() {
 
     // Install the extracted files
     const sourcePath = path.join(extractDir, ckbVersionOSName);
+    fs.rmdirSync(BINARY_FOLDER, { recursive: true });
     if (!fs.existsSync(BINARY_FOLDER)) {
       fs.mkdirSync(BINARY_FOLDER);
     }
@@ -106,7 +107,7 @@ export async function decompressTarGzAsync(tarballPath: string, destinationDir: 
 
 export function getInstalledVersion(): string | null {
   try {
-    const versionOutput = execSync(`${BINARY} --version`, {
+    const versionOutput = execSync(`${encodeBinPathForTerminal(BINARY)} --version`, {
       encoding: 'utf-8',
     });
 

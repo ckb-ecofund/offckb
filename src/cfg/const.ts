@@ -17,11 +17,4 @@ export const deployedContractInfoFolderPath = path.resolve(targetEnvironmentPath
 export const accountTargetDir = path.join(packageRootPath, `account`);
 
 // Version
-export const minimalRequiredCKBVersion = '0.113.1';
 export const defaultLumosVersion = '0.21.0';
-
-// url
-export const dappTemplateGitRepoUserAndName = 'RetricSu/offckb';
-export const dappTemplateGitUrl = `https://github.com/${dappTemplateGitRepoUserAndName}`;
-export const dappTemplateGitBranch = 'develop';
-export const dappTemplateGitFolder = 'templates';

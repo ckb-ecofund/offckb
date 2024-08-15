@@ -1,10 +1,11 @@
 import path from 'path';
-import { currentExecPath, dappTemplateGitBranch, dappTemplateGitFolder, dappTemplateGitUrl } from '../cfg/const';
+import { currentExecPath } from '../cfg/const';
 import { findFileInFolder, updateVersionInTSFile } from '../util/fs';
 import { BareTemplateOption, loadBareTemplateOpts } from '../util/template';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
+import { settings } from '../cfg/setting';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
@@ -22,8 +23,13 @@ export function createScriptProject(name: string) {
 
 export async function create(name: string, template: BareTemplateOption) {
   const targetPath = path.resolve(currentExecPath, name);
-  const dappTemplateFolderPath = `${dappTemplateGitFolder}/${template.value}`;
-  gitCloneAndDownloadFolderSync(dappTemplateGitUrl, dappTemplateGitBranch, dappTemplateFolderPath, targetPath);
+  const dappTemplateFolderPath = `${settings.dappTemplate.gitFolder}/${template.value}`;
+  gitCloneAndDownloadFolderSync(
+    settings.dappTemplate.gitRepoUrl,
+    settings.dappTemplate.gitBranch,
+    dappTemplateFolderPath,
+    targetPath,
+  );
 
   // update the version
   const projectFolder = path.resolve(currentExecPath, name);
