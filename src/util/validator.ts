@@ -61,3 +61,15 @@ export function validateNetworkOpt(network: string) {
     process.exit(1);
   }
 }
+
+export function isValidVersion(version: unknown): boolean {
+  if (typeof version !== 'string') {
+    return false;
+  }
+
+  // Regular expression to match version strings like X.Y.Z
+  const versionRegex = /^\d+\.\d+\.\d+$/;
+
+  // Test the version against the regex
+  return versionRegex.test(version);
+}

@@ -1,8 +1,9 @@
-import { devnetDataPath } from '../cfg/const';
 import fs from 'fs';
 import { isFolderExists } from '../util/fs';
+import { settings } from '../cfg/setting';
 
 export function clean() {
+  const devnetDataPath = settings.devnet.dataPath;
   if (isFolderExists(devnetDataPath)) {
     try {
       fs.rmSync(devnetDataPath, { recursive: true });

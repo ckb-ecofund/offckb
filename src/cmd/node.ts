@@ -1,14 +1,19 @@
 import { exec } from 'child_process';
-import { ckbBinPath, devnetPath } from '../cfg/const';
 import { initChainIfNeeded } from './develop/init-chain';
 import { installDependency } from './develop/install';
+import { readSettings } from '../cfg/setting';
+import { encodeBinPathForTerminal } from '../util/encoding';
 
 export async function node() {
   await installDependency();
   await initChainIfNeeded();
 
-  const ckbCmd = `${ckbBinPath} run -C ${devnetPath}`;
-  const minerCmd = `${ckbBinPath} miner -C ${devnetPath}`;
+  const settings = readSettings();
+  const ckbBinPath = encodeBinPathForTerminal(settings.devnet.CKBBinaryPath);
+  const devnetConfigPath = encodeBinPathForTerminal(settings.devnet.configPath);
+
+  const ckbCmd = `${ckbBinPath} run -C ${devnetConfigPath}`;
+  const minerCmd = `${ckbBinPath} miner -C ${devnetConfigPath}`;
   try {
     // Run first command
     const ckbProcess = exec(ckbCmd);
