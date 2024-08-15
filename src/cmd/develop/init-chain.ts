@@ -1,23 +1,31 @@
 import * as fs from 'fs';
-import { devnetPath, devnetSourcePath } from '../../cfg/const';
 import path from 'path';
 import { isFolderExists, copyFilesWithExclusion } from '../../util/fs';
+import { readSettings } from '../../cfg/setting';
 
 export async function initChainIfNeeded() {
-  if (!isFolderExists(devnetPath)) {
+  const settings = readSettings();
+  const devnetConfigPath = settings.devnet.configPath;
+  if (!isFolderExists(devnetConfigPath)) {
     await doInitChain();
   }
 }
 
 async function doInitChain() {
-  await copyFilesWithExclusion(devnetSourcePath, devnetPath, ['data']);
-  console.debug(`init devnet config folder: ${devnetPath}`);
+  const settings = readSettings();
+  const devnetConfigPath = settings.devnet.configPath;
+  const devnetSourcePath = settings.devnet.sourcePath;
+  await copyFilesWithExclusion(devnetSourcePath, devnetConfigPath, ['data']);
+  console.debug(`init devnet config folder: ${devnetConfigPath}`);
   copyAndEditMinerToml();
 }
 
 function copyAndEditMinerToml() {
+  const settings = readSettings();
+  const devnetConfigPath = settings.devnet.configPath;
+  const devnetSourcePath = settings.devnet.sourcePath;
   const minerToml = path.join(devnetSourcePath, 'ckb-miner.toml');
-  const newMinerToml = path.join(devnetPath, 'ckb-miner.toml');
+  const newMinerToml = path.join(devnetConfigPath, 'ckb-miner.toml');
   // Read the content of the ckb-miner.toml file
   fs.readFile(minerToml, 'utf8', (err, data) => {
     if (err) {

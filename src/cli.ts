@@ -91,7 +91,7 @@ program
   .action((options: DeployedScriptOption) => deployedScripts(options));
 
 program
-  .command('config <action> <section> [value]')
+  .command('config <action> [section] [value]')
   .description('do a configuration action')
   .action((action, section, value) => Config(action, section as ConfigSection, value));
 

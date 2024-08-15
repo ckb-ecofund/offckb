@@ -5,11 +5,14 @@ import semver from 'semver';
 import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
-import { ckbBinPath, ckbFolderPath, minimalRequiredCKBVersion, targetEnvironmentPath } from '../../cfg/const';
 import { Request } from '../../util/request';
+import { readSettings } from '../../cfg/setting';
 
-const BINARY = ckbBinPath;
-const MINIMAL_VERSION = minimalRequiredCKBVersion;
+const settings = readSettings();
+const BINARY_FOLDER = settings.devnet.binaryFolderPath;
+const BINARY = settings.devnet.CKBBinaryPath;
+const MINIMAL_VERSION = settings.devnet.minimalRequiredCKBVersion;
+const DOWNLOAD_PATH = settings.devnet.downloadPath;
 
 // Function to download and install the dependency binary
 export async function installDependency() {
@@ -39,13 +42,16 @@ export async function downloadBinaryAndUnzip() {
     await downloadAndSaveCKBBinary(tempFilePath);
 
     // Unzip the file
-    const extractDir = path.join(targetEnvironmentPath, `ckb_v${MINIMAL_VERSION}`);
+    const extractDir = path.join(DOWNLOAD_PATH, `ckb_v${MINIMAL_VERSION}`);
     await unZipFile(tempFilePath, extractDir, ext === 'tar.gz');
 
     // Install the extracted files
     const sourcePath = path.join(extractDir, ckbVersionOSName);
-    fs.renameSync(sourcePath, ckbFolderPath); // Move binary to desired location
-    fs.chmodSync(ckbBinPath, '755'); // Make the binary executable
+    if (!fs.existsSync(BINARY_FOLDER)) {
+      fs.mkdirSync(BINARY_FOLDER);
+    }
+    fs.renameSync(sourcePath, BINARY_FOLDER); // Move binary to desired location
+    fs.chmodSync(BINARY, '755'); // Make the binary executable
 
     console.log('CKB installed successfully.');
   } catch (error) {

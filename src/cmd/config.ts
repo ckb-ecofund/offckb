@@ -2,6 +2,7 @@ import { readSettings, writeSettings } from '../cfg/setting';
 import { Request } from '../util/request';
 
 export enum ConfigAction {
+  list = 'list',
   get = 'get',
   set = 'set',
   rm = 'rm',
@@ -12,6 +13,10 @@ export enum ConfigSection {
 }
 
 export async function Config(action: ConfigAction, section: ConfigSection, value?: string) {
+  if (action === ConfigAction.list) {
+    return console.log(readSettings());
+  }
+
   if (action === ConfigAction.get) {
     switch (section) {
       case ConfigSection.proxy: {
