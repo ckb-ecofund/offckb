@@ -25,7 +25,10 @@ Start building on Nervos blockchain, right now, right away!
 - [Get started](#get-started)
   - [Create a full-stack Project](#create-a-full-stack-project)
   - [Create a script-only Project](#create-a-script-only-project)
-  - [Add Network Proxy](#add-network-proxy)
+- [Config Setting](#config-setting)
+  - [List All Settings](#list-all-settings)
+  - [Set CKB version](#set-ckb-version)
+  - [Set Network Proxy](#set-network-proxy)
 - [Built-in scripts](#built-in-scripts)
 - [Accounts](#accounts)
 - [About Lumos](#about-lumos)
@@ -63,7 +66,7 @@ Commands:
   balance [options] [toAddress]                     Check account balance, only devnet and testnet
   deploy [options]                                  Deploy contracts to different networks, only supports devnet and testnet
   deployed-scripts [options]                        Show deployed contracts info on networks, only supports devnet and testnet
-  config <action> <section> [value]                 do a configuration action
+  config <action> [item] [value]                 do a configuration action
   help [command]                                    display help for command
 ```
 
@@ -98,7 +101,25 @@ offckb create <your-project-name> --script
 
 Note: you need to have rust/cargo/cargo-generate/clang 16+ installed in your environment to use this command. offckb doesn't do anything really, it just call [ckb-script-template](https://github.com/cryptape/ckb-script-tempaltes) to do all the magic.
 
-### Add Network Proxy
+## Config Setting
+
+### List All Settings
+
+```sh
+offckb config list
+```
+
+### Set CKB version
+
+```sh
+offckb config get ckb-version
+> 0.113.0
+offckb config set ckb-version 0.117.0
+offckb config get ckb-version
+> 0.117.0
+```
+
+### Set Network Proxy
 
 ```sh
 offckb config set proxy http://127.0.0.1:1086
