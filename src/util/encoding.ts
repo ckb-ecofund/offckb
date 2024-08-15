@@ -10,3 +10,9 @@ export function setUTF8EncodingForWindows() {
     }
   }
 }
+
+export function encodePathForTerminal(path: string) {
+  // some path contains space in the string
+  // this fix the space in the terminal
+  return `"${path}"`;
+}

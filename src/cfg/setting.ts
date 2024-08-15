@@ -11,7 +11,6 @@ const cachePath = paths.cache;
 export interface Settings {
   proxy?: AxiosProxyConfig;
   devnet: {
-    sourcePath: string;
     configPath: string;
     dataPath: string;
     minimalRequiredCKBVersion: string;
@@ -30,7 +29,6 @@ export const defaultSettings: Settings = {
   proxy: undefined,
   devnet: {
     downloadPath: path.resolve(cachePath, 'download'),
-    sourcePath: path.resolve(cachePath, 'ckb/devnet'),
     configPath: path.resolve(dataPath, 'devnet'),
     dataPath: path.resolve(dataPath, 'devnet/data'),
     minimalRequiredCKBVersion: '0.113.1',
@@ -67,3 +65,5 @@ export function writeSettings(settings: Settings): void {
     console.error('Error writing settings:', error);
   }
 }
+
+export const settings = readSettings();

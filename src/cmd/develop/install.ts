@@ -6,13 +6,13 @@ import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
 import { Request } from '../../util/request';
-import { readSettings } from '../../cfg/setting';
+import { settings } from '../../cfg/setting';
+import { encodePathForTerminal } from '../../util/encoding';
 
-const settings = readSettings();
 const BINARY_FOLDER = settings.devnet.binaryFolderPath;
-const BINARY = settings.devnet.CKBBinaryPath;
+const BINARY = encodePathForTerminal(settings.devnet.CKBBinaryPath);
 const MINIMAL_VERSION = settings.devnet.minimalRequiredCKBVersion;
-const DOWNLOAD_PATH = settings.devnet.downloadPath;
+const DOWNLOAD_PATH = encodePathForTerminal(settings.devnet.downloadPath);
 
 // Function to download and install the dependency binary
 export async function installDependency() {
