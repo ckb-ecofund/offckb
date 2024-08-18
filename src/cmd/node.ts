@@ -4,6 +4,7 @@ import { installDependency } from './develop/install';
 import { readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
 import { createRPCProxy } from './develop/rpc-proxy';
+import { Network } from '../util/type';
 
 export async function node() {
   await installDependency();
@@ -41,7 +42,7 @@ export async function node() {
 
         const ckbRpc = 'http://localhost:8114';
         const port = 9000;
-        const proxy = createRPCProxy(ckbRpc, port);
+        const proxy = createRPCProxy(Network.devnet, ckbRpc, port);
         proxy.start();
       } catch (error) {
         console.error('Error running CKB-Miner:', error);

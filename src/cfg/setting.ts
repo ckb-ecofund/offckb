@@ -2,6 +2,7 @@ import { AxiosProxyConfig } from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import envPaths from './env-path';
+import { deepMerge } from '../util/setting';
 
 const paths = envPaths('offckb');
 const configPath = path.join(paths.config, 'settings.json');
@@ -17,6 +18,10 @@ export interface Settings {
     binaryFolderPath: string;
     CKBBinaryPath: string;
     downloadPath: string;
+    debugFullTransactionsPath: string;
+    transactionsPath: string;
+    failedTransactionsPath: string;
+    contractsPath: string;
   };
   dappTemplate: {
     gitRepoUrl: string;
@@ -34,6 +39,10 @@ export const defaultSettings: Settings = {
     minimalRequiredCKBVersion: '0.113.1',
     binaryFolderPath: path.resolve(dataPath, 'binary'),
     CKBBinaryPath: path.resolve(dataPath, 'binary', 'ckb'),
+    debugFullTransactionsPath: path.resolve(cachePath, 'devnet/full-transactions'),
+    transactionsPath: path.resolve(dataPath, 'devnet/transactions'),
+    failedTransactionsPath: path.resolve(dataPath, 'devnet/failed-transactions'),
+    contractsPath: path.resolve(dataPath, 'devnet/contracts'),
   },
   dappTemplate: {
     gitRepoUrl: `https://github.com/RetricSu/offckb`,
@@ -46,7 +55,7 @@ export function readSettings(): Settings {
   try {
     if (fs.existsSync(configPath)) {
       const data = fs.readFileSync(configPath, 'utf8');
-      return { ...defaultSettings, ...JSON.parse(data) } as Settings;
+      return deepMerge(defaultSettings, JSON.parse(data)) as Settings;
     } else {
       return defaultSettings;
     }

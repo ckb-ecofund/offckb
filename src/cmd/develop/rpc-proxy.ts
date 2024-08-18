@@ -1,7 +1,14 @@
 import httpProxy from 'http-proxy';
 import http from 'http';
+import { Network } from '../../util/type';
+import fs from 'fs';
+import { readSettings } from '../../cfg/setting';
+import path from 'path';
 
-export function createRPCProxy(targetRpcUrl: string, port: number) {
+// todo: if we use import this throws error in tsc building
+const { cccA } = require('@ckb-ccc/core/advanced');
+
+export function createRPCProxy(network: Network, targetRpcUrl: string, port: number) {
   const proxy = httpProxy.createProxyServer({
     target: targetRpcUrl, // Target RPC server
   });
@@ -29,8 +36,18 @@ export function createRPCProxy(targetRpcUrl: string, port: number) {
 
           if (method === 'send_transaction') {
             const tx = params[0];
-            console.debug(tx);
             // todo: record tx
+            if (network === Network.devnet) {
+              const cccTx = cccA.JsonRpcTransformers.transactionTo(tx);
+              const txHash = cccTx.hash();
+              const settings = readSettings();
+              console.log('txHash: ', txHash, settings, settings.devnet.transactionsPath);
+              if (!fs.existsSync(settings.devnet.transactionsPath)) {
+                fs.mkdirSync(settings.devnet.transactionsPath);
+              }
+              const txFile = path.resolve(settings.devnet.transactionsPath, `${txHash}.json`);
+              fs.writeFileSync(txFile, JSON.stringify(tx, null, 2));
+            }
           }
         } catch (err) {
           console.error('Error parsing JSON-RPC content:', err);
@@ -54,6 +71,7 @@ export function createRPCProxy(targetRpcUrl: string, port: number) {
 
   return {
     server,
+    network,
     start: () => {
       return server.listen(port, () => {
         console.debug(`Proxy server running on http://localhost:${port}`);
