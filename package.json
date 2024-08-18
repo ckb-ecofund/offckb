@@ -61,12 +61,16 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@ckb-ccc/core": "^0.0.11-alpha.3",
     "@ckb-lumos/lumos": "0.23.0",
     "@inquirer/prompts": "^4.1.0",
+    "@types/http-proxy": "^1.17.15",
     "adm-zip": "^0.5.10",
     "axios": "^1.6.7",
     "child_process": "^1.0.2",
+    "ckb-transaction-dumper": "^0.4.0",
     "commander": "^12.0.0",
+    "http-proxy": "^1.18.1",
     "semver": "^7.6.0",
     "tar": "^6.2.1"
   }

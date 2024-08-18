@@ -19,6 +19,7 @@ import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
 import { Config, ConfigItem } from './cmd/config';
+import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -27,7 +28,6 @@ const description = require('../package.json').description;
 setUTF8EncodingForWindows();
 
 const program = new Command();
-
 program.name('offckb').description(description).version(version);
 
 program
@@ -94,6 +94,21 @@ program
   .command('config <action> [item] [value]')
   .description('do a configuration action')
   .action((action, item, value) => Config(action, item as ConfigItem, value));
+
+program
+  .command('debug')
+  .requiredOption('--tx-hash <txHash>', 'Specify the transaction hash to debug with')
+  .option('--single-script <singleScript>', 'Specify the cell script to debug with')
+  .option('--bin <bin>', 'Specify a binary to replace the script to debug with')
+  .description('CKB Debugger for development')
+  .action(async (option) => {
+    const txHash = option.txHash;
+    if (option.singleScript) {
+      const { cellType, cellIndex, scriptType } = parseSingleScriptOption(option.singleScript);
+      return debugSingleScript(txHash, cellIndex, cellType, scriptType, option.bin);
+    }
+    return debugTransaction(txHash);
+  });
 
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {
