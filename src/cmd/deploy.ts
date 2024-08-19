@@ -131,7 +131,7 @@ async function deployBinary(
   const res = await ckb.rpc.sendTransaction(tx, 'passthrough');
   console.log(`contract ${contractName} deployed, tx hash:`, res);
   console.log('wait 4 blocks..');
-  await ckb.indexer.waitForSync(4);
+  await ckb.indexer.waitForSync(-4); // why negative 4? a bug in ckb-lumos
 
   // todo: handle multiple cell recipes?
   return {
