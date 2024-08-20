@@ -2,8 +2,8 @@ import { Script } from '@ckb-lumos/lumos';
 import fs from 'fs';
 import toml from 'toml';
 import { Network } from '../util/type';
-import { readSettings } from '../cfg/setting';
 import { dirname } from 'path';
+import { getContractsPath } from './util';
 
 export interface DeploymentOptions {
   name: string;
@@ -13,7 +13,6 @@ export interface DeploymentOptions {
 }
 
 export function generateDeploymentToml(options: DeploymentOptions, network: Network) {
-  const settings = readSettings();
   const data = {
     cells: [
       {
@@ -32,10 +31,7 @@ export function generateDeploymentToml(options: DeploymentOptions, network: Netw
   };
 
   const tomlString = JSON.stringify(data);
-  let outputFilePath: string | undefined = undefined;
-  if (network === Network.devnet) {
-    outputFilePath = `${settings.devnet.contractsPath}/${options.name}/deployment.toml`;
-  }
+  const outputFilePath: string = `${getContractsPath(network)}/${options.name}/deployment.toml`;
   if (outputFilePath) {
     if (!fs.existsSync(dirname(outputFilePath))) {
       fs.mkdirSync(dirname(outputFilePath), { recursive: true });
@@ -46,12 +42,7 @@ export function generateDeploymentToml(options: DeploymentOptions, network: Netw
 }
 
 export function readDeploymentToml(scriptName: string, network: Network) {
-  let filePath = '';
-  const settings = readSettings();
-  if (network === Network.devnet) {
-    filePath = `${settings.devnet.contractsPath}/${scriptName}/deployment.toml`;
-  }
-
+  const filePath = `${getContractsPath(network)}/${scriptName}/deployment.toml`;
   const file = fs.readFileSync(filePath, 'utf-8');
   const data = toml.parse(file);
   return {

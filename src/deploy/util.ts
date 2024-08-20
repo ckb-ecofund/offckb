@@ -11,5 +11,9 @@ export function getContractsPath(network: Network) {
     return settings.testnet.contractsPath;
   }
 
-  throw new Error('Mainnet not implemented yet!');
+  if (network === Network.mainnet) {
+    return settings.mainnet.contractsPath;
+  }
+
+  throw new Error(`invalid network ${network}`);
 }

@@ -1,6 +1,5 @@
 import { HexNumber } from '@ckb-lumos/lumos';
 import { Network } from '../util/type';
-import { readSettings } from '../cfg/setting';
 import path, { dirname } from 'path';
 import fs from 'fs';
 import { getContractsPath } from './util';
@@ -50,14 +49,10 @@ export function generateDeploymentRecipeJsonFile(
   deploymentRecipe: DeploymentRecipe,
   network = Network.devnet,
 ) {
-  const settings = readSettings();
   const cellRecipes = deploymentRecipe.cellRecipes;
   const depGroupRecipes = deploymentRecipe.depGroupRecipes;
   const jsonString = JSON.stringify(deploymentRecipeToJson({ cellRecipes, depGroupRecipes }), null, 2);
-  let outputFilePath: string | undefined = undefined;
-  if (network === Network.devnet) {
-    outputFilePath = `${settings.devnet.contractsPath}/${name}/migrations/${getFormattedMigrationDate()}.json`;
-  }
+  const outputFilePath: string = `${getContractsPath(network)}/${name}/migrations/${getFormattedMigrationDate()}.json`;
   if (outputFilePath) {
     if (!fs.existsSync(dirname(outputFilePath))) {
       fs.mkdirSync(dirname(outputFilePath), { recursive: true });

@@ -26,6 +26,9 @@ export interface Settings {
   testnet: {
     contractsPath: string;
   };
+  mainnet: {
+    contractsPath: string;
+  };
   dappTemplate: {
     gitRepoUrl: string;
     gitBranch: string;
@@ -49,6 +52,9 @@ export const defaultSettings: Settings = {
   },
   testnet: {
     contractsPath: path.resolve(dataPath, 'testnet/contracts'),
+  },
+  mainnet: {
+    contractsPath: path.resolve(dataPath, 'mainnet/contracts'),
   },
   dappTemplate: {
     gitRepoUrl: `https://github.com/RetricSu/offckb`,
