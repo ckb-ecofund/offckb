@@ -12,7 +12,6 @@ export const predefinedOffCKBConfigTsPath = path.resolve(dappTemplatePath, 'offc
 export const userOffCKBConfigPath = path.resolve(currentExecPath, 'offckb.config.ts');
 
 export const devnetSourcePath = path.resolve(packageRootPath, './ckb/devnet');
-export const deployedContractInfoFolderPath = path.resolve(targetEnvironmentPath, 'contracts');
 
 export const accountTargetDir = path.join(packageRootPath, `account`);
 

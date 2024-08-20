@@ -23,6 +23,12 @@ export interface Settings {
     failedTransactionsPath: string;
     contractsPath: string;
   };
+  testnet: {
+    contractsPath: string;
+  };
+  mainnet: {
+    contractsPath: string;
+  };
   dappTemplate: {
     gitRepoUrl: string;
     gitBranch: string;
@@ -43,6 +49,12 @@ export const defaultSettings: Settings = {
     transactionsPath: path.resolve(dataPath, 'devnet/transactions'),
     failedTransactionsPath: path.resolve(dataPath, 'devnet/failed-transactions'),
     contractsPath: path.resolve(dataPath, 'devnet/contracts'),
+  },
+  testnet: {
+    contractsPath: path.resolve(dataPath, 'testnet/contracts'),
+  },
+  mainnet: {
+    contractsPath: path.resolve(dataPath, 'mainnet/contracts'),
   },
   dappTemplate: {
     gitRepoUrl: `https://github.com/RetricSu/offckb`,

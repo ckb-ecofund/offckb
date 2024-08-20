@@ -190,3 +190,10 @@ export function findFileInFolder(folderPath: string, fileName: string): string |
 
   return null;
 }
+
+export function getSubfolders(folderPath: string): string[] {
+  return fs.readdirSync(folderPath).filter((file) => {
+    const fullPath = path.join(folderPath, file);
+    return fs.statSync(fullPath).isDirectory();
+  });
+}

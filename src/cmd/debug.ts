@@ -27,12 +27,12 @@ export function buildTransactionDebugOptions(txHash: string) {
   const result = [];
   for (const [index, input] of cccTx.inputs.entries()) {
     result.push({
-      name: `Inputs[${index}].Lock`,
+      name: `Input[${index}].Lock`,
       cmdOption: `--cell-index ${index} --cell-type input --script-group-type lock`,
     });
     if (input.cellOutput?.type) {
       result.push({
-        name: `Inputs[${index}].Type`,
+        name: `Input[${index}].Type`,
         cmdOption: `--cell-index ${index} --cell-type input --script-group-type type`,
       });
     }
@@ -41,7 +41,7 @@ export function buildTransactionDebugOptions(txHash: string) {
   for (const [index, output] of cccTx.outputs.entries()) {
     if (output.type) {
       result.push({
-        name: `Outputs[${index}].Type`,
+        name: `Output[${index}].Type`,
         cmdOption: `--cell-index ${index} --cell-type output --script-group-type type`,
       });
     }

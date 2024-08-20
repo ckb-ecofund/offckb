@@ -1,19 +1,16 @@
 import { commons, hd, helpers } from '@ckb-lumos/lumos';
 import fs from 'fs';
-import { currentExecPath, deployedContractInfoFolderPath, userOffCKBConfigPath } from '../cfg/const';
+import { currentExecPath, userOffCKBConfigPath } from '../cfg/const';
 import { NetworkOption, Network } from '../util/type';
 import path from 'path';
 import { Account, CKB } from '../util/ckb';
 import { deployerAccount } from '../cfg/account';
 import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
-import {
-  listBinaryFilesInFolder,
-  isFolderExists,
-  readFileToUint8Array,
-  convertFilenameToUppercase,
-  isAbsolutePath,
-} from '../util/fs';
+import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
 import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validator';
+import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
+import { DeploymentRecipe, generateDeploymentRecipeJsonFile } from '../deploy/migration';
+import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
@@ -82,17 +79,9 @@ async function recordDeployResult(results: DeployedInterfaceType[], network: Net
   if (results.length === 0) {
     return;
   }
-
   for (const result of results) {
-    const { scriptConfig, contractName } = result;
-    const jsonContent = JSON.stringify(scriptConfig, null, 2);
-    const filename = `${contractName}.json`;
-
-    const filePath = path.resolve(deployedContractInfoFolderPath, network, filename);
-    if (!isFolderExists(path.resolve(deployedContractInfoFolderPath, network))) {
-      fs.mkdirSync(path.resolve(deployedContractInfoFolderPath, network), { recursive: true });
-    }
-    fs.writeFileSync(filePath, jsonContent);
+    generateDeploymentToml(result.deploymentOptions, network);
+    generateDeploymentRecipeJsonFile(result.deploymentOptions.name, result.deploymentRecipe, network);
   }
 
   // update lumos config in offckb.config.ts
@@ -116,9 +105,16 @@ async function deployBinaries(binPaths: string[], from: Account, ckb: CKB) {
   return results;
 }
 
-async function deployBinary(binPath: string, from: Account, ckb: CKB) {
+async function deployBinary(
+  binPath: string,
+  from: Account,
+  ckb: CKB,
+): Promise<{
+  deploymentRecipe: DeploymentRecipe;
+  deploymentOptions: DeploymentOptions;
+}> {
   const bin = await readFileToUint8Array(binPath);
-  const contractName = convertFilenameToUppercase(binPath);
+  const contractName = path.basename(binPath);
   const result = await commons.deploy.generateDeployWithTypeIdTx({
     cellProvider: ckb.indexer,
     fromInfo: from.address,
@@ -134,15 +130,29 @@ async function deployBinary(binPath: string, from: Account, ckb: CKB) {
   const tx = helpers.sealTransaction(txSkeleton, [Sig]);
   const res = await ckb.rpc.sendTransaction(tx, 'passthrough');
   console.log(`contract ${contractName} deployed, tx hash:`, res);
-
-  //todo: upgrade lumos
-  // indexer.waitForSync has a bug, we use negative number to workaround.
-  // the negative number presents the block difference from current tip to wait
   console.log('wait 4 blocks..');
-  await ckb.indexer.waitForSync(-4);
+  await ckb.indexer.waitForSync(-4); // why negative 4? a bug in ckb-lumos
 
+  // todo: handle multiple cell recipes?
   return {
-    contractName,
-    ...result,
+    deploymentOptions: {
+      name: contractName,
+      binFilePath: binPath,
+      enableTypeId: true,
+      lockScript: tx.outputs[+result.scriptConfig.INDEX].lock,
+    },
+    deploymentRecipe: {
+      cellRecipes: [
+        {
+          name: contractName,
+          txHash: result.scriptConfig.TX_HASH,
+          index: result.scriptConfig.INDEX,
+          occupiedCapacity: '0x' + BigInt(tx.outputsData[+result.scriptConfig.INDEX].slice(2).length / 2).toString(16),
+          dataHash: ckbHash(tx.outputsData[+result.scriptConfig.INDEX]),
+          typeId: computeScriptHash(result.typeId),
+        },
+      ],
+      depGroupRecipes: [],
+    },
   };
 }

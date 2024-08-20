@@ -1,8 +1,11 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { dappTemplatePath, deployedContractInfoFolderPath } from '../cfg/const';
+import { dappTemplatePath } from '../cfg/const';
 import { config } from '@ckb-lumos/lumos';
 import { Network } from './type';
+import { getContractsPath } from '../deploy/util';
+import { getSubfolders } from './fs';
+import { getMigrationFolderPath, getNewestMigrationFile, readDeploymentRecipeJsonFile } from '../deploy/migration';
 const version = require('../../package.json').version;
 
 export function updateOffCKBConfigVersion(filePath: string) {
@@ -64,36 +67,35 @@ export function readUserDeployedScriptsInfo(network: Network) {
   const deployedScriptsInfo: Record<string, config.ScriptConfig> = {};
 
   // Read all files in the folder
-  const folder = path.resolve(deployedContractInfoFolderPath, network);
+  const folder = getContractsPath(network);
   if (!fs.existsSync(folder)) {
     return deployedScriptsInfo;
   }
 
-  const files = fs.readdirSync(folder);
+  const contractNames = getSubfolders(folder);
+  for (const contractName of contractNames) {
+    const folderPath = getMigrationFolderPath(contractName, network); // Replace with your function to get the folder path
+    const newestFilePath = getNewestMigrationFile(folderPath);
 
-  // Iterate through each file
-  files.forEach((fileName) => {
-    // Construct the full file path
-    const filePath = path.join(folder, fileName);
-
-    // Check if the file is a JSON file
-    if (fileName.endsWith('.json')) {
+    if (newestFilePath) {
       try {
         // Read the file content
-        const fileContent = fs.readFileSync(filePath, 'utf-8');
-
-        // Parse the JSON content
-        const scriptContent = JSON.parse(fileContent);
-
-        const rawFileName = path.parse(fileName).name.replace(/-/g, '_');
-
-        // Add the file content to the result object with the file name as the key
-        deployedScriptsInfo[rawFileName] = scriptContent;
+        const recipe = readDeploymentRecipeJsonFile(newestFilePath);
+        // todo: handle multiple cell recipes?
+        const firstCell = recipe.cellRecipes[0];
+        const isDepCode = recipe.depGroupRecipes.length === 0;
+        deployedScriptsInfo[firstCell.name] = {
+          CODE_HASH: firstCell.typeId ? firstCell.typeId : firstCell.dataHash,
+          HASH_TYPE: firstCell.typeId ? 'type' : 'data1',
+          TX_HASH: firstCell.txHash,
+          INDEX: firstCell.index,
+          DEP_TYPE: isDepCode ? 'code' : 'depGroup',
+        };
       } catch (error) {
-        console.error(`Error reading or parsing file '${fileName}':`, error);
+        console.error(`Error reading or parsing file '${newestFilePath}':`, error);
       }
     }
-  });
+  }
 
   return deployedScriptsInfo;
 }
