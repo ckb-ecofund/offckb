@@ -63,6 +63,7 @@
   "dependencies": {
     "@ckb-ccc/core": "^0.0.11-alpha.3",
     "@ckb-lumos/lumos": "0.23.0",
+    "@iarna/toml": "^2.2.5",
     "@inquirer/prompts": "^4.1.0",
     "@types/http-proxy": "^1.17.15",
     "adm-zip": "^0.5.10",
@@ -72,7 +73,6 @@
     "commander": "^12.0.0",
     "http-proxy": "^1.18.1",
     "semver": "^7.6.0",
-    "tar": "^6.2.1",
-    "toml": "^3.0.0"
+    "tar": "^6.2.1"
   }
 }

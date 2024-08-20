@@ -1,15 +1,31 @@
 import { Script } from '@ckb-lumos/lumos';
 import fs from 'fs';
-import toml from 'toml';
+import toml from '@iarna/toml';
 import { Network } from '../util/type';
 import { dirname } from 'path';
 import { getContractsPath } from './util';
+import { HashType } from '@ckb-ccc/core';
 
 export interface DeploymentOptions {
   name: string;
   binFilePath: string;
   enableTypeId: boolean;
   lockScript: Script;
+}
+
+export interface DeploymentToml {
+  cells: {
+    name: string;
+    enable_type_id: 'true' | 'false';
+    location: {
+      file: string;
+    };
+  }[];
+  lock: {
+    code_hash: string;
+    args: string;
+    hash_type: HashType;
+  };
 }
 
 export function generateDeploymentToml(options: DeploymentOptions, network: Network) {
@@ -30,7 +46,7 @@ export function generateDeploymentToml(options: DeploymentOptions, network: Netw
     },
   };
 
-  const tomlString = JSON.stringify(data);
+  const tomlString = toml.stringify(data);
   const outputFilePath: string = `${getContractsPath(network)}/${options.name}/deployment.toml`;
   if (outputFilePath) {
     if (!fs.existsSync(dirname(outputFilePath))) {
@@ -44,14 +60,14 @@ export function generateDeploymentToml(options: DeploymentOptions, network: Netw
 export function readDeploymentToml(scriptName: string, network: Network) {
   const filePath = `${getContractsPath(network)}/${scriptName}/deployment.toml`;
   const file = fs.readFileSync(filePath, 'utf-8');
-  const data = toml.parse(file);
+  const data = toml.parse(file) as unknown as DeploymentToml;
   return {
     cells: [
       {
-        name: data.name as string,
-        enableTypeId: data.enable_type_id === 'true' ? true : false,
+        name: data.cells[0].name as string,
+        enableTypeId: data.cells[0].enable_type_id === 'true' ? true : false,
         location: {
-          file: data.filePath as string,
+          file: data.cells[0].location.file as string,
         },
       },
     ],
