@@ -11,13 +11,14 @@ const cachePath = paths.cache;
 
 export interface Settings {
   proxy?: AxiosProxyConfig;
+  bins: {
+    rootFolder: string;
+    defaultCKBVersion: string;
+    downloadPath: string;
+  };
   devnet: {
     configPath: string;
     dataPath: string;
-    minimalRequiredCKBVersion: string;
-    binaryFolderPath: string;
-    CKBBinaryPath: string;
-    downloadPath: string;
     debugFullTransactionsPath: string;
     transactionsPath: string;
     failedTransactionsPath: string;
@@ -38,13 +39,14 @@ export interface Settings {
 
 export const defaultSettings: Settings = {
   proxy: undefined,
-  devnet: {
+  bins: {
+    rootFolder: path.resolve(dataPath, 'bins'),
+    defaultCKBVersion: '0.113.1', // this also the default version
     downloadPath: path.resolve(cachePath, 'download'),
+  },
+  devnet: {
     configPath: path.resolve(dataPath, 'devnet'),
     dataPath: path.resolve(dataPath, 'devnet/data'),
-    minimalRequiredCKBVersion: '0.113.1',
-    binaryFolderPath: path.resolve(dataPath, 'binary'),
-    CKBBinaryPath: path.resolve(dataPath, 'binary', 'ckb'),
     debugFullTransactionsPath: path.resolve(cachePath, 'devnet/full-transactions'),
     transactionsPath: path.resolve(dataPath, 'devnet/transactions'),
     failedTransactionsPath: path.resolve(dataPath, 'devnet/failed-transactions'),
@@ -85,6 +87,15 @@ export function writeSettings(settings: Settings): void {
   } catch (error) {
     console.error('Error writing settings:', error);
   }
+}
+
+export function getCKBBinaryInstallPath(version: string) {
+  const setting = readSettings();
+  return `${setting.bins.rootFolder}/${version}`;
+}
+
+export function getCKBBinaryPath(version: string) {
+  return `${getCKBBinaryInstallPath(version)}/ckb`;
 }
 
 export const settings = readSettings();

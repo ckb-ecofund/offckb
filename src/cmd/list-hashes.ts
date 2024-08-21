@@ -1,14 +1,16 @@
 import { execSync } from 'child_process';
-import { installDependency } from './develop/install';
+import { installCKBBinary } from './develop/install';
 import { initChainIfNeeded } from './develop/init-chain';
-import { settings } from '../cfg/setting';
+import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
 
-export async function listHashes() {
-  await installDependency();
+export async function listHashes(version?: string) {
+  const settings = readSettings();
+  const ckbVersion = version || settings.bins.defaultCKBVersion;
+  await installCKBBinary(ckbVersion);
   await initChainIfNeeded();
 
-  const ckbBinPath = encodeBinPathForTerminal(settings.devnet.CKBBinaryPath);
+  const ckbBinPath = encodeBinPathForTerminal(getCKBBinaryPath(ckbVersion));
   const devnetPath = encodeBinPathForTerminal(settings.devnet.configPath);
   const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;
   try {

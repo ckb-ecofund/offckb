@@ -33,7 +33,7 @@ export async function Config(action: ConfigAction, item: ConfigItem, value?: str
 
       case ConfigItem.ckbVersion: {
         const settings = readSettings();
-        const version = settings.devnet.minimalRequiredCKBVersion;
+        const version = settings.bins.defaultCKBVersion;
         return console.log(`${version}`);
       }
 
@@ -61,7 +61,7 @@ export async function Config(action: ConfigAction, item: ConfigItem, value?: str
         const settings = readSettings();
         try {
           if (isValidVersion(value)) {
-            settings.devnet.minimalRequiredCKBVersion = value as string;
+            settings.bins.defaultCKBVersion = value as string;
             return writeSettings(settings);
           } else {
             return console.error(`invalid version value, `, value);

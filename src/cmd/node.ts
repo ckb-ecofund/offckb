@@ -1,17 +1,22 @@
 import { exec } from 'child_process';
 import { initChainIfNeeded } from './develop/init-chain';
-import { installDependency } from './develop/install';
-import { readSettings } from '../cfg/setting';
+import { installCKBBinary } from './develop/install';
+import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
 import { createRPCProxy } from './develop/rpc-proxy';
 import { Network } from '../util/type';
 
-export async function node() {
-  await installDependency();
+export interface NodeProp {
+  version?: string;
+}
+
+export async function node({ version }: NodeProp) {
+  const settings = readSettings();
+  const ckbVersion = version || settings.bins.defaultCKBVersion;
+  await installCKBBinary(ckbVersion);
   await initChainIfNeeded();
 
-  const settings = readSettings();
-  const ckbBinPath = encodeBinPathForTerminal(settings.devnet.CKBBinaryPath);
+  const ckbBinPath = encodeBinPathForTerminal(getCKBBinaryPath(ckbVersion));
   const devnetConfigPath = encodeBinPathForTerminal(settings.devnet.configPath);
 
   const ckbCmd = `${ckbBinPath} run -C ${devnetConfigPath}`;

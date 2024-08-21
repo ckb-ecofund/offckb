@@ -6,7 +6,6 @@ export class Request {
 
   static async send(_config: AxiosRequestConfig) {
     const config = this.proxy ? { ...{ proxy: this.proxy }, ..._config } : _config;
-    console.log(config);
     return await axios(config);
   }
 
