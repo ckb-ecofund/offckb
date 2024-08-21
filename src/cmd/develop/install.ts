@@ -6,62 +6,58 @@ import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
 import { Request } from '../../util/request';
-import { settings } from '../../cfg/setting';
+import { getCKBBinaryInstallPath, getCKBBinaryPath, readSettings } from '../../cfg/setting';
 import { encodeBinPathForTerminal } from '../../util/encoding';
 
-const BINARY_FOLDER = settings.devnet.binaryFolderPath;
-const BINARY = settings.devnet.CKBBinaryPath;
-const MINIMAL_VERSION = settings.devnet.minimalRequiredCKBVersion;
-const DOWNLOAD_PATH = settings.devnet.downloadPath;
-
-// Function to download and install the dependency binary
-export async function installDependency() {
-  const version = getInstalledVersion();
-  if (version) {
-    if (isVersionOutdated(version)) {
+export async function installCKBBinary(version: string) {
+  const ckbBinPath = getCKBBinaryPath(version);
+  const outputVersion = getVersionFromBinary(ckbBinPath);
+  if (outputVersion) {
+    if (!semver.eq(version, outputVersion)) {
       console.log(
-        `${BINARY} version ${version} is outdated, download and install the new version ${MINIMAL_VERSION}..`,
+        `CKB version ${outputVersion} is not equal to the ${version}, download and install the new version ${version}..`,
       );
     } else {
       return;
     }
   } else {
-    console.log(`${BINARY} not found, download and install the new version ${MINIMAL_VERSION}..`);
+    console.log(`CKB Binary not found, download and install the new version ${version}..`);
   }
 
-  await downloadBinaryAndUnzip();
+  await downloadCKBBinaryAndUnzip(version);
 }
 
-export async function downloadBinaryAndUnzip() {
+export async function downloadCKBBinaryAndUnzip(version: string) {
   const arch = getArch();
   const osname = getOS();
   const ext = getExtension();
-  const ckbVersionOSName = `ckb_v${MINIMAL_VERSION}_${arch}-${osname}`;
+  const ckbVersionOSName = `ckb_v${version}_${arch}-${osname}`;
   try {
     const tempFilePath = path.join(os.tmpdir(), `${ckbVersionOSName}.${ext}`);
-    await downloadAndSaveCKBBinary(tempFilePath);
+    await downloadAndSaveCKBBinary(version, tempFilePath);
 
     // Unzip the file
-    const extractDir = path.join(DOWNLOAD_PATH, `ckb_v${MINIMAL_VERSION}`);
+    const extractDir = path.join(readSettings().bins.downloadPath, `ckb_v${version}`);
     await unZipFile(tempFilePath, extractDir, ext === 'tar.gz');
 
     // Install the extracted files
     const sourcePath = path.join(extractDir, ckbVersionOSName);
-    fs.rmdirSync(BINARY_FOLDER, { recursive: true });
-    if (!fs.existsSync(BINARY_FOLDER)) {
-      fs.mkdirSync(BINARY_FOLDER);
+    const targetPath = getCKBBinaryInstallPath(version);
+    if (fs.existsSync(targetPath)) {
+      fs.rmdirSync(targetPath, { recursive: true });
     }
-    fs.renameSync(sourcePath, BINARY_FOLDER); // Move binary to desired location
-    fs.chmodSync(BINARY, '755'); // Make the binary executable
+    fs.mkdirSync(targetPath, { recursive: true });
+    fs.renameSync(sourcePath, targetPath); // Move binary to desired location
+    fs.chmodSync(getCKBBinaryPath(version), '755'); // Make the binary executable
 
-    console.log('CKB installed successfully.');
+    console.log(`CKB ${version} installed successfully.`);
   } catch (error) {
     console.error('Error installing dependency binary:', error);
   }
 }
 
-export async function downloadAndSaveCKBBinary(tempFilePath: string) {
-  const downloadURL = buildDownloadUrl(MINIMAL_VERSION);
+export async function downloadAndSaveCKBBinary(version: string, tempFilePath: string) {
+  const downloadURL = buildDownloadUrl(version);
   const response = await Request.get(downloadURL, {
     responseType: 'arraybuffer',
   });
@@ -105,9 +101,9 @@ export async function decompressTarGzAsync(tarballPath: string, destinationDir: 
   });
 }
 
-export function getInstalledVersion(): string | null {
+export function getVersionFromBinary(binPath: string): string | null {
   try {
-    const versionOutput = execSync(`${encodeBinPathForTerminal(BINARY)} --version`, {
+    const versionOutput = execSync(`${encodeBinPathForTerminal(binPath)} --version`, {
       encoding: 'utf-8',
     });
 
@@ -119,10 +115,6 @@ export function getInstalledVersion(): string | null {
   } catch (error) {
     return null;
   }
-}
-
-export function isVersionOutdated(installedVersion: string): boolean {
-  return semver.lt(installedVersion, MINIMAL_VERSION);
 }
 
 export function getOS(): string {

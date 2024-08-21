@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { installDependency } from './cmd/develop/install';
+import { installCKBBinary } from './cmd/develop/install';
 import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/genkey';
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
@@ -44,7 +44,12 @@ program
     return create(name, template);
   });
 
-program.command('node').description('Use the CKB to start devnet').action(node);
+program
+  .command('node [CKB-Version]')
+  .description('Use the CKB to start devnet')
+  .action(async (version: string) => {
+    return node({ version });
+  });
 program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('Print account list info').action(accounts);
 program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
@@ -113,7 +118,7 @@ program
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {
   // Define the CLI commands and options
-  program.command('install').description('Install the ckb dependency binary').action(installDependency);
+  program.command('install').description('Install the ckb dependency binary').action(installCKBBinary);
 
   program.command('genkey').description('Generate 20 accounts').action(genkey);
 

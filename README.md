@@ -55,7 +55,7 @@ Options:
 
 Commands:
   create [your-project-name]                        Create a new dApp from bare templates
-  node                                              Use the CKB to start devnet
+  node [ckb-version]                                Use the CKB to start devnet
   clean                                             Clean the devnet data, need to stop running the chain first
   accounts                                          Print account list info
   list-hashes                                       Use the CKB to list blockchain scripts hashes
