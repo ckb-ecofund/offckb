@@ -5,7 +5,6 @@ import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/g
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/develop/init-chain';
-import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -20,6 +19,7 @@ import { create, selectBareTemplate, CreateOption, createScriptProject } from '.
 import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
 import { Config, ConfigItem } from './cmd/config';
 import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
+import { printSystemScripts } from './cmd/system-scripts';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -52,7 +52,10 @@ program
   });
 program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('Print account list info').action(accounts);
-program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
+program
+  .command('list-hashes [CKB-Version]')
+  .description('Use the CKB to list blockchain scripts hashes')
+  .action(listHashes);
 program.command('inject-config').description('Add offckb.config.ts to your workspace').action(injectConfig);
 program.command('sync-config').description('Sync offckb.config.ts in your workspace').action(syncConfig);
 
@@ -115,6 +118,15 @@ program
     return debugTransaction(txHash);
   });
 
+program
+  .command('system-scripts')
+  .option('--export-style <exportStyle>', 'Specify the export format, possible values are lumos and ccc.')
+  .description('Output system scripts of the local devnet')
+  .action(async (option) => {
+    const exportStyle = option.exportStyle;
+    return printSystemScripts(exportStyle);
+  });
+
 // Add commands meant for developers
 if (process.env.NODE_ENV === 'development') {
   // Define the CLI commands and options
@@ -123,11 +135,6 @@ if (process.env.NODE_ENV === 'development') {
   program.command('genkey').description('Generate 20 accounts').action(genkey);
 
   program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
-
-  program
-    .command('build-devnet-lumos-config')
-    .description('Use the CKB to generate predefined devnet lumos config.json')
-    .action(writePredefinedDevnetLumosConfig);
 
   program.command('build-accounts').description('Generate accounts with prefunded CKB tokens').action(buildAccounts);
 
