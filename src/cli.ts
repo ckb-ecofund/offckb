@@ -20,6 +20,7 @@ import { create, selectBareTemplate, CreateOption, createScriptProject } from '.
 import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
 import { Config, ConfigItem } from './cmd/config';
 import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
+import { printSystemScripts } from './cmd/system-scripts';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -52,7 +53,10 @@ program
   });
 program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('Print account list info').action(accounts);
-program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
+program
+  .command('list-hashes [CKB-Version]')
+  .description('Use the CKB to list blockchain scripts hashes')
+  .action(listHashes);
 program.command('inject-config').description('Add offckb.config.ts to your workspace').action(injectConfig);
 program.command('sync-config').description('Sync offckb.config.ts in your workspace').action(syncConfig);
 
@@ -113,6 +117,15 @@ program
       return debugSingleScript(txHash, cellIndex, cellType, scriptType, option.bin);
     }
     return debugTransaction(txHash);
+  });
+
+program
+  .command('system-scripts')
+  .option('--export-style <exportStyle>', 'Specify the export format, possible values are lumos and ccc.')
+  .description('Output system scripts of the local devnet')
+  .action(async (option) => {
+    const exportStyle = option.exportStyle;
+    return printSystemScripts(exportStyle);
   });
 
 // Add commands meant for developers

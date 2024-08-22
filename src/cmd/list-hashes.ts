@@ -3,8 +3,40 @@ import { installCKBBinary } from './develop/install';
 import { initChainIfNeeded } from './develop/init-chain';
 import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
+import { H256 } from '../util/type';
+
+export interface SystemCell {
+  path: string;
+  tx_hash: H256;
+  index: number;
+  data_hash: H256;
+  type_hash?: H256;
+}
+
+export interface DepGroupCell {
+  included_cells: string[];
+  tx_hash: H256;
+  index: number;
+}
+
+export interface SpecHashes {
+  spec_hash: H256;
+  genesis: H256;
+  cellbase: H256;
+  system_cells: SystemCell[];
+  dep_groups: DepGroupCell[];
+}
+
+export interface ListHashes {
+  offckb: SpecHashes;
+}
 
 export async function listHashes(version?: string) {
+  const output = await getListHashes(version);
+  console.log(output);
+}
+
+export async function getListHashes(version?: string): Promise<string | null> {
   const settings = readSettings();
   const ckbVersion = version || settings.bins.defaultCKBVersion;
   await installCKBBinary(ckbVersion);
@@ -14,10 +46,12 @@ export async function listHashes(version?: string) {
   const devnetPath = encodeBinPathForTerminal(settings.devnet.configPath);
   const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;
   try {
-    execSync(cmd, {
-      stdio: 'inherit',
+    const output = execSync(cmd, {
+      encoding: 'utf-8',
     });
+    return output;
   } catch (error) {
     console.error('Error running dependency binary:', error);
+    return null;
   }
 }
