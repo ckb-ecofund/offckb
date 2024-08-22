@@ -1,6 +1,4 @@
 import { execSync } from 'child_process';
-import { installCKBBinary } from './develop/install';
-import { initChainIfNeeded } from './develop/init-chain';
 import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
 import { H256 } from '../util/type';
@@ -32,16 +30,13 @@ export interface ListHashes {
 }
 
 export async function listHashes(version?: string) {
-  const output = await getListHashes(version);
+  const output = getListHashes(version);
   console.log(output);
 }
 
-export async function getListHashes(version?: string): Promise<string | null> {
+export function getListHashes(version?: string): string | null {
   const settings = readSettings();
   const ckbVersion = version || settings.bins.defaultCKBVersion;
-  await installCKBBinary(ckbVersion);
-  await initChainIfNeeded();
-
   const ckbBinPath = encodeBinPathForTerminal(getCKBBinaryPath(ckbVersion));
   const devnetPath = encodeBinPathForTerminal(settings.devnet.configPath);
   const cmd = `${ckbBinPath} list-hashes  -C ${devnetPath}`;

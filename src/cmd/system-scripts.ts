@@ -45,7 +45,7 @@ export type SystemScriptsRecord = Record<SystemScriptName, SystemScript>;
 export type PrintProps = 'lumos' | 'ccc';
 
 export async function printSystemScripts(props?: PrintProps) {
-  const systemScripts = await getSystemScriptsFromListHashes();
+  const systemScripts = getSystemScriptsFromListHashes();
   if (systemScripts) {
     if (!props) {
       return printInSystemStyle(systemScripts);
@@ -84,9 +84,9 @@ export function printInCCCStyle(scripts: SystemScriptsRecord) {
   console.log(JSON.stringify(knownsScripts, null, 2));
 }
 
-export async function getSystemScriptsFromListHashes(): Promise<SystemScriptsRecord | null> {
+export function getSystemScriptsFromListHashes(): SystemScriptsRecord | null {
   const settings = readSettings();
-  const listHashesString = await getListHashes(settings.bins.defaultCKBVersion);
+  const listHashesString = getListHashes(settings.bins.defaultCKBVersion);
   if (listHashesString) {
     const listHashes = toml.parse(listHashesString) as unknown as ListHashes;
     const systemScriptArray = listHashes.offckb.system_cells

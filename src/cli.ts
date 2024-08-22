@@ -5,7 +5,6 @@ import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/g
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
 import { initChainIfNeeded } from './cmd/develop/init-chain';
-import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -136,11 +135,6 @@ if (process.env.NODE_ENV === 'development') {
   program.command('genkey').description('Generate 20 accounts').action(genkey);
 
   program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
-
-  program
-    .command('build-devnet-lumos-config')
-    .description('Use the CKB to generate predefined devnet lumos config.json')
-    .action(writePredefinedDevnetLumosConfig);
 
   program.command('build-accounts').description('Generate accounts with prefunded CKB tokens').action(buildAccounts);
 

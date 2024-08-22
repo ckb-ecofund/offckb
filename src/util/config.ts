@@ -1,11 +1,10 @@
 import * as fs from 'fs';
-import * as path from 'path';
-import { dappTemplatePath } from '../cfg/const';
 import { config } from '@ckb-lumos/lumos';
 import { Network } from './type';
 import { getContractsPath } from '../deploy/util';
 import { getSubfolders } from './fs';
 import { getMigrationFolderPath, getNewestMigrationFile, readDeploymentRecipeJsonFile } from '../deploy/migration';
+import { getSystemScriptsFromListHashes, toLumosConfig } from '../cmd/system-scripts';
 const version = require('../../package.json').version;
 
 export function updateOffCKBConfigVersion(filePath: string) {
@@ -101,24 +100,25 @@ export function readUserDeployedScriptsInfo(network: Network) {
 }
 
 export function readPredefinedDevnetLumosConfig() {
-  const filePath = path.resolve(dappTemplatePath, 'config.json');
   try {
-    const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const jsonData = JSON.parse(fileContent);
-    return jsonData as config.Config;
+    const systemScripts = getSystemScriptsFromListHashes();
+    if (systemScripts) {
+      return toLumosConfig(systemScripts);
+    }
+    throw new Error('systemScripts not found!');
   } catch (error: unknown) {
-    throw new Error('Error reading the json file:' + (error as Error).message);
+    throw new Error('getSystemScriptsFromListHashes error' + (error as Error).message);
   }
 }
 
 export function readPredefinedMainnetLumosConfig(): config.Config {
-  const predefined = config.predefined.LINA;
+  const predefined = config.MAINNET;
   // add more example like spore;
   return predefined;
 }
 
 export function readPredefinedTestnetLumosConfig(): config.Config {
-  const predefined = config.predefined.AGGRON4;
+  const predefined = config.TESTNET;
   // add more example like spore;
   return predefined;
 }

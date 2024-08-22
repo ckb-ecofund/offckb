@@ -16,7 +16,6 @@
     "dist",
     "account",
     "ckb",
-    "templates/config.json",
     "templates/offckb.config.ts",
     "templates/template.json"
   ],
