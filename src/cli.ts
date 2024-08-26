@@ -16,7 +16,7 @@ import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
-import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
+import { printMyScripts, DeployedScriptOption } from './cmd/my-scripts';
 import { Config, ConfigItem } from './cmd/config';
 import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
 import { printSystemScripts } from './cmd/system-scripts';
@@ -93,10 +93,10 @@ program
   .action((options: DeployOptions) => deploy(options));
 
 program
-  .command('deployed-scripts')
+  .command('my-scripts')
   .description('Show deployed contracts info on different networks, only supports devnet and testnet')
   .option('--network <network>', 'Specify the network to deploy to', 'devnet')
-  .action((options: DeployedScriptOption) => deployedScripts(options));
+  .action((options: DeployedScriptOption) => printMyScripts(options));
 
 program
   .command('config <action> [item] [value]')

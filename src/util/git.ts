@@ -37,16 +37,21 @@ export function gitCloneAndDownloadFolderSync(
 
   // Clone the repository
   try {
-    const cloneCommand = `git clone -n --depth=1 --single-branch --branch ${branch} --filter=tree:0 ${repoUrl} ${tempFolder}`;
+    const cloneCommand = `git clone -n --depth=1 --filter=tree:0 --single-branch --branch ${branch} ${repoUrl} ${tempFolder}`;
+    console.log(cloneCommand);
     execSync(cloneCommand);
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);
   }
-  // checkout the examples sub folder
+
+  // Set up sparse-checkout for the subfolder
   try {
-    execSync(`git sparse-checkout set ${subFolderName}`, { cwd: tempFolder });
-    execSync(`git checkout`, { cwd: tempFolder });
+    console.log(subFolderName, tempFolder);
+    execSync('git sparse-checkout init --cone', { cwd: tempFolder });
+    // Use the full path for sparse-checkout
+    execSync(`git sparse-checkout set "${subFolderName}"`, { cwd: tempFolder });
+    execSync('git checkout', { cwd: tempFolder });
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);
@@ -56,8 +61,15 @@ export function gitCloneAndDownloadFolderSync(
   if (!fs.existsSync(targetPath) || !fs.statSync(targetPath).isDirectory()) {
     fs.mkdirSync(targetPath, { recursive: true });
   }
+
+  // Copy the specific subfolder
   const source = path.resolve(tempFolder, subFolderName);
-  copyFolderSync(source, targetPath);
+  if (fs.existsSync(source)) {
+    copyFolderSync(source, targetPath);
+  } else {
+    console.error(`Subfolder ${subFolderName} not found in the cloned repository ${source}.`);
+    process.exit(1);
+  }
 
   // Empty the temp folder if it exists
   if (fs.existsSync(tempFolder)) {

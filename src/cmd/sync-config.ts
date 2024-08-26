@@ -1,18 +1,22 @@
+import path from 'path';
 import { userOffCKBConfigPath } from '../cfg/const';
-import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
-import { Network } from '../util/type';
+import { readContractInfoFolderFromOffCKBConfig } from '../util/fs';
 import { validateExecDappEnvironment } from '../util/validator';
+import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 
 export function syncConfig() {
   validateExecDappEnvironment();
 
-  // update the offckb.config.ts file in users workspace
-  const devnetFullLumosConfig = buildFullLumosConfig(Network.devnet);
-  const testnetFullLumosConfig = buildFullLumosConfig(Network.testnet);
-  const mainnetFullLumosConfig = buildFullLumosConfig(Network.mainnet);
+  const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+  if (!contractInfoFolder) {
+    throw new Error('No contract info folder found in offckb.config.ts!');
+  }
 
-  updateScriptInfoInOffCKBConfigTs(devnetFullLumosConfig, userOffCKBConfigPath, Network.devnet);
-  updateScriptInfoInOffCKBConfigTs(testnetFullLumosConfig, userOffCKBConfigPath, Network.testnet);
-  updateScriptInfoInOffCKBConfigTs(mainnetFullLumosConfig, userOffCKBConfigPath, Network.mainnet);
-  console.log('offCKB config updated.');
+  const systemJsonFilePath = path.resolve(contractInfoFolder, 'system-scripts.json');
+  genSystemScriptsJsonFile(systemJsonFilePath);
+
+  const myScriptsJsonFilePath = path.resolve(contractInfoFolder, 'my-scripts.json');
+  genMyScriptsJsonFile(myScriptsJsonFilePath);
+
+  console.log('scripts json config updated.');
 }

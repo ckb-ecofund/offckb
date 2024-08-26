@@ -6,7 +6,7 @@ import { validateNetworkOpt } from '../util/validator';
 
 export interface DeployedScriptOption extends NetworkOption {}
 
-export function deployedScripts(option: DeployedScriptOption = { network: Network.devnet }) {
+export function printMyScripts(option: DeployedScriptOption = { network: Network.devnet }) {
   const network = option.network;
   validateNetworkOpt(network);
 

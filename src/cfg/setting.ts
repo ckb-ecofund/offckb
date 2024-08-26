@@ -5,9 +5,9 @@ import envPaths from './env-path';
 import { deepMerge } from '../util/setting';
 
 const paths = envPaths('offckb');
-const configPath = path.join(paths.config, 'settings.json');
-const dataPath = paths.data;
-const cachePath = paths.cache;
+export const configPath = path.join(paths.config, 'settings.json');
+export const dataPath = paths.data;
+export const cachePath = paths.cache;
 
 export interface Settings {
   proxy?: AxiosProxyConfig;
@@ -59,9 +59,9 @@ export const defaultSettings: Settings = {
     contractsPath: path.resolve(dataPath, 'mainnet/contracts'),
   },
   dappTemplate: {
-    gitRepoUrl: `https://github.com/RetricSu/offckb`,
-    gitBranch: 'develop',
-    gitFolder: 'templates',
+    gitRepoUrl: `https://github.com/ckb-ecofund/offckb`,
+    gitBranch: 'new-template',
+    gitFolder: 'templates/v3',
   },
 };
 

@@ -65,7 +65,7 @@ Commands:
   transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
   balance [options] [toAddress]                     Check account balance, only devnet and testnet
   deploy [options]                                  Deploy contracts to different networks, only supports devnet and testnet
-  deployed-scripts [options]                        Show deployed contracts info on different networks, only supports devnet and testnet
+  my-scripts [options]                              Show deployed contracts info on different networks, only supports devnet and testnet
   config <action> [item] [value]                    do a configuration action
   debug [options]                                   CKB Debugger for development
   system-scripts [options]                          Output system scripts of the local devnet
