@@ -14,6 +14,3 @@ export const userOffCKBConfigPath = path.resolve(currentExecPath, 'offckb.config
 export const devnetSourcePath = path.resolve(packageRootPath, './ckb/devnet');
 
 export const accountTargetDir = path.join(packageRootPath, `account`);
-
-// Version
-export const defaultLumosVersion = '0.21.0';

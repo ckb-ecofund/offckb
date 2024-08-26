@@ -6,7 +6,7 @@ import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { settings } from '../cfg/setting';
-import { genSystemScriptsJsonFile } from '../scripts/gen';
+import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
@@ -44,6 +44,9 @@ export async function create(name: string, template: BareTemplateOption) {
 
     const systemJsonFilePath = path.resolve(contractInfoFolder, 'system-scripts.json');
     genSystemScriptsJsonFile(systemJsonFilePath);
+
+    const myScriptsJsonFilePath = path.resolve(contractInfoFolder, 'my-scripts.json');
+    genMyScriptsJsonFile(myScriptsJsonFilePath);
   } else {
     console.log("Couldn't find the offckb config file in project. abort.");
   }

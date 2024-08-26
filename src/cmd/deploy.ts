@@ -5,12 +5,17 @@ import { NetworkOption, Network } from '../util/type';
 import path from 'path';
 import { Account, CKB } from '../util/ckb';
 import { deployerAccount } from '../cfg/account';
-import { buildFullLumosConfig, updateScriptInfoInOffCKBConfigTs } from '../util/config';
-import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
+import {
+  listBinaryFilesInFolder,
+  readFileToUint8Array,
+  isAbsolutePath,
+  readContractInfoFolderFromOffCKBConfig,
+} from '../util/fs';
 import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validator';
 import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
 import { DeploymentRecipe, generateDeploymentRecipeJsonFile } from '../deploy/migration';
 import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
+import { genMyScriptsJsonFile } from '../scripts/gen';
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
@@ -36,7 +41,7 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
     const results = await deployBinaries(binPaths, from, ckb);
 
     // record the deployed contract infos
-    recordDeployResult(results, network, false); // we don't update offCKB.config since we don't know where the file is
+    recordDeployResult(results, network, false); // we don't update my-scripts.json since we don't know where the file is
     return;
   }
 
@@ -75,7 +80,7 @@ type DeployBinaryReturnType = ReturnType<typeof deployBinary>;
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 type DeployedInterfaceType = UnwrapPromise<DeployBinaryReturnType>;
 
-async function recordDeployResult(results: DeployedInterfaceType[], network: Network, updateOffCKBConfig = true) {
+async function recordDeployResult(results: DeployedInterfaceType[], network: Network, updateMyScriptsJsonFile = true) {
   if (results.length === 0) {
     return;
   }
@@ -84,10 +89,13 @@ async function recordDeployResult(results: DeployedInterfaceType[], network: Net
     generateDeploymentRecipeJsonFile(result.deploymentOptions.name, result.deploymentRecipe, network);
   }
 
-  // update lumos config in offckb.config.ts
-  if (updateOffCKBConfig) {
-    const newLumosConfig = buildFullLumosConfig(network);
-    updateScriptInfoInOffCKBConfigTs(newLumosConfig, userOffCKBConfigPath, network);
+  // update my-scripts.json
+  if (updateMyScriptsJsonFile) {
+    const folder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+    if (folder) {
+      const myScriptsFilePath = path.resolve(folder, 'my-scripts.json');
+      genMyScriptsJsonFile(myScriptsFilePath);
+    }
   }
 
   console.log('done.');

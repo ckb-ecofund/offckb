@@ -69,11 +69,11 @@ export default function Home() {
             HELLO_WORLD Script{' '}
             {isScriptDeployed ? (
               <div>
-                <li>code_hash: {offckb.myScripts['hello_world']?.script.codeHash}</li>
-                <li>hash_type: {offckb.myScripts['hello_world']?.script.hashType}</li>
+                <li>code_hash: {offckb.myScripts['hello_world']?.codeHash}</li>
+                <li>hash_type: {offckb.myScripts['hello_world']?.hashType}</li>
                 <li>
-                  outpoint: {offckb.myScripts['hello_world']?.script.cellDeps[0].cellDep.outPoint.txHash}:
-                  {offckb.myScripts['hello_world']?.script.cellDeps[0].cellDep.outPoint.index}
+                  outpoint: {offckb.myScripts['hello_world']?.cellDeps[0].cellDep.outPoint.txHash}:
+                  {offckb.myScripts['hello_world']?.cellDeps[0].cellDep.outPoint.index}
                 </li>
               </div>
             ) : (

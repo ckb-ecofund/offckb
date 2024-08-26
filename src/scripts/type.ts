@@ -44,7 +44,7 @@ export interface NetworkSystemScripts {
   mainnet: SystemScriptsRecord;
 }
 
-export type MyScriptsRecord = Record<string, SystemScript | undefined>;
+export type MyScriptsRecord = Record<string, ScriptInfo | undefined>;
 
 export interface NetworkMyScripts {
   devnet: MyScriptsRecord;
