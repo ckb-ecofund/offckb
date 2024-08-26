@@ -60,7 +60,7 @@ export const defaultSettings: Settings = {
   },
   dappTemplate: {
     gitRepoUrl: `https://github.com/ckb-ecofund/offckb`,
-    gitBranch: 'new-template',
+    gitBranch: 'v0.3.x',
     gitFolder: 'templates/v3',
   },
 };
