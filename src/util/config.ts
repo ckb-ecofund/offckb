@@ -36,21 +36,33 @@ export function readUserDeployedScriptsInfo(network: Network) {
         const recipe = readDeploymentRecipeJsonFile(newestFilePath);
         // todo: handle multiple cell recipes?
         const firstCell = recipe.cellRecipes[0];
-        const isDepCode = recipe.depGroupRecipes.length === 0;
+        const isDepCode = recipe.depGroupRecipes.length > 0;
         deployedScriptsInfo[firstCell.name] = {
           codeHash: (firstCell.typeId ? firstCell.typeId : firstCell.dataHash) as `0x${string}`,
           hashType: firstCell.typeId ? 'type' : 'data1',
-          cellDeps: recipe.depGroupRecipes.map((depGroupRecipe) => {
-            return {
-              cellDep: {
-                outPoint: {
-                  txHash: depGroupRecipe.txHash as `0x${string}`,
-                  index: +depGroupRecipe.index,
+          cellDeps: !isDepCode
+            ? [
+                {
+                  cellDep: {
+                    outPoint: {
+                      txHash: firstCell.txHash as `0x${string}`,
+                      index: +firstCell.index,
+                    },
+                    depType: 'code',
+                  },
                 },
-                depType: isDepCode ? 'code' : 'depGroup',
-              },
-            };
-          }),
+              ]
+            : recipe.depGroupRecipes.map((depGroupRecipe) => {
+                return {
+                  cellDep: {
+                    outPoint: {
+                      txHash: depGroupRecipe.txHash as `0x${string}`,
+                      index: +depGroupRecipe.index,
+                    },
+                    depType: 'depGroup',
+                  },
+                };
+              }),
         };
       } catch (error) {
         console.error(`Error reading or parsing file '${newestFilePath}':`, error);
