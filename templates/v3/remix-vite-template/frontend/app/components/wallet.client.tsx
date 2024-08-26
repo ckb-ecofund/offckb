@@ -1,10 +1,7 @@
 import { ccc } from '@ckb-ccc/connector-react';
 import React, { useEffect, useState } from 'react';
-import { TransactionSkeleton } from '@ckb-lumos/helpers';
 import offckb, { readEnvNetwork } from 'offckb.config';
 import { buildCccClient } from './wallet-client.client';
-import common, { registerCustomLockScriptInfos } from '@ckb-lumos/common-scripts/lib/common';
-import { generateDefaultScriptInfos } from '@ckb-ccc/lumos-patches';
 
 function WalletIcon({ wallet, className }: { wallet: ccc.Wallet; className?: string }) {
   return (
