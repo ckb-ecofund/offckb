@@ -2,6 +2,9 @@ import { predefinedOffCKBConfigTsPath, userOffCKBConfigPath } from '../cfg/const
 import { copyFileSync } from 'fs';
 import { updateOffCKBConfigVersion } from '../util/config';
 import { validateTypescriptWorkspace } from '../util/validator';
+import { readContractInfoFolderFromOffCKBConfig } from '../util/fs';
+import path from 'path';
+import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 
 export function injectConfig() {
   validateTypescriptWorkspace();
@@ -12,7 +15,16 @@ export function injectConfig() {
   // update the version in the offckb.config.ts
   updateOffCKBConfigVersion(userOffCKBConfigPath);
 
-  //todo: update my-scripts.json
+  const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+  if (!contractInfoFolder) {
+    throw new Error('No contract info folder found in offckb.config.ts!');
+  }
+
+  const systemJsonFilePath = path.resolve(contractInfoFolder, 'system-scripts.json');
+  genSystemScriptsJsonFile(systemJsonFilePath);
+
+  const myScriptsJsonFilePath = path.resolve(contractInfoFolder, 'my-scripts.json');
+  genMyScriptsJsonFile(myScriptsJsonFilePath);
 
   console.log(`\n\nAll good. You can now use it in your project like: 
   
