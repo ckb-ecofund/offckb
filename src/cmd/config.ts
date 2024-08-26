@@ -1,4 +1,4 @@
-import { readSettings, writeSettings } from '../cfg/setting';
+import { configPath, readSettings, writeSettings } from '../cfg/setting';
 import { Request } from '../util/request';
 import { isValidVersion } from '../util/validator';
 
@@ -16,6 +16,7 @@ export enum ConfigItem {
 
 export async function Config(action: ConfigAction, item: ConfigItem, value?: string) {
   if (action === ConfigAction.list) {
+    console.log('config file: ', configPath);
     return console.log(readSettings());
   }
 
