@@ -115,6 +115,25 @@ export function updateVersionInTSFile(newVersion: string, filePath: string): voi
   }
 }
 
+export function readContractInfoFolderFromOffCKBConfig(filePath: string): string | null {
+  // Read the contents of the TS file
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+
+  // Use a regular expression to find the version value
+  const match = fileContents.match(/contractInfoFolder:\s*['"]([^'"]+)['"]/);
+  if (match && match[1]) {
+    const contractInfoFolderValue = match[1];
+    const folderPath = path.dirname(filePath);
+    const contractInfoFolder = isAbsolutePath(contractInfoFolderValue)
+      ? contractInfoFolderValue
+      : path.resolve(folderPath, contractInfoFolderValue);
+    return contractInfoFolder;
+  } else {
+    console.log('contractBinFolder value not found in offckb.config.ts');
+    return null;
+  }
+}
+
 export async function readFileToUint8Array(filePath: string): Promise<Uint8Array> {
   return new Promise<Uint8Array>((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {

@@ -1,11 +1,12 @@
 import path from 'path';
 import { currentExecPath } from '../cfg/const';
-import { findFileInFolder, updateVersionInTSFile } from '../util/fs';
+import { findFileInFolder, readContractInfoFolderFromOffCKBConfig, updateVersionInTSFile } from '../util/fs';
 import { BareTemplateOption, loadBareTemplateOpts } from '../util/template';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { settings } from '../cfg/setting';
+import { genSystemScriptsJsonFile } from '../scripts/gen';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
@@ -36,6 +37,13 @@ export async function create(name: string, template: BareTemplateOption) {
   const targetConfigPath = findFileInFolder(projectFolder, 'offckb.config.ts');
   if (targetConfigPath) {
     updateVersionInTSFile(version, targetConfigPath);
+    const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(targetConfigPath);
+    if (!contractInfoFolder) {
+      throw new Error('No contract info folder found in offckb.config.ts!');
+    }
+
+    const systemJsonFilePath = path.resolve(contractInfoFolder, 'system-scripts.json');
+    genSystemScriptsJsonFile(systemJsonFilePath);
   } else {
     console.log("Couldn't find the offckb config file in project. abort.");
   }
