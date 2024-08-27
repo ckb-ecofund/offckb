@@ -1,9 +1,9 @@
 import { exec } from 'child_process';
-import { initChainIfNeeded } from './develop/init-chain';
-import { installCKBBinary } from './develop/install';
+import { initChainIfNeeded } from '../node/init-chain';
+import { installCKBBinary } from '../node/install';
 import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
-import { createRPCProxy } from './develop/rpc-proxy';
+import { createRPCProxy } from '../tools/rpc-proxy';
 import { Network } from '../util/type';
 
 export interface NodeProp {

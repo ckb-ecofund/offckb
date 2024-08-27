@@ -1,8 +1,8 @@
 import * as fs from 'fs';
 import path from 'path';
-import { isFolderExists, copyFilesWithExclusion } from '../../util/fs';
-import { settings } from '../../cfg/setting';
-import { devnetSourcePath } from '../../cfg/const';
+import { isFolderExists, copyFilesWithExclusion } from '../util/fs';
+import { settings } from '../cfg/setting';
+import { devnetSourcePath } from '../cfg/const';
 
 export async function initChainIfNeeded() {
   const devnetConfigPath = settings.devnet.configPath;

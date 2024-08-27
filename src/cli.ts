@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { installCKBBinary } from './cmd/develop/install';
-import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/genkey';
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
-import { initChainIfNeeded } from './cmd/develop/init-chain';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -14,7 +11,6 @@ import { DeployOptions, deploy } from './cmd/deploy';
 import { syncConfig } from './cmd/sync-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
-import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 import { printMyScripts, DeployedScriptOption } from './cmd/my-scripts';
 import { Config, ConfigItem } from './cmd/config';
@@ -126,28 +122,6 @@ program
     const exportStyle = option.exportStyle;
     return printSystemScripts(exportStyle);
   });
-
-// Add commands meant for developers
-if (process.env.NODE_ENV === 'development') {
-  // Define the CLI commands and options
-  program.command('install').description('Install the ckb dependency binary').action(installCKBBinary);
-
-  program.command('genkey').description('Generate 20 accounts').action(genkey);
-
-  program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
-
-  program.command('build-accounts').description('Generate accounts with prefunded CKB tokens').action(buildAccounts);
-
-  program
-    .command('print-account-issue-info')
-    .description('Print account issue cells config toml sections')
-    .action(printIssueSectionForToml);
-
-  program
-    .command('build-account [privateKey]')
-    .description('Print standard account info from a privatekey')
-    .action(buildAccount);
-}
 
 program.parse(process.argv);
 

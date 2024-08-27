@@ -5,9 +5,9 @@ import semver from 'semver';
 import os from 'os';
 import AdmZip from 'adm-zip';
 import * as tar from 'tar';
-import { Request } from '../../util/request';
-import { getCKBBinaryInstallPath, getCKBBinaryPath, readSettings } from '../../cfg/setting';
-import { encodeBinPathForTerminal } from '../../util/encoding';
+import { Request } from '../util/request';
+import { getCKBBinaryInstallPath, getCKBBinaryPath, readSettings } from '../cfg/setting';
+import { encodeBinPathForTerminal } from '../util/encoding';
 
 export async function installCKBBinary(version: string) {
   const ckbBinPath = getCKBBinaryPath(version);

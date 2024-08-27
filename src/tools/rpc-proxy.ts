@@ -1,8 +1,8 @@
 import httpProxy from 'http-proxy';
 import http from 'http';
-import { Network } from '../../util/type';
+import { Network } from '../util/type';
 import fs from 'fs';
-import { readSettings } from '../../cfg/setting';
+import { readSettings } from '../cfg/setting';
 import path from 'path';
 
 // todo: if we use import this throws error in tsc building
