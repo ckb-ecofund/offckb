@@ -18,7 +18,7 @@ export async function initChainIfNeeded() {
     // Read the content of the ckb-miner.toml file
     const data = fs.readFileSync(minerToml, 'utf8');
     // Replace the URL
-    const modifiedData = data.replace('http://ckb:8114/', 'http://localhost:8114');
+    const modifiedData = data.replace('http://ckb:8114/', settings.devnet.rpcUrl);
     // Write the modified content back to the file
     fs.writeFileSync(newMinerToml, modifiedData, 'utf8');
   }

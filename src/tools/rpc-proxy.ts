@@ -74,7 +74,7 @@ export function createRPCProxy(network: Network, targetRpcUrl: string, port: num
     network,
     start: () => {
       return server.listen(port, () => {
-        console.debug(`Proxy server running on http://localhost:${port}`);
+        console.debug(`CKB ${network} RPC Proxy server running on http://localhost:${port}`);
       });
     },
     stop: () => {

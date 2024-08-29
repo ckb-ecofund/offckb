@@ -14,12 +14,16 @@ export const packageRootPath = path.resolve(packageSrcPath, '../');
 
 export interface Settings {
   proxy?: AxiosProxyConfig;
+  rpc: {
+    proxyPort: number;
+  };
   bins: {
     rootFolder: string;
     defaultCKBVersion: string;
     downloadPath: string;
   };
   devnet: {
+    rpcUrl: string;
     configPath: string;
     dataPath: string;
     debugFullTransactionsPath: string;
@@ -28,9 +32,11 @@ export interface Settings {
     contractsPath: string;
   };
   testnet: {
+    rpcUrl: string;
     contractsPath: string;
   };
   mainnet: {
+    rpcUrl: string;
     contractsPath: string;
   };
   dappTemplate: {
@@ -43,12 +49,16 @@ export interface Settings {
 
 export const defaultSettings: Settings = {
   proxy: undefined,
+  rpc: {
+    proxyPort: 9000,
+  },
   bins: {
     rootFolder: path.resolve(dataPath, 'bins'),
-    defaultCKBVersion: '0.113.1', // this also the default version
+    defaultCKBVersion: '0.113.1',
     downloadPath: path.resolve(cachePath, 'download'),
   },
   devnet: {
+    rpcUrl: 'http://localhost:8114',
     configPath: path.resolve(dataPath, 'devnet'),
     dataPath: path.resolve(dataPath, 'devnet/data'),
     debugFullTransactionsPath: path.resolve(cachePath, 'devnet/full-transactions'),
@@ -57,9 +67,11 @@ export const defaultSettings: Settings = {
     contractsPath: path.resolve(dataPath, 'devnet/contracts'),
   },
   testnet: {
+    rpcUrl: 'https://testnet.ckb.dev',
     contractsPath: path.resolve(dataPath, 'testnet/contracts'),
   },
   mainnet: {
+    rpcUrl: 'https://mainnet.ckb.dev',
     contractsPath: path.resolve(dataPath, 'mainnet/contracts'),
   },
   dappTemplate: {

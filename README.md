@@ -56,7 +56,8 @@ Options:
 
 Commands:
   create [options] [your-project-name]              Create a new dApp from bare templates
-  node [CKB-Version]                                Use the CKB to start devnet
+  node [options] [CKB-Version]                      Use the CKB to start devnet
+  proxy-rpc [options]                               Start the rpc proxy server
   clean                                             Clean the devnet data, need to stop running the chain first
   accounts                                          Print account list info
   list-hashes [CKB-Version]                         Use the CKB to list blockchain scripts hashes
@@ -71,7 +72,6 @@ Commands:
   debug [options]                                   CKB Debugger for development
   system-scripts [options]                          Output system scripts of the local devnet
   help [command]                                    display help for command
-✨
 ```
 
 *Use `offckb [command] -h` to learn more about a specific command.*
