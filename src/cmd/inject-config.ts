@@ -1,9 +1,9 @@
 import { copyFileSync } from 'fs';
-import { updateOffCKBConfigVersion } from '../util/config';
 import { validateTypescriptWorkspace } from '../util/validator';
 import path from 'path';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 import { OffCKBConfigFile } from '../template/config';
+const version = require('../../package.json').version;
 
 export function injectConfig() {
   validateTypescriptWorkspace();
@@ -14,7 +14,7 @@ export function injectConfig() {
   const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
   copyFileSync(predefinedOffCKBConfigTsPath, userOffCKBConfigPath);
   // update the version in the offckb.config.ts
-  updateOffCKBConfigVersion(userOffCKBConfigPath);
+  OffCKBConfigFile.updateVersion(version, userOffCKBConfigPath);
 
   const contractInfoFolder = OffCKBConfigFile.readContractInfoFolder(userOffCKBConfigPath);
   if (!contractInfoFolder) {

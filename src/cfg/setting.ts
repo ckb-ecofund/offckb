@@ -2,7 +2,6 @@ import { AxiosProxyConfig } from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import envPaths from './env-path';
-import { deepMerge } from '../util/setting';
 
 const paths = envPaths('offckb');
 
@@ -102,4 +101,18 @@ export function getCKBBinaryInstallPath(version: string) {
 
 export function getCKBBinaryPath(version: string) {
   return `${getCKBBinaryInstallPath(version)}/ckb`;
+}
+
+function deepMerge(target: any, source: any): any {
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object') {
+      if (!target[key]) {
+        target[key] = {};
+      }
+      deepMerge(target[key], source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
 }

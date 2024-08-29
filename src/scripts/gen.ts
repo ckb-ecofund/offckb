@@ -3,8 +3,8 @@ import publicScripts from './public';
 import { NetworkMyScripts, NetworkSystemScripts } from './type';
 import { getSystemScriptsFromListHashes } from '../cmd/system-scripts';
 import path from 'path';
-import { readUserDeployedScriptsInfo } from '../util/config';
 import { Network } from '../util/type';
+import { readUserDeployedScriptsInfo } from './util';
 
 export function genSystemScripts(): NetworkSystemScripts | null {
   const devnetScripts = getSystemScriptsFromListHashes();

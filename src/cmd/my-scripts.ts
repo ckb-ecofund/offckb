@@ -1,6 +1,6 @@
 import { readDeploymentToml } from '../deploy/toml';
 import { getContractsPath } from '../deploy/util';
-import { readUserDeployedScriptsInfo } from '../util/config';
+import { readUserDeployedScriptsInfo } from '../scripts/util';
 import { NetworkOption, Network } from '../util/type';
 import { validateNetworkOpt } from '../util/validator';
 
