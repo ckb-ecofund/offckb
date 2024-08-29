@@ -1,11 +1,12 @@
 import path from 'path';
-import { findFileInFolder, readContractInfoFolderFromOffCKBConfig, updateVersionInTSFile } from '../util/fs';
-import { BareTemplateOption, loadBareTemplateOpts } from '../template';
+import { findFileInFolder } from '../util/fs';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 import { readSettings } from '../cfg/setting';
+import { BareTemplateOption, loadBareTemplateOpts } from '../template/option';
+import { OffCKBConfigFile } from '../template/config';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
@@ -36,8 +37,8 @@ export async function create(name: string, template: BareTemplateOption) {
   const projectFolder = path.resolve(process.cwd(), name);
   const targetConfigPath = findFileInFolder(projectFolder, 'offckb.config.ts');
   if (targetConfigPath) {
-    updateVersionInTSFile(version, targetConfigPath);
-    const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(targetConfigPath);
+    OffCKBConfigFile.updateVersion(version, targetConfigPath);
+    const contractInfoFolder = OffCKBConfigFile.readContractInfoFolder(targetConfigPath);
     if (!contractInfoFolder) {
       throw new Error('No contract info folder found in offckb.config.ts!');
     }

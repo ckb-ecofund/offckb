@@ -4,17 +4,13 @@ import { NetworkOption, Network } from '../util/type';
 import path from 'path';
 import { Account, CKB } from '../util/ckb';
 import { deployerAccount } from '../cfg/account';
-import {
-  listBinaryFilesInFolder,
-  readFileToUint8Array,
-  isAbsolutePath,
-  readContractInfoFolderFromOffCKBConfig,
-} from '../util/fs';
+import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
 import { validateNetworkOpt, validateExecDappEnvironment } from '../util/validator';
 import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
 import { DeploymentRecipe, generateDeploymentRecipeJsonFile } from '../deploy/migration';
 import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
 import { genMyScriptsJsonFile } from '../scripts/gen';
+import { OffCKBConfigFile } from '../template/config';
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
@@ -92,7 +88,7 @@ async function recordDeployResult(results: DeployedInterfaceType[], network: Net
   // update my-scripts.json
   if (updateMyScriptsJsonFile) {
     const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
-    const folder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+    const folder = OffCKBConfigFile.readContractInfoFolder(userOffCKBConfigPath);
     if (folder) {
       const myScriptsFilePath = path.resolve(folder, 'my-scripts.json');
       genMyScriptsJsonFile(myScriptsFilePath);
