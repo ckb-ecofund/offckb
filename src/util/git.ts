@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { dappTemplatePath } from '../cfg/const';
 import { copyFolderSync } from './fs';
+import { readSettings } from '../cfg/setting';
 
 export function isGitInstalled(): boolean {
   try {
@@ -20,7 +20,8 @@ export function gitCloneAndDownloadFolderSync(
   targetPath: string,
 ) {
   console.log('start cloning the dapp template..');
-  const tempFolder = path.resolve(dappTemplatePath, 'temp-clone-folder');
+  const settings = readSettings();
+  const tempFolder = path.resolve(settings.dappTemplate.downloadPath, 'temp-clone-folder');
 
   if (!isGitInstalled()) {
     console.log('Git is not installed, please check https://git-scm.com/');

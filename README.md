@@ -14,7 +14,7 @@
 - built-in scripts like [Omnilock](https://github.com/cryptape/omnilock) and [Spore-contract](https://github.com/sporeprotocol/spore-contract)
 - multiple minimal dApp templates to learn and get your hands dirty
 
-Start building on Nervos blockchain, right now, right away!
+Start building on CKB blockchain, right now, right away!
 
 ## Table of Contents
 
@@ -31,7 +31,8 @@ Start building on Nervos blockchain, right now, right away!
   - [Set Network Proxy](#set-network-proxy)
 - [Built-in scripts](#built-in-scripts)
 - [Accounts](#accounts)
-- [About Lumos](#about-lumos)
+- [About CCC](#about-ccc)
+- [FAQ](#faq)
 - [Contributing](#contributing)
 
 ## Install
@@ -74,13 +75,6 @@ Commands:
 ```
 
 *Use `offckb [command] -h` to learn more about a specific command.*
-
-Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
-
-```sh
-sudo chown -R $(whoami) /usr/local/lib/node_modules
-npm install -g @offckb/cli
-```
 
 ## Get started
 
@@ -157,9 +151,18 @@ detail informations about each account are recorded in the `account/account.json
 
 :warning: **DO NOT SEND REAL ASSETS INTO ALL THESE ACCOUNTS, YOU CAN LOOSE YOUR MONEY** :warning:
 
-## About Lumos
+## About CCC
 
-`offckb` uses [Lumos](https://github.com/ckb-js/lumos) as the CKB dApp framework to build the template projects.
+`offckb` uses [CCC](https://github.com/ckb-ecofund/ccc) as the development framework to build the CKB dApp template projects.
+
+## FAQ
+
+Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
+
+```sh
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+npm install -g @offckb/cli
+```
 
 ## Contributing
 

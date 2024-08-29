@@ -5,9 +5,13 @@ import envPaths from './env-path';
 import { deepMerge } from '../util/setting';
 
 const paths = envPaths('offckb');
+
 export const configPath = path.join(paths.config, 'settings.json');
 export const dataPath = paths.data;
 export const cachePath = paths.cache;
+
+export const packageSrcPath = path.dirname(require.main!.filename);
+export const packageRootPath = path.resolve(packageSrcPath, '../');
 
 export interface Settings {
   proxy?: AxiosProxyConfig;
@@ -34,6 +38,7 @@ export interface Settings {
     gitRepoUrl: string;
     gitBranch: string;
     gitFolder: string;
+    downloadPath: string;
   };
 }
 
@@ -62,6 +67,7 @@ export const defaultSettings: Settings = {
     gitRepoUrl: `https://github.com/ckb-ecofund/offckb`,
     gitBranch: 'v0.3.x',
     gitFolder: 'templates/v3',
+    downloadPath: path.resolve(cachePath, 'download', 'dapp-template'),
   },
 };
 
@@ -97,5 +103,3 @@ export function getCKBBinaryInstallPath(version: string) {
 export function getCKBBinaryPath(version: string) {
   return `${getCKBBinaryInstallPath(version)}/ckb`;
 }
-
-export const settings = readSettings();

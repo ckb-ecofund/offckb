@@ -1,4 +1,4 @@
-import templateOpt from '../../templates/template.json';
+import templateOpt from './option.json';
 
 export interface BareTemplateOption {
   name: string;

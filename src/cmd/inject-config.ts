@@ -1,4 +1,3 @@
-import { predefinedOffCKBConfigTsPath, userOffCKBConfigPath } from '../cfg/const';
 import { copyFileSync } from 'fs';
 import { updateOffCKBConfigVersion } from '../util/config';
 import { validateTypescriptWorkspace } from '../util/validator';
@@ -11,6 +10,8 @@ export function injectConfig() {
 
   // inject the offckb.config.ts file into users workspace
   // copy config template
+  const predefinedOffCKBConfigTsPath = path.resolve('../template', 'offckb.config.ts');
+  const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
   copyFileSync(predefinedOffCKBConfigTsPath, userOffCKBConfigPath);
   // update the version in the offckb.config.ts
   updateOffCKBConfigVersion(userOffCKBConfigPath);
