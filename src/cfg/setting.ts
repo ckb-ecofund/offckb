@@ -59,9 +59,11 @@ export const defaultSettings: Settings = {
   },
   devnet: {
     rpcUrl: 'http://localhost:8114',
+    // todo: maybe add a root folder for all devnet data
+    // so we can clean it easily
     configPath: path.resolve(dataPath, 'devnet'),
     dataPath: path.resolve(dataPath, 'devnet/data'),
-    debugFullTransactionsPath: path.resolve(cachePath, 'devnet/full-transactions'),
+    debugFullTransactionsPath: path.resolve(dataPath, 'devnet/full-transactions'),
     transactionsPath: path.resolve(dataPath, 'devnet/transactions'),
     failedTransactionsPath: path.resolve(dataPath, 'devnet/failed-transactions'),
     contractsPath: path.resolve(dataPath, 'devnet/contracts'),

@@ -4,17 +4,17 @@ import { readSettings } from '../cfg/setting';
 
 export function clean() {
   const settings = readSettings();
-  const devnetDataPath = settings.devnet.dataPath;
-  if (isFolderExists(devnetDataPath)) {
+  const allDevnetDataPath = settings.devnet.configPath;
+  // this is the root folder of devnet, it contains config, data, debugFullTransactions, transactions, failed-transactions, contracts
+  if (isFolderExists(allDevnetDataPath)) {
     try {
-      fs.rmSync(devnetDataPath, { recursive: true });
+      fs.rmSync(allDevnetDataPath, { recursive: true });
       console.log(`Chain data cleaned.`);
-      // todo: rm deploy info too
     } catch (error: unknown) {
       console.log(`Did you stop running the chain first?`);
       console.log((error as Error).message);
     }
   } else {
-    console.log(`${devnetDataPath} not found, unable to clean it.`);
+    console.log(`${allDevnetDataPath} not found, unable to clean it.`);
   }
 }
