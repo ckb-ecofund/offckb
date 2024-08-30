@@ -3,14 +3,12 @@ import { CKBDebugger } from '../tools/ckb-debugger';
 import fs from 'fs';
 import { dumpTransaction } from '../tools/ckb-tx-dumper';
 import path from 'path';
+import { cccA } from '@ckb-ccc/core/advanced';
+import { Network } from '../util/type';
 
-// todo: if we use import this throws error in tsc building
-//import { cccA } from '@ckb-ccc/core/dist.commonjs/advanced';
-const { cccA } = require('@ckb-ccc/core/advanced');
-
-export function debugTransaction(txHash: string) {
-  const txFile = buildTxFileOptionBy(txHash);
-  const opts = buildTransactionDebugOptions(txHash);
+export function debugTransaction(txHash: string, network: Network) {
+  const txFile = buildTxFileOptionBy(txHash, network);
+  const opts = buildTransactionDebugOptions(txHash, network);
   for (const opt of opts) {
     console.log(`\n******************************`);
     console.log(`****** ${opt.name} ******\n`);
@@ -18,9 +16,8 @@ export function debugTransaction(txHash: string) {
   }
 }
 
-export function buildTransactionDebugOptions(txHash: string) {
-  const settings = readSettings();
-  const txJsonFilePath = `${settings.devnet.transactionsPath}/${txHash}.json`;
+export function buildTransactionDebugOptions(txHash: string, network: Network) {
+  const txJsonFilePath = buildTransactionJsonFilePath(network, txHash);
   const txJson = JSON.parse(fs.readFileSync(txJsonFilePath, 'utf-8'));
   const cccTx = cccA.JsonRpcTransformers.transactionTo(txJson);
 
@@ -55,9 +52,10 @@ export function debugSingleScript(
   cellIndex: number,
   cellType: 'input' | 'output',
   scriptType: 'type' | 'lock',
+  network: Network,
   bin?: string,
 ) {
-  const txFile = buildTxFileOptionBy(txHash);
+  const txFile = buildTxFileOptionBy(txHash, network);
   let opt = `--cell-index ${cellIndex} --cell-type ${cellType} --script-group-type ${scriptType}`;
   if (bin) {
     opt = opt + ` --bin ${bin}`;
@@ -82,12 +80,12 @@ export function parseSingleScriptOption(value: string) {
   };
 }
 
-export function buildTxFileOptionBy(txHash: string) {
+export function buildTxFileOptionBy(txHash: string, network: Network) {
   const settings = readSettings();
-  const outputFilePath = `${settings.devnet.debugFullTransactionsPath}/${txHash}.json`;
+  const outputFilePath = buildDebugFullTransactionFilePath(network, txHash);
   if (!fs.existsSync(outputFilePath)) {
     const rpc = settings.devnet.rpcUrl;
-    const txJsonFilePath = `${settings.devnet.transactionsPath}/${txHash}.json`;
+    const txJsonFilePath = buildTransactionJsonFilePath(network, txHash);
     if (!fs.existsSync(outputFilePath)) {
       fs.mkdirSync(path.dirname(outputFilePath), { recursive: true });
     }
@@ -95,6 +93,28 @@ export function buildTxFileOptionBy(txHash: string) {
   }
   const opt = `--tx-file ${outputFilePath}`;
   return opt;
+}
+
+export function buildTransactionJsonFilePath(network: Network, txHash: string) {
+  const settings = readSettings();
+  if (network === Network.devnet) {
+    return `${settings.devnet.transactionsPath}/${txHash}.json`;
+  }
+  if (network === Network.testnet) {
+    return `${settings.testnet.transactionsPath}/${txHash}.json`;
+  }
+  return `${settings.mainnet.transactionsPath}/${txHash}.json`;
+}
+
+export function buildDebugFullTransactionFilePath(network: Network, txHash: string) {
+  const settings = readSettings();
+  if (network === Network.devnet) {
+    return `${settings.devnet.debugFullTransactionsPath}/${txHash}.json`;
+  }
+  if (network === Network.testnet) {
+    return `${settings.testnet.debugFullTransactionsPath}/${txHash}.json`;
+  }
+  return `${settings.mainnet.debugFullTransactionsPath}/${txHash}.json`;
 }
 
 export function debugRaw(options: string) {

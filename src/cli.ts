@@ -118,14 +118,15 @@ program
   .requiredOption('--tx-hash <txHash>', 'Specify the transaction hash to debug with')
   .option('--single-script <singleScript>', 'Specify the cell script to debug with')
   .option('--bin <bin>', 'Specify a binary to replace the script to debug with')
+  .option('--network <network>', 'Specify the network to debug', 'devnet')
   .description('CKB Debugger for development')
   .action(async (option) => {
     const txHash = option.txHash;
     if (option.singleScript) {
       const { cellType, cellIndex, scriptType } = parseSingleScriptOption(option.singleScript);
-      return debugSingleScript(txHash, cellIndex, cellType, scriptType, option.bin);
+      return debugSingleScript(txHash, cellIndex, cellType, scriptType, option.network, option.bin);
     }
-    return debugTransaction(txHash);
+    return debugTransaction(txHash, option.network);
   });
 
 program

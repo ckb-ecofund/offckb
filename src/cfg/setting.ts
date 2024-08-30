@@ -33,10 +33,16 @@ export interface Settings {
   };
   testnet: {
     rpcUrl: string;
+    debugFullTransactionsPath: string;
+    transactionsPath: string;
+    failedTransactionsPath: string;
     contractsPath: string;
   };
   mainnet: {
     rpcUrl: string;
+    debugFullTransactionsPath: string;
+    transactionsPath: string;
+    failedTransactionsPath: string;
     contractsPath: string;
   };
   dappTemplate: {
@@ -70,10 +76,16 @@ export const defaultSettings: Settings = {
   },
   testnet: {
     rpcUrl: 'https://testnet.ckb.dev',
+    debugFullTransactionsPath: path.resolve(dataPath, 'testnet/full-transactions'),
+    transactionsPath: path.resolve(dataPath, 'testnet/transactions'),
+    failedTransactionsPath: path.resolve(dataPath, 'testnet/failed-transactions'),
     contractsPath: path.resolve(dataPath, 'testnet/contracts'),
   },
   mainnet: {
     rpcUrl: 'https://mainnet.ckb.dev',
+    debugFullTransactionsPath: path.resolve(dataPath, 'mainnet/full-transactions'),
+    transactionsPath: path.resolve(dataPath, 'mainnet/transactions'),
+    failedTransactionsPath: path.resolve(dataPath, 'mainnet/failed-transactions'),
     contractsPath: path.resolve(dataPath, 'mainnet/contracts'),
   },
   dappTemplate: {
