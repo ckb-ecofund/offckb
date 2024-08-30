@@ -66,7 +66,7 @@ export default function Home() {
         <div className="my-6">
           <div className="text-xl font-semibold my-2">Smart Contract</div>
           <div>
-            HELLO_WORLD Script{' '}
+            hello-world Script{' '}
             {isScriptDeployed ? (
               <div>
                 <li>code_hash: {offckb.myScripts['hello-world']?.codeHash}</li>
