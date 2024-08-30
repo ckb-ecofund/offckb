@@ -1,13 +1,13 @@
 import path from 'path';
-import { userOffCKBConfigPath } from '../cfg/const';
-import { readContractInfoFolderFromOffCKBConfig } from '../util/fs';
 import { validateExecDappEnvironment } from '../util/validator';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
+import { OffCKBConfigFile } from '../template/config';
 
 export function syncConfig() {
   validateExecDappEnvironment();
 
-  const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+  const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
+  const contractInfoFolder = OffCKBConfigFile.readContractInfoFolder(userOffCKBConfigPath);
   if (!contractInfoFolder) {
     throw new Error('No contract info folder found in offckb.config.ts!');
   }

@@ -1,8 +1,8 @@
 import httpProxy from 'http-proxy';
 import http from 'http';
-import { Network } from '../../util/type';
+import { Network } from '../util/type';
 import fs from 'fs';
-import { readSettings } from '../../cfg/setting';
+import { readSettings } from '../cfg/setting';
 import path from 'path';
 
 // todo: if we use import this throws error in tsc building
@@ -74,7 +74,7 @@ export function createRPCProxy(network: Network, targetRpcUrl: string, port: num
     network,
     start: () => {
       return server.listen(port, () => {
-        console.debug(`Proxy server running on http://localhost:${port}`);
+        console.debug(`CKB ${network} RPC Proxy server running on http://localhost:${port}`);
       });
     },
     stop: () => {

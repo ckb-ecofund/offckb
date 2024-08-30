@@ -1,6 +1,6 @@
 import path from 'path';
 import { execSync } from 'child_process';
-import { packageRootPath } from '../cfg/const';
+import { packageRootPath } from '../cfg/setting';
 
 export interface DumpOption {
   rpc: string;

@@ -1,12 +1,12 @@
 import path from 'path';
-import { currentExecPath } from '../cfg/const';
-import { findFileInFolder, readContractInfoFolderFromOffCKBConfig, updateVersionInTSFile } from '../util/fs';
-import { BareTemplateOption, loadBareTemplateOpts } from '../util/template';
+import { findFileInFolder } from '../util/fs';
 import { gitCloneAndDownloadFolderSync } from '../util/git';
 import { select } from '@inquirer/prompts';
 import { execSync } from 'child_process';
-import { settings } from '../cfg/setting';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
+import { readSettings } from '../cfg/setting';
+import { BareTemplateOption, loadBareTemplateOpts } from '../template/option';
+import { OffCKBConfigFile } from '../template/config';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
@@ -23,7 +23,8 @@ export function createScriptProject(name: string) {
 }
 
 export async function create(name: string, template: BareTemplateOption) {
-  const targetPath = path.resolve(currentExecPath, name);
+  const targetPath = path.resolve(process.cwd(), name);
+  const settings = readSettings();
   const dappTemplateFolderPath = `${settings.dappTemplate.gitFolder}/${template.value}`;
   gitCloneAndDownloadFolderSync(
     settings.dappTemplate.gitRepoUrl,
@@ -33,11 +34,11 @@ export async function create(name: string, template: BareTemplateOption) {
   );
 
   // update the version
-  const projectFolder = path.resolve(currentExecPath, name);
+  const projectFolder = path.resolve(process.cwd(), name);
   const targetConfigPath = findFileInFolder(projectFolder, 'offckb.config.ts');
   if (targetConfigPath) {
-    updateVersionInTSFile(version, targetConfigPath);
-    const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(targetConfigPath);
+    OffCKBConfigFile.updateVersion(version, targetConfigPath);
+    const contractInfoFolder = OffCKBConfigFile.readContractInfoFolder(targetConfigPath);
     if (!contractInfoFolder) {
       throw new Error('No contract info folder found in offckb.config.ts!');
     }

@@ -1,10 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { installCKBBinary } from './cmd/develop/install';
-import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/genkey';
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
-import { initChainIfNeeded } from './cmd/develop/init-chain';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -14,12 +11,12 @@ import { DeployOptions, deploy } from './cmd/deploy';
 import { syncConfig } from './cmd/sync-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
-import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
 import { printMyScripts, DeployedScriptOption } from './cmd/my-scripts';
 import { Config, ConfigItem } from './cmd/config';
 import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
 import { printSystemScripts } from './cmd/system-scripts';
+import { proxyRpc, ProxyRpcOptions } from './cmd/proxy-rpc';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -47,9 +44,22 @@ program
 program
   .command('node [CKB-Version]')
   .description('Use the CKB to start devnet')
-  .action(async (version: string) => {
-    return node({ version });
+  .option('--no-proxy', 'Do not start the rpc proxy server', true)
+  .action(async (version: string, options) => {
+    // commander.js change our noProxy option to proxy
+    return node({ version, noProxyServer: !options.proxy });
   });
+
+program
+  .command('proxy-rpc')
+  .description('Start the rpc proxy server')
+  .option('--ckb-rpc <ckbRpc>', 'Specify the ckb rpc address')
+  .option('--port <port>', 'Specify the port to start the proxy server')
+  .option('--network <network>', 'Specify the network to proxy')
+  .action((options: ProxyRpcOptions) => {
+    return proxyRpc(options);
+  });
+
 program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('Print account list info').action(accounts);
 program
@@ -126,28 +136,6 @@ program
     const exportStyle = option.exportStyle;
     return printSystemScripts(exportStyle);
   });
-
-// Add commands meant for developers
-if (process.env.NODE_ENV === 'development') {
-  // Define the CLI commands and options
-  program.command('install').description('Install the ckb dependency binary').action(installCKBBinary);
-
-  program.command('genkey').description('Generate 20 accounts').action(genkey);
-
-  program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
-
-  program.command('build-accounts').description('Generate accounts with prefunded CKB tokens').action(buildAccounts);
-
-  program
-    .command('print-account-issue-info')
-    .description('Print account issue cells config toml sections')
-    .action(printIssueSectionForToml);
-
-  program
-    .command('build-account [privateKey]')
-    .description('Print standard account info from a privatekey')
-    .action(buildAccount);
-}
 
 program.parse(process.argv);
 

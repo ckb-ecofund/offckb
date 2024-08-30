@@ -1,21 +1,22 @@
-import { predefinedOffCKBConfigTsPath, userOffCKBConfigPath } from '../cfg/const';
 import { copyFileSync } from 'fs';
-import { updateOffCKBConfigVersion } from '../util/config';
 import { validateTypescriptWorkspace } from '../util/validator';
-import { readContractInfoFolderFromOffCKBConfig } from '../util/fs';
 import path from 'path';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
+import { OffCKBConfigFile } from '../template/config';
+const version = require('../../package.json').version;
 
 export function injectConfig() {
   validateTypescriptWorkspace();
 
   // inject the offckb.config.ts file into users workspace
   // copy config template
+  const predefinedOffCKBConfigTsPath = path.resolve('../template', 'offckb.config.ts');
+  const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
   copyFileSync(predefinedOffCKBConfigTsPath, userOffCKBConfigPath);
   // update the version in the offckb.config.ts
-  updateOffCKBConfigVersion(userOffCKBConfigPath);
+  OffCKBConfigFile.updateVersion(version, userOffCKBConfigPath);
 
-  const contractInfoFolder = readContractInfoFolderFromOffCKBConfig(userOffCKBConfigPath);
+  const contractInfoFolder = OffCKBConfigFile.readContractInfoFolder(userOffCKBConfigPath);
   if (!contractInfoFolder) {
     throw new Error('No contract info folder found in offckb.config.ts!');
   }

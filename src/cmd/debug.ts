@@ -86,7 +86,7 @@ export function buildTxFileOptionBy(txHash: string) {
   const settings = readSettings();
   const outputFilePath = `${settings.devnet.debugFullTransactionsPath}/${txHash}.json`;
   if (!fs.existsSync(outputFilePath)) {
-    const rpc = 'http://localhost:8114';
+    const rpc = settings.devnet.rpcUrl;
     const txJsonFilePath = `${settings.devnet.transactionsPath}/${txHash}.json`;
     if (!fs.existsSync(outputFilePath)) {
       fs.mkdirSync(path.dirname(outputFilePath), { recursive: true });
