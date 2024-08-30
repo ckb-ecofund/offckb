@@ -3,7 +3,7 @@ import { ccc } from '@ckb-ccc/connector-react';
 import offckb from 'offckb.config';
 
 export default function Home() {
-  const isScriptDeployed = offckb.myScripts['hello_world'] != null;
+  const isScriptDeployed = offckb.myScripts['hello-world'] != null;
   return (
     <ccc.Provider>
       <div className="max-w-screen-md mx-auto mt-10">
@@ -69,11 +69,11 @@ export default function Home() {
             HELLO_WORLD Script{' '}
             {isScriptDeployed ? (
               <div>
-                <li>code_hash: {offckb.myScripts['hello_world']?.codeHash}</li>
-                <li>hash_type: {offckb.myScripts['hello_world']?.hashType}</li>
+                <li>code_hash: {offckb.myScripts['hello-world']?.codeHash}</li>
+                <li>hash_type: {offckb.myScripts['hello-world']?.hashType}</li>
                 <li>
-                  outpoint: {offckb.myScripts['hello_world']?.cellDeps[0].cellDep.outPoint.txHash}:
-                  {offckb.myScripts['hello_world']?.cellDeps[0].cellDep.outPoint.index}
+                  outpoint: {offckb.myScripts['hello-world']?.cellDeps[0].cellDep.outPoint.txHash}:
+                  {offckb.myScripts['hello-world']?.cellDeps[0].cellDep.outPoint.index}
                 </li>
               </div>
             ) : (
