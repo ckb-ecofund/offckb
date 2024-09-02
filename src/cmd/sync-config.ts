@@ -1,7 +1,7 @@
 import path from 'path';
 import { validateExecDappEnvironment } from '../util/validator';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
-import { OffCKBConfigFile } from '../template/config';
+import { OffCKBConfigFile } from '../template/offckb-config';
 
 export function syncConfig() {
   validateExecDappEnvironment();

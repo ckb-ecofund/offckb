@@ -6,7 +6,7 @@ import { execSync } from 'child_process';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 import { readSettings } from '../cfg/setting';
 import { BareTemplateOption, loadBareTemplateOpts } from '../template/option';
-import { OffCKBConfigFile } from '../template/config';
+import { OffCKBConfigFile } from '../template/offckb-config';
 const version = require('../../package.json').version;
 
 export interface CreateOption {
