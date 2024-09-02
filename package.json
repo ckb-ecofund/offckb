@@ -16,8 +16,7 @@
     "dist",
     "account",
     "ckb",
-    "templates/offckb.config.ts",
-    "templates/template.json"
+    "templates/v3/offckb.config.example.ts"
   ],
   "private": false,
   "publishConfig": {
