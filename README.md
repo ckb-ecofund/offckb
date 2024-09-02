@@ -71,6 +71,7 @@ Commands:
   config <action> [item] [value]                    do a configuration action
   debug [options]                                   CKB Debugger for development
   system-scripts [options]                          Output system scripts of the local devnet
+  mol [options]                                     Generate CKB Moleculec binding code for development
   help [command]                                    display help for command
 ```
 
