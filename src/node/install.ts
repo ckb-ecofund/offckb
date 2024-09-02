@@ -117,7 +117,7 @@ export function getVersionFromBinary(binPath: string): string | null {
   }
 }
 
-export function getOS(): string {
+function getOS(): string {
   const platform = os.platform();
   if (platform === 'darwin') {
     return 'apple-darwin';
@@ -130,7 +130,7 @@ export function getOS(): string {
   }
 }
 
-export function getArch(): string {
+function getArch(): string {
   const arch = os.arch();
   if (arch === 'x64') {
     return 'x86_64';
@@ -141,7 +141,7 @@ export function getArch(): string {
   }
 }
 
-export function getExtension(): 'tar.gz' | 'zip' {
+function getExtension(): 'tar.gz' | 'zip' {
   const platform = os.platform();
   if (platform === 'linux') {
     return 'tar.gz';

@@ -51,6 +51,13 @@ export interface Settings {
     gitFolder: string;
     downloadPath: string;
   };
+  tools: {
+    moleculeES: {
+      downloadPath: string;
+      cachePath: string;
+      binFolder: string;
+    };
+  };
 }
 
 export const defaultSettings: Settings = {
@@ -93,6 +100,13 @@ export const defaultSettings: Settings = {
     gitBranch: 'v0.3.x',
     gitFolder: 'templates/v3',
     downloadPath: path.resolve(cachePath, 'download', 'dapp-template'),
+  },
+  tools: {
+    moleculeES: {
+      downloadPath: path.resolve(cachePath, 'download', 'molecule-es'),
+      cachePath: path.resolve(cachePath, 'tools', 'moleculec-es'),
+      binFolder: path.resolve(dataPath, 'tools', 'moleculec-es'),
+    },
   },
 };
 
