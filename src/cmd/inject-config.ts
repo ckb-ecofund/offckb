@@ -2,7 +2,7 @@ import { copyFileSync } from 'fs';
 import { validateTypescriptWorkspace } from '../util/validator';
 import path from 'path';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
-import { OffCKBConfigFile } from '../template/config';
+import { OffCKBConfigFile } from '../template/offckb-config';
 const version = require('../../package.json').version;
 
 export function injectConfig() {
@@ -10,7 +10,7 @@ export function injectConfig() {
 
   // inject the offckb.config.ts file into users workspace
   // copy config template
-  const predefinedOffCKBConfigTsPath = path.resolve('../template', 'offckb.config.ts');
+  const predefinedOffCKBConfigTsPath = path.resolve('../template', 'offckb.config.example.ts');
   const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
   copyFileSync(predefinedOffCKBConfigTsPath, userOffCKBConfigPath);
   // update the version in the offckb.config.ts

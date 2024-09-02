@@ -98,7 +98,7 @@ const offCKBConfig: OffCKBConfig = {
   contractInfoFolder: './offckb',
   networks: {
     devnet: {
-      rpc_url: 'http://127.0.0.1:8114',
+      rpc_url: 'http://127.0.0.1:9000', // 9000 is the default proxy port for CKB node rpc, if you don't need proxy, you can change it to 'https://localhost:8114'
       addressPrefix: 'ckt',
     },
     testnet: {

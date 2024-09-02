@@ -10,7 +10,7 @@ import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
 import { DeploymentRecipe, generateDeploymentRecipeJsonFile } from '../deploy/migration';
 import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
 import { genMyScriptsJsonFile } from '../scripts/gen';
-import { OffCKBConfigFile } from '../template/config';
+import { OffCKBConfigFile } from '../template/offckb-config';
 
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
