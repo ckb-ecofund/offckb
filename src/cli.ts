@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { installDependency } from './cmd/develop/install';
-import { buildAccounts, printIssueSectionForToml, genkey } from './cmd/develop/genkey';
 import { listHashes } from './cmd/list-hashes';
 import { node } from './cmd/node';
-import { initChainIfNeeded } from './cmd/develop/init-chain';
-import { writePredefinedDevnetLumosConfig } from './cmd/develop/lumos-config';
 import { accounts } from './cmd/accounts';
 import { clean } from './cmd/clean';
 import { setUTF8EncodingForWindows } from './util/encoding';
@@ -15,10 +11,14 @@ import { DeployOptions, deploy } from './cmd/deploy';
 import { syncConfig } from './cmd/sync-config';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
-import { buildAccount } from './cmd/develop/build-account';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
-import { deployedScripts, DeployedScriptOption } from './cmd/deployed-scripts';
-import { Config, ConfigSection } from './cmd/config';
+import { printMyScripts, DeployedScriptOption } from './cmd/my-scripts';
+import { Config, ConfigItem } from './cmd/config';
+import { debugSingleScript, debugTransaction, parseSingleScriptOption } from './cmd/debug';
+import { printSystemScripts } from './cmd/system-scripts';
+import { proxyRpc, ProxyRpcOptions } from './cmd/proxy-rpc';
+import { molFiles, molSingleFile } from './cmd/mol';
+import * as fs from 'fs';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -27,7 +27,6 @@ const description = require('../package.json').description;
 setUTF8EncodingForWindows();
 
 const program = new Command();
-
 program.name('offckb').description(description).version(version);
 
 program
@@ -44,10 +43,31 @@ program
     return create(name, template);
   });
 
-program.command('node').description('Use the CKB to start devnet').action(node);
+program
+  .command('node [CKB-Version]')
+  .description('Use the CKB to start devnet')
+  .option('--no-proxy', 'Do not start the rpc proxy server', true)
+  .action(async (version: string, options) => {
+    // commander.js change our noProxy option to proxy
+    return node({ version, noProxyServer: !options.proxy });
+  });
+
+program
+  .command('proxy-rpc')
+  .description('Start the rpc proxy server')
+  .option('--ckb-rpc <ckbRpc>', 'Specify the ckb rpc address')
+  .option('--port <port>', 'Specify the port to start the proxy server')
+  .option('--network <network>', 'Specify the network to proxy')
+  .action((options: ProxyRpcOptions) => {
+    return proxyRpc(options);
+  });
+
 program.command('clean').description('Clean the devnet data, need to stop running the chain first').action(clean);
 program.command('accounts').description('Print account list info').action(accounts);
-program.command('list-hashes').description('Use the CKB to list blockchain scripts hashes').action(listHashes);
+program
+  .command('list-hashes [CKB-Version]')
+  .description('Use the CKB to list blockchain scripts hashes')
+  .action(listHashes);
 program.command('inject-config').description('Add offckb.config.ts to your workspace').action(injectConfig);
 program.command('sync-config').description('Sync offckb.config.ts in your workspace').action(syncConfig);
 
@@ -85,42 +105,55 @@ program
   .action((options: DeployOptions) => deploy(options));
 
 program
-  .command('deployed-scripts')
+  .command('my-scripts')
   .description('Show deployed contracts info on different networks, only supports devnet and testnet')
   .option('--network <network>', 'Specify the network to deploy to', 'devnet')
-  .action((options: DeployedScriptOption) => deployedScripts(options));
+  .action((options: DeployedScriptOption) => printMyScripts(options));
 
 program
-  .command('config <action> <section> [value]')
+  .command('config <action> [item] [value]')
   .description('do a configuration action')
-  .action((action, section, value) => Config(action, section as ConfigSection, value));
+  .action((action, item, value) => Config(action, item as ConfigItem, value));
 
-// Add commands meant for developers
-if (process.env.NODE_ENV === 'development') {
-  // Define the CLI commands and options
-  program.command('install').description('Install the ckb dependency binary').action(installDependency);
+program
+  .command('debug')
+  .requiredOption('--tx-hash <txHash>', 'Specify the transaction hash to debug with')
+  .option('--single-script <singleScript>', 'Specify the cell script to debug with')
+  .option('--bin <bin>', 'Specify a binary to replace the script to debug with')
+  .option('--network <network>', 'Specify the network to debug', 'devnet')
+  .description('CKB Debugger for development')
+  .action(async (option) => {
+    const txHash = option.txHash;
+    if (option.singleScript) {
+      const { cellType, cellIndex, scriptType } = parseSingleScriptOption(option.singleScript);
+      return debugSingleScript(txHash, cellIndex, cellType, scriptType, option.network, option.bin);
+    }
+    return debugTransaction(txHash, option.network);
+  });
 
-  program.command('genkey').description('Generate 20 accounts').action(genkey);
+program
+  .command('system-scripts')
+  .option('--export-style <exportStyle>', 'Specify the export format, possible values are lumos and ccc.')
+  .description('Output system scripts of the local devnet')
+  .action(async (option) => {
+    const exportStyle = option.exportStyle;
+    return printSystemScripts(exportStyle);
+  });
 
-  program.command('init-chain').description('Use the CKB to init devnet').action(initChainIfNeeded);
-
-  program
-    .command('build-devnet-lumos-config')
-    .description('Use the CKB to generate predefined devnet lumos config.json')
-    .action(writePredefinedDevnetLumosConfig);
-
-  program.command('build-accounts').description('Generate accounts with prefunded CKB tokens').action(buildAccounts);
-
-  program
-    .command('print-account-issue-info')
-    .description('Print account issue cells config toml sections')
-    .action(printIssueSectionForToml);
-
-  program
-    .command('build-account [privateKey]')
-    .description('Print standard account info from a privatekey')
-    .action(buildAccount);
-}
+program
+  .command('mol')
+  .requiredOption('--schema <schema>', 'Specify the scheme .mol file/folders to generate bindings')
+  .option('--output <output>', 'Specify the output file/folder path')
+  .option('--output-folder <output-folder>', 'Specify the output folder path, only valid when schema is a folder')
+  .option('--lang <lang>', 'Specify the binding language, [ts, js, c, rs, go]', 'ts')
+  .description('Generate CKB Moleculec binding code for development')
+  .action(async (option) => {
+    if (fs.statSync(option.schema).isDirectory()) {
+      const outputFolderPath = option.outputFolder ?? './';
+      return molFiles(option.schema, outputFolderPath, option.lang);
+    }
+    return molSingleFile(option.schema, option.output, option.lang);
+  });
 
 program.parse(process.argv);
 

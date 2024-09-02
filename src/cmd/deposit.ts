@@ -1,6 +1,5 @@
 import { CKB } from '../util/ckb';
 import { AxiosRequestConfig } from 'axios';
-import { generateHex } from './develop/genkey';
 import { ckbDevnetMinerAccount } from '../cfg/account';
 import { NetworkOption, Network } from '../util/type';
 import { buildTestnetTxLink } from '../util/link';
@@ -89,4 +88,13 @@ async function sendClaimRequest(toAddress: string) {
   } catch (error) {
     console.error('Error:', error);
   }
+}
+
+function generateHex(length: number) {
+  const characters = 'abcdef0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters[Math.floor(Math.random() * characters.length)];
+  }
+  return result;
 }

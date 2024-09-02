@@ -38,10 +38,10 @@ capacity = 100_000_0000_0000
 file = { file = "sudt" }
 create_type_id = true
 [[genesis.system_cells]]
-file = { file = "xudt_rce" }
+file = { file = "xudt" }
 create_type_id = true
 [[genesis.system_cells]]
-file = { file = "omni_lock" }
+file = { file = "omnilock" }
 create_type_id = true
 [[genesis.system_cells]]
 file = { file = "anyone_can_pay" }
@@ -50,19 +50,19 @@ create_type_id = true
 file = { file = "always_success" }
 create_type_id = true
 [[genesis.system_cells]]
-file = { file = "spore-scripts/spore" }
+file = { file = "spore/spore" }
 create_type_id = false
 [[genesis.system_cells]]
-file = { file = "spore-scripts/cluster" }
+file = { file = "spore/spore_cluster" }
 create_type_id = false
 [[genesis.system_cells]]
-file = { file = "spore-scripts/cluster_agent" }
+file = { file = "spore/spore_cluster_agent" }
 create_type_id = false
 [[genesis.system_cells]]
-file = { file = "spore-scripts/cluster_proxy" }
+file = { file = "spore/spore_cluster_proxy" }
 create_type_id = false
 [[genesis.system_cells]]
-file = { file = "spore-scripts/spore_extension_lua" }
+file = { file = "spore/spore_extension_lua" }
 create_type_id = false
 
 [genesis.system_cells_lock]

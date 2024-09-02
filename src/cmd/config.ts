@@ -1,20 +1,28 @@
-import { readSettings, writeSettings } from '../cfg/setting';
+import { configPath, readSettings, writeSettings } from '../cfg/setting';
 import { Request } from '../util/request';
+import { isValidVersion } from '../util/validator';
 
 export enum ConfigAction {
+  list = 'list',
   get = 'get',
   set = 'set',
   rm = 'rm',
 }
 
-export enum ConfigSection {
+export enum ConfigItem {
   proxy = 'proxy',
+  ckbVersion = 'ckb-version',
 }
 
-export async function Config(action: ConfigAction, section: ConfigSection, value?: string) {
+export async function Config(action: ConfigAction, item: ConfigItem, value?: string) {
+  if (action === ConfigAction.list) {
+    console.log('config file: ', configPath);
+    return console.log(readSettings());
+  }
+
   if (action === ConfigAction.get) {
-    switch (section) {
-      case ConfigSection.proxy: {
+    switch (item) {
+      case ConfigItem.proxy: {
         const settings = readSettings();
         const proxy = settings.proxy;
         if (proxy == null) {
@@ -24,14 +32,20 @@ export async function Config(action: ConfigAction, section: ConfigSection, value
         return console.log(`${Request.proxyConfigToUrl(proxy)}`);
       }
 
+      case ConfigItem.ckbVersion: {
+        const settings = readSettings();
+        const version = settings.bins.defaultCKBVersion;
+        return console.log(`${version}`);
+      }
+
       default:
         break;
     }
   }
 
   if (action === ConfigAction.set) {
-    switch (section) {
-      case ConfigSection.proxy: {
+    switch (item) {
+      case ConfigItem.proxy: {
         if (value == null) throw new Error('No proxyUrl!');
 
         try {
@@ -44,14 +58,28 @@ export async function Config(action: ConfigAction, section: ConfigSection, value
         }
       }
 
+      case ConfigItem.ckbVersion: {
+        const settings = readSettings();
+        try {
+          if (isValidVersion(value)) {
+            settings.bins.defaultCKBVersion = value as string;
+            return writeSettings(settings);
+          } else {
+            return console.error(`invalid version value, `, value);
+          }
+        } catch (error: unknown) {
+          return console.error(`invalid version value, `, (error as Error).message);
+        }
+      }
+
       default:
         break;
     }
   }
 
   if (action === ConfigAction.rm) {
-    switch (section) {
-      case ConfigSection.proxy: {
+    switch (item) {
+      case ConfigItem.proxy: {
         const settings = readSettings();
         settings.proxy = undefined;
         return writeSettings(settings);

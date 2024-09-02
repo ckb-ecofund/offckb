@@ -8,3 +8,5 @@ export enum Network {
 export interface NetworkOption {
   network: Network;
 }
+
+export type H256 = string;

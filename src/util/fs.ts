@@ -88,33 +88,6 @@ export async function copyRecursive(source: string, destination: string, exclude
   }
 }
 
-export function updateVersionInTSFile(newVersion: string, filePath: string): void {
-  try {
-    // Read the contents of the TS file
-    const fileContents = fs.readFileSync(filePath, 'utf8');
-
-    // Use a regular expression to find the version value
-    const regex = /const\s+offCKBConfig:\s+OffCKBConfig\s*=\s*\{\s*version:\s*'([^']+)'/;
-    const match = fileContents.match(regex);
-
-    if (match) {
-      // Replace the version value with the new value
-      const updatedContents = fileContents.replace(
-        regex,
-        `const offCKBConfig: OffCKBConfig = {\n  version: '${newVersion}'`,
-      );
-
-      // Write the updated contents back to the file
-      fs.writeFileSync(filePath, updatedContents, 'utf8');
-      console.log(`Version updated to '${newVersion}' in ${filePath}`);
-    } else {
-      console.error(`Could not find version value in ${filePath}`);
-    }
-  } catch (error) {
-    console.error(`Error updating version in ${filePath}: ${error}`);
-  }
-}
-
 export async function readFileToUint8Array(filePath: string): Promise<Uint8Array> {
   return new Promise<Uint8Array>((resolve, reject) => {
     fs.readFile(filePath, (err, data) => {
@@ -125,15 +98,6 @@ export async function readFileToUint8Array(filePath: string): Promise<Uint8Array
       resolve(new Uint8Array(data));
     });
   });
-}
-
-export function convertFilenameToUppercase(filePath: string): string {
-  // Extract the filename from the file path
-  const filename = path.basename(filePath);
-
-  // Convert the filename to uppercase
-  const uppercaseFilename = filename.toUpperCase();
-  return uppercaseFilename;
 }
 
 export function listBinaryFilesInFolder(folderPath: string): string[] {
@@ -189,4 +153,11 @@ export function findFileInFolder(folderPath: string, fileName: string): string |
   }
 
   return null;
+}
+
+export function getSubfolders(folderPath: string): string[] {
+  return fs.readdirSync(folderPath).filter((file) => {
+    const fullPath = path.join(folderPath, file);
+    return fs.statSync(fullPath).isDirectory();
+  });
 }

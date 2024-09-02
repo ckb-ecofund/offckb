@@ -1,10 +1,9 @@
 import path from 'path';
-import { currentExecPath } from '../cfg/const';
 import fs from 'fs';
 import { Network } from './type';
 
 export function validateTypescriptWorkspace() {
-  const cwd = currentExecPath;
+  const cwd = process.cwd();
 
   // Check if package.json exists
   const packageJsonPath = path.join(cwd, 'package.json');
@@ -20,7 +19,7 @@ export function validateTypescriptWorkspace() {
 }
 
 export function validateExecDappEnvironment() {
-  const cwd = currentExecPath;
+  const cwd = process.cwd();
 
   // Check if package.json and tsconfig.json exists
   validateTypescriptWorkspace();
@@ -60,4 +59,16 @@ export function validateNetworkOpt(network: string) {
     );
     process.exit(1);
   }
+}
+
+export function isValidVersion(version: unknown): boolean {
+  if (typeof version !== 'string') {
+    return false;
+  }
+
+  // Regular expression to match version strings like X.Y.Z
+  const versionRegex = /^\d+\.\d+\.\d+$/;
+
+  // Test the version against the regex
+  return versionRegex.test(version);
 }

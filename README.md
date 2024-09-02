@@ -14,7 +14,7 @@
 - built-in scripts like [Omnilock](https://github.com/cryptape/omnilock) and [Spore-contract](https://github.com/sporeprotocol/spore-contract)
 - multiple minimal dApp templates to learn and get your hands dirty
 
-Start building on Nervos blockchain, right now, right away!
+Start building on CKB blockchain, right now, right away!
 
 ## Table of Contents
 
@@ -25,10 +25,14 @@ Start building on Nervos blockchain, right now, right away!
 - [Get started](#get-started)
   - [Create a full-stack Project](#create-a-full-stack-project)
   - [Create a script-only Project](#create-a-script-only-project)
-  - [Add Network Proxy](#add-network-proxy)
+- [Config Setting](#config-setting)
+  - [List All Settings](#list-all-settings)
+  - [Set CKB version](#set-ckb-version)
+  - [Set Network Proxy](#set-network-proxy)
 - [Built-in scripts](#built-in-scripts)
 - [Accounts](#accounts)
-- [About Lumos](#about-lumos)
+- [About CCC](#about-ccc)
+- [FAQ](#faq)
 - [Contributing](#contributing)
 
 ## Install
@@ -51,30 +55,27 @@ Options:
   -h, --help                                        display help for command
 
 Commands:
-  create [your-project-name]                        Create a new dApp from bare templates
-  node                                              Use the CKB to start devnet
+  create [options] [your-project-name]              Create a new dApp from bare templates
+  node [options] [CKB-Version]                      Use the CKB to start devnet
+  proxy-rpc [options]                               Start the rpc proxy server
   clean                                             Clean the devnet data, need to stop running the chain first
   accounts                                          Print account list info
-  list-hashes                                       Use the CKB to list blockchain scripts hashes
+  list-hashes [CKB-Version]                         Use the CKB to list blockchain scripts hashes
   inject-config                                     Add offckb.config.ts to your workspace
-  sync-config                                       sync offckb.config.ts in your workspace
+  sync-config                                       Sync offckb.config.ts in your workspace
   deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
   transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
   balance [options] [toAddress]                     Check account balance, only devnet and testnet
   deploy [options]                                  Deploy contracts to different networks, only supports devnet and testnet
-  deployed-scripts [options]                        Show deployed contracts info on networks, only supports devnet and testnet
-  config <action> <section> [value]                 do a configuration action
+  my-scripts [options]                              Show deployed contracts info on different networks, only supports devnet and testnet
+  config <action> [item] [value]                    do a configuration action
+  debug [options]                                   CKB Debugger for development
+  system-scripts [options]                          Output system scripts of the local devnet
+  mol [options]                                     Generate CKB Moleculec binding code for development
   help [command]                                    display help for command
 ```
 
 *Use `offckb [command] -h` to learn more about a specific command.*
-
-Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
-
-```sh
-sudo chown -R $(whoami) /usr/local/lib/node_modules
-npm install -g @offckb/cli
-```
 
 ## Get started
 
@@ -98,7 +99,25 @@ offckb create <your-project-name> --script
 
 Note: you need to have rust/cargo/cargo-generate/clang 16+ installed in your environment to use this command. offckb doesn't do anything really, it just call [ckb-script-template](https://github.com/cryptape/ckb-script-tempaltes) to do all the magic.
 
-### Add Network Proxy
+## Config Setting
+
+### List All Settings
+
+```sh
+offckb config list
+```
+
+### Set CKB version
+
+```sh
+offckb config get ckb-version
+> 0.113.0
+offckb config set ckb-version 0.117.0
+offckb config get ckb-version
+> 0.117.0
+```
+
+### Set Network Proxy
 
 ```sh
 offckb config set proxy http://127.0.0.1:1086
@@ -133,9 +152,18 @@ detail informations about each account are recorded in the `account/account.json
 
 :warning: **DO NOT SEND REAL ASSETS INTO ALL THESE ACCOUNTS, YOU CAN LOOSE YOUR MONEY** :warning:
 
-## About Lumos
+## About CCC
 
-`offckb` uses [Lumos](https://github.com/ckb-js/lumos) as the CKB dApp framework to build the template projects.
+`offckb` uses [CCC](https://github.com/ckb-ecofund/ccc) as the development framework to build the CKB dApp template projects.
+
+## FAQ
+
+Sometimes you might encounter sudo permission problems. Granting the current user write access to the node_modules directory can resolve the problem.
+
+```sh
+sudo chown -R $(whoami) /usr/local/lib/node_modules
+npm install -g @offckb/cli
+```
 
 ## Contributing
 

@@ -1,9 +1,9 @@
 import { Address, BI, Cell, Indexer, RPC, Script, WitnessArgs, commons, config, hd, helpers } from '@ckb-lumos/lumos';
 import { blockchain, values } from '@ckb-lumos/base';
 import { bytes } from '@ckb-lumos/codec';
-import { readPredefinedDevnetLumosConfig } from './config';
 import { isValidNetworkString } from './validator';
 import { Network } from './type';
+import { getSystemScriptsFromListHashes, toLumosConfig } from '../cmd/system-scripts';
 const { ScriptValue } = values;
 
 export type Account = {
@@ -287,5 +287,17 @@ export class CKB {
     const tx = helpers.sealTransaction(txSkeleton, [Sig]);
     const hash = await this.rpc.sendTransaction(tx, 'passthrough');
     return hash;
+  }
+}
+
+export function readPredefinedDevnetLumosConfig() {
+  try {
+    const systemScripts = getSystemScriptsFromListHashes();
+    if (systemScripts) {
+      return toLumosConfig(systemScripts);
+    }
+    throw new Error('systemScripts not found!');
+  } catch (error: unknown) {
+    throw new Error('getSystemScriptsFromListHashes error' + (error as Error).message);
   }
 }
