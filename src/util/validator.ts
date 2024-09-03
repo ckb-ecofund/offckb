@@ -66,8 +66,8 @@ export function isValidVersion(version: unknown): boolean {
     return false;
   }
 
-  // Regular expression to match version strings like X.Y.Z
-  const versionRegex = /^\d+\.\d+\.\d+$/;
+  // Regular expression to match version strings like X.Y.Z or vX.Y.Z-rcN
+  const versionRegex = /^v?\d+\.\d+\.\d+(-rc\d+)?$/;
 
   // Test the version against the regex
   return versionRegex.test(version);

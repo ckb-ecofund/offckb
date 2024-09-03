@@ -130,14 +130,18 @@ const offCKBConfig: OffCKBConfig = {
 
   get systemScripts() {
     const network = readEnvNetwork();
-    const networkSystemScripts: NetworkSystemScripts = require('./offckb/system-scripts.json');
+    const networkSystemScripts: NetworkSystemScripts = JSON.parse(
+      Object.values(import.meta.glob('./offckb/system-scripts.json', { eager: true, as: 'raw' }))[0],
+    );
     const systemScripts = networkSystemScripts[network];
     return systemScripts;
   },
 
   get myScripts() {
     const network = readEnvNetwork();
-    const networkMyScripts: NetworkMyScripts = require('./offckb/my-scripts.json');
+    const networkMyScripts: NetworkMyScripts = JSON.parse(
+      Object.values(import.meta.glob('./offckb/my-scripts.json', { eager: true, as: 'raw' }))[0],
+    );
     const myScripts = networkMyScripts[network];
     return myScripts;
   },

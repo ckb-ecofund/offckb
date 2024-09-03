@@ -62,10 +62,13 @@ export async function Config(action: ConfigAction, item: ConfigItem, value?: str
         const settings = readSettings();
         try {
           if (isValidVersion(value)) {
-            settings.bins.defaultCKBVersion = value as string;
+            const version = extractVersion(value!);
+            settings.bins.defaultCKBVersion = version;
             return writeSettings(settings);
           } else {
-            return console.error(`invalid version value, `, value);
+            return console.error(
+              `invalid version value, ${value}. Check available versions on https://github.com/nervosnetwork/ckb/tags`,
+            );
           }
         } catch (error: unknown) {
           return console.error(`invalid version value, `, (error as Error).message);
@@ -91,4 +94,9 @@ export async function Config(action: ConfigAction, item: ConfigItem, value?: str
   }
 
   throw new Error('invalid config action.');
+}
+
+function extractVersion(version: string): string {
+  // If the version starts with 'v', remove it
+  return version.startsWith('v') ? version.slice(1) : version;
 }

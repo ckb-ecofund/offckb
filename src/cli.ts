@@ -8,7 +8,7 @@ import { setUTF8EncodingForWindows } from './util/encoding';
 import { injectConfig } from './cmd/inject-config';
 import { DepositOptions, deposit } from './cmd/deposit';
 import { DeployOptions, deploy } from './cmd/deploy';
-import { syncConfig } from './cmd/sync-config';
+import { syncScripts } from './cmd/sync-scripts';
 import { TransferOptions, transfer } from './cmd/transfer';
 import { BalanceOption, balanceOf } from './cmd/balance';
 import { create, selectBareTemplate, CreateOption, createScriptProject } from './cmd/create';
@@ -68,8 +68,8 @@ program
   .command('list-hashes [CKB-Version]')
   .description('Use the CKB to list blockchain scripts hashes')
   .action(listHashes);
-program.command('inject-config').description('Add offckb.config.ts to your workspace').action(injectConfig);
-program.command('sync-config').description('Sync offckb.config.ts in your workspace').action(syncConfig);
+program.command('inject-config').description('Add offckb.config.ts to your frontend workspace').action(injectConfig);
+program.command('sync-scripts').description('Sync scripts json files in your frontend workspace').action(syncScripts);
 
 program
   .command('deposit [toAddress] [amountInShannon]')
