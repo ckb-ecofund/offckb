@@ -67,8 +67,8 @@ Commands:
   clean                                             Clean the devnet data, need to stop running the chain first
   accounts                                          Print account list info
   list-hashes [CKB-Version]                         Use the CKB to list blockchain scripts hashes
-  inject-config                                     Add offckb.config.ts to your workspace
-  sync-config                                       Sync offckb.config.ts in your workspace
+  inject-config                                     Add offckb.config.ts to your frontend workspace
+  sync-scripts                                      Sync scripts json file in your frontend workspace
   deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
   transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
   balance [options] [toAddress]                     Check account balance, only devnet and testnet
@@ -122,22 +122,22 @@ offckb proxy-rpc --ckb-rpc http://localhost:8114 --port 9000 --network devnet
 
 ### List scripts info
 
-List all the predefined scripts for the blockchain:
+List all the predefined scripts for the local blockchain:
 
 ```sh
-offckb system-scripts --network devnet
+offckb system-scripts
 ```
 
 Or export the scripts info to a lumos JSON file:
 
 ```sh
-offckb system-scripts --network devnet --export-style lumos
+offckb system-scripts --export-style lumos
 ```
 
 Or print the scripts info in a CCC style:
 
 ```sh
-offckb system-scripts --network devnet --export-style ccc
+offckb system-scripts --export-style ccc
 ```
 
 ### Create a full-stack Project
@@ -173,7 +173,7 @@ make build
 To deploy the script, cd into the frontend folder and run:
 
 ```sh
-offckb deploy --network <devnet/testnet>
+cd frontend && offckb deploy --network <devnet/testnet>
 ```
 
 Once the deployment is done, you can use the following command to check the deployed scripts:
@@ -182,14 +182,14 @@ Once the deployment is done, you can use the following command to check the depl
 offckb my-scripts --network <devnet/testnet>
 ```
 
-Your deployed scripts will be also be listed in the `offckb/my-scripts` folder in your frontend project.
+Your deployed scripts will be also be listed in the `frontend/offckb/my-scripts` folder in your frontend project.
 
 ### Start the frontend project
 
 To start the frontend project, cd into the frontend folder and run:
 
 ```sh
-npm run dev
+npm i & npm run dev
 ```
 
 ### Debug a transaction
@@ -200,6 +200,33 @@ Everytime you run a transaction, you can debug it with the transaction hash:
 
 ```sh
 offckb debug <transaction-hash>
+```
+
+It will verify all the scripts in the transaction and print the detailed info in the terminal.
+
+```sh
+offckb debug --tx-hash 0x64c936ee78107450d49e57b7453dce9031ce68b056b2f1cdad5c2218ab7232ad
+Dump transaction successfully
+
+******************************
+****** Input[0].Lock ******
+
+hello, this is new add!
+Hashed 1148 bytes in sighash_all
+sighash_all = 5d9b2340738ee28729fc74eba35e6ef969878354fe556bd89d5b6f62642f6e50
+event = {"pubkey":"45c41f21e1cf715fa6d9ca20b8e002a574db7bb49e96ee89834c66dac5446b7a","tags":[["ckb_sighash_all","5d9b2340738ee28729fc74eba35e6ef969878354fe556bd89d5b6f62642f6e50"]],"created_at":1725339769,"kind":23334,"content":"Signing a CKB transaction\n\nIMPORTANT: Please verify the integrity and authenticity of connected Nostr client before signing this message\n","id":"90af298075ac878901282e23ce35b24e584b7727bc545e149fc259875a23a7aa","sig":"b505e7d5b643d2e6b1f0e5581221bbfe3c37f17534715e51eecf5ff97a2e1b828a3d767eb712555c78a8736e9085b4960458014fa171d5d169a1b267b186d2f3"}
+verify_signature costs 3654 k cycles
+Run result: 0
+Total cycles consumed: 4013717(3.8M)
+Transfer cycles: 44947(43.9K), running cycles: 3968770(3.8M)
+
+******************************
+****** Output[0].Type ******
+
+verify_signature costs 3654 k cycles
+Run result: 0
+Total cycles consumed: 3916670(3.7M)
+Transfer cycles: 43162(42.2K), running cycles: 3873508(3.7M)
 ```
 
 If you want to debug a single cell script in the transaction, you can use the following command:
