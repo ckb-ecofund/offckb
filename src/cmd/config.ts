@@ -66,7 +66,9 @@ export async function Config(action: ConfigAction, item: ConfigItem, value?: str
             settings.bins.defaultCKBVersion = version;
             return writeSettings(settings);
           } else {
-            return console.error(`invalid version value, `, value);
+            return console.error(
+              `invalid version value, ${value}. Check available versions on https://github.com/nervosnetwork/ckb/tags`,
+            );
           }
         } catch (error: unknown) {
           return console.error(`invalid version value, `, (error as Error).message);
