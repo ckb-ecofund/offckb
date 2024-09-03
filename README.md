@@ -9,10 +9,10 @@
 **CKB local development network for your first try.**
 
 - One-line command to start a devnet
-- no docker required
-- pre-funded test accounts
-- built-in scripts like [Omnilock](https://github.com/cryptape/omnilock) and [Spore-contract](https://github.com/sporeprotocol/spore-contract)
-- multiple minimal dApp templates to learn and get your hands dirty
+- No docker required
+- Pre-funded test accounts
+- Built-in scripts like [Omnilock](https://github.com/cryptape/omnilock) and [Spore-contract](https://github.com/sporeprotocol/spore-contract)
+- Multiple minimal dApp templates to learn and get your hands dirty
 
 Start building on CKB blockchain, right now, right away!
 
@@ -23,8 +23,14 @@ Start building on CKB blockchain, right now, right away!
 - [Install](#install)
 - [Usage](#usage)
 - [Get started](#get-started)
+  - [Running CKB](#running-ckb)
+  - [List scripts info](#list-scripts-info)
   - [Create a full-stack Project](#create-a-full-stack-project)
   - [Create a script-only Project](#create-a-script-only-project)
+  - [Build and Deploy a script](#build-and-deploy-a-script)
+  - [Start the frontend project](#start-the-frontend-project)
+  - [Debug a transaction](#debug-a-transaction)
+  - [Generate Moleculec bindings](#generate-moleculec-bindings)
 - [Config Setting](#config-setting)
   - [List All Settings](#list-all-settings)
   - [Set CKB version](#set-ckb-version)
@@ -79,6 +85,61 @@ Commands:
 
 ## Get started
 
+### Running CKB
+
+Start a local blockchain with the default CKB version:
+
+```sh
+offckb node
+```
+
+Or specify a CKB version:
+
+```sh
+offckb node 0.117.0 
+```
+
+Or set the default CKB version:
+
+```sh
+offckb config set ckb-version 0.117.0
+offckb node
+```
+
+Once you start the devnet, there is a RPC server running at `http://localhost:8114`. There is also a RPC proxy server running at `http://localhost:9000` which will proxy all the requests to the RPC server. The meaning of using a proxy RPC server is to record request and automatically dump failed transactions so you can debug them easily later.
+
+The proxy server is optional, you can use the RPC server directly if you don't need a proxy:
+
+```sh
+offckb node --no-proxy
+```
+
+Or start the proxy server in a standalone terminal to better monitor the logs:
+
+```sh
+offckb proxy-rpc --ckb-rpc http://localhost:8114 --port 9000 --network devnet
+```
+
+### List scripts info
+
+List all the predefined scripts for the blockchain:
+
+```sh
+offckb system-scripts --network devnet
+```
+
+Or export the scripts info to a lumos JSON file:
+
+```sh
+offckb system-scripts --network devnet --export-style lumos
+```
+
+Or print the scripts info in a CCC style:
+
+```sh
+offckb system-scripts --network devnet --export-style ccc
+```
+
 ### Create a full-stack Project
 
 Create a new project from predefined boilerplates.
@@ -98,6 +159,86 @@ offckb create <your-project-name> --script
 ```
 
 Note: you need to have rust/cargo/cargo-generate/clang 16+ installed in your environment to use this command. offckb doesn't do anything really, it just call [ckb-script-template](https://github.com/cryptape/ckb-script-tempaltes) to do all the magic.
+
+### Build and Deploy a script
+
+The fullstack boilerplate project is a monorepo, which contains a script project and a frontend project.
+
+To build the script, in the root of the project, run: 
+
+```sh
+make build
+```
+
+To deploy the script, cd into the frontend folder and run:
+
+```sh
+offckb deploy --network <devnet/testnet>
+```
+
+Once the deployment is done, you can use the following command to check the deployed scripts:
+
+```sh
+offckb my-scripts --network <devnet/testnet>
+```
+
+Your deployed scripts will be also be listed in the `offckb/my-scripts` folder in your frontend project.
+
+### Start the frontend project
+
+To start the frontend project, cd into the frontend folder and run:
+
+```sh
+npm run dev
+```
+
+### Debug a transaction
+
+If you are using the proxy RPC server, all the failed transactions will be dumped and recorded so you can debug them later.
+
+Everytime you run a transaction, you can debug it with the transaction hash:
+
+```sh
+offckb debug <transaction-hash>
+```
+
+If you want to debug a single cell script in the transaction, you can use the following command:
+
+```sh
+offckb debug <transaction-hash> --single-script <single-cell-script-option>
+```
+
+The `single-cell-script-option` format is `<cell-type>[<cell-index>].<script-type>`, eg: `"input[0].lock"`
+
+- `cell-type` could be `input` or `output`, refers to the cell type
+- `cell-index` is the index of the cell in the transaction
+- `script-type` could be `lock` or `type`, refers to the script type
+
+Or you can replace the script with a binary file in your single cell script debug session:
+
+```sh
+offckb debug <transaction-hash> --single-script <single-cell-script-option> --bin <path/to/binary/file>
+```
+
+All the debug utils are borrowed from [ckb-debugger](https://github.com/nervosnetwork/ckb-debugger).
+
+### Generate Moleculec bindings
+
+[Moleculec](https://github.com/nervosnetwork/molecule) is the official Serialization/Deserialization system for CKB smart contracts.
+
+You will define your data structure in `.mol` file(schema), and generate the bindings for different programming languages to use in your development.
+
+```sh
+offckb mol --schema <path/to/mol/file> --output <path/to/output/file> --lang <lang>
+```
+
+The `lang` could be `ts`, `js`, `c`, `rs` and `go`.
+
+If you have multiple `.mol` files, you can use a folder as the input and specify an output folder:
+
+```sh
+offckb mol --schema <path/to/mol/folder> --output-folder <path/to/output/folder> --lang <lang>
+```
 
 ## Config Setting
 
