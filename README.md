@@ -67,8 +67,8 @@ Commands:
   clean                                             Clean the devnet data, need to stop running the chain first
   accounts                                          Print account list info
   list-hashes [CKB-Version]                         Use the CKB to list blockchain scripts hashes
-  inject-config                                     Add offckb.config.ts to your workspace
-  sync-config                                       Sync offckb.config.ts in your workspace
+  inject-config                                     Add offckb.config.ts to your frontend workspace
+  sync-scripts                                      Sync scripts json file in your frontend workspace
   deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
   transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
   balance [options] [toAddress]                     Check account balance, only devnet and testnet

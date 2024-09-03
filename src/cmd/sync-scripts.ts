@@ -3,7 +3,7 @@ import { validateExecDappEnvironment } from '../util/validator';
 import { genMyScriptsJsonFile, genSystemScriptsJsonFile } from '../scripts/gen';
 import { OffCKBConfigFile } from '../template/offckb-config';
 
-export function syncConfig() {
+export function syncScripts() {
   validateExecDappEnvironment();
 
   const userOffCKBConfigPath = path.resolve(process.cwd(), 'offckb.config.ts');
