@@ -122,22 +122,22 @@ offckb proxy-rpc --ckb-rpc http://localhost:8114 --port 9000 --network devnet
 
 ### List scripts info
 
-List all the predefined scripts for the blockchain:
+List all the predefined scripts for the local blockchain:
 
 ```sh
-offckb system-scripts --network devnet
+offckb system-scripts
 ```
 
 Or export the scripts info to a lumos JSON file:
 
 ```sh
-offckb system-scripts --network devnet --export-style lumos
+offckb system-scripts --export-style lumos
 ```
 
 Or print the scripts info in a CCC style:
 
 ```sh
-offckb system-scripts --network devnet --export-style ccc
+offckb system-scripts --export-style ccc
 ```
 
 ### Create a full-stack Project
@@ -173,7 +173,7 @@ make build
 To deploy the script, cd into the frontend folder and run:
 
 ```sh
-offckb deploy --network <devnet/testnet>
+cd frontend && offckb deploy --network <devnet/testnet>
 ```
 
 Once the deployment is done, you can use the following command to check the deployed scripts:
@@ -182,14 +182,14 @@ Once the deployment is done, you can use the following command to check the depl
 offckb my-scripts --network <devnet/testnet>
 ```
 
-Your deployed scripts will be also be listed in the `offckb/my-scripts` folder in your frontend project.
+Your deployed scripts will be also be listed in the `frontend/offckb/my-scripts` folder in your frontend project.
 
 ### Start the frontend project
 
 To start the frontend project, cd into the frontend folder and run:
 
 ```sh
-npm run dev
+npm i & npm run dev
 ```
 
 ### Debug a transaction

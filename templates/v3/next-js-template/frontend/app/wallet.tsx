@@ -2,7 +2,7 @@
 
 import { ccc } from '@ckb-ccc/connector-react';
 import React, { useEffect, useState } from 'react';
-import offckb, { readEnvNetwork } from '@/offckb.config';
+import { readEnvNetwork } from '@/offckb.config';
 import { buildCccClient } from './wallet-client';
 
 function WalletIcon({ wallet, className }: { wallet: ccc.Wallet; className?: string }) {
@@ -152,7 +152,7 @@ export default function Wallet() {
   useEffect(() => {
     const network = readEnvNetwork();
     setClient(buildCccClient(network));
-  }, [offckb.currentNetwork, setClient]);
+  }, [setClient]);
 
   return (
     <div>
