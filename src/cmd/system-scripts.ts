@@ -105,7 +105,7 @@ export function systemCellToScriptInfo(
   if (depType === 'code') {
     return {
       codeHash: cell.type_hash || cell.data_hash,
-      hashType: cell.type_hash ? 'type' : 'data',
+      hashType: cell.type_hash ? 'type' : 'data1',
       cellDeps: [
         {
           cellDep: {
@@ -122,7 +122,7 @@ export function systemCellToScriptInfo(
 
   return {
     codeHash: cell.type_hash || cell.data_hash,
-    hashType: cell.type_hash ? 'type' : 'data',
+    hashType: cell.type_hash ? 'type' : 'data1',
     cellDeps: [
       {
         cellDep: {
