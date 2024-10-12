@@ -1,4 +1,4 @@
-name = "offckb"
+name = "ckb_dev"
 
 [genesis]
 version = 0
