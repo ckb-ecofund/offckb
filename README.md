@@ -25,6 +25,7 @@ Start building on CKB blockchain, right now, right away!
 - [Get started](#get-started)
   - [Running CKB](#running-ckb)
   - [List scripts info](#list-scripts-info)
+  - [Tweak Devnet Config](#tweak-devnet-config)
   - [Create a full-stack Project](#create-a-full-stack-project)
   - [Create a script-only Project](#create-a-script-only-project)
   - [Build and Deploy a script](#build-and-deploy-a-script)
@@ -47,7 +48,7 @@ Start building on CKB blockchain, right now, right away!
 npm install -g @offckb/cli
 ```
 
-*We recommand using [LTS](https://nodejs.org/en/download/package-manager) version of Node to run `offckb`*
+_We recommand using [LTS](https://nodejs.org/en/download/package-manager) version of Node to run `offckb`_
 
 ## Usage
 
@@ -81,7 +82,7 @@ Commands:
   help [command]                                    display help for command
 ```
 
-*Use `offckb [command] -h` to learn more about a specific command.*
+_Use `offckb [command] -h` to learn more about a specific command._
 
 ## Get started
 
@@ -96,7 +97,7 @@ offckb node
 Or specify a CKB version:
 
 ```sh
-offckb node 0.117.0 
+offckb node 0.117.0
 ```
 
 Or set the default CKB version:
@@ -140,6 +141,39 @@ Or print the scripts info in a CCC style:
 offckb system-scripts --export-style ccc
 ```
 
+### Tweak Devnet Config
+
+By default, offckb use a fixed devnet config for the local blockchain. You can tweak the config to customize the devnet:
+
+First, start a default CKB devnet and locate your devnet folder
+
+```sh
+offckb node
+# after starting, press ctrl-c to kill the node
+# then get the config
+offckb config list
+```
+
+Result:
+
+```json
+{
+  "devnet": {
+    "rpcUrl": "http://localhost:8114",
+    "configPath": "~/Library/Application Support/offckb-nodejs/devnet",
+    "dataPath": "~/Library/Application Support/offckb-nodejs/devnet/data"
+  }
+}
+```
+
+Pay attention to the `devnet.configPath` and `devnet.dataPath`. They are the ones we need.
+
+1. `cd` into the `devnet.configPath`, this is the config folder for the local blockchain. Modify the config in the folder to better customize the devnet. For customization, see [Custom Devnet Setup](https://docs.nervos.org/docs/node/run-devnet-node#custom-devnet-setup) and [Configure CKB](https://github.com/nervosnetwork/ckb/blob/develop/docs/configure.md) for better explanation of the config files.
+2. After modifications, remove everything in the `devnet.dataPath` folder. This will clean the chain data.
+3. Restart local blockchain by running `offckb node`
+
+Done.
+
 ### Create a full-stack Project
 
 Create a new project from predefined boilerplates.
@@ -164,7 +198,7 @@ Note: you need to have rust/cargo/cargo-generate/clang 16+ installed in your env
 
 The fullstack boilerplate project is a monorepo, which contains a script project and a frontend project.
 
-To build the script, in the root of the project, run: 
+To build the script, in the root of the project, run:
 
 ```sh
 make build
