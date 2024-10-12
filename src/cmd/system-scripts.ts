@@ -1,6 +1,6 @@
 import { config } from '@ckb-lumos/lumos';
 import { readSettings } from '../cfg/setting';
-import { getListHashes, ListHashes, SystemCell } from './list-hashes';
+import { getListHashes, ListHashes, SpecHashes, SystemCell } from './list-hashes';
 import toml from '@iarna/toml';
 import { CellDepInfoLike, KnownScript, Script } from '@ckb-ccc/core';
 import { SystemScript, SystemScriptName, SystemScriptsRecord } from '../scripts/type';
@@ -55,11 +55,15 @@ export function getSystemScriptsFromListHashes(): SystemScriptsRecord | null {
   const listHashesString = getListHashes(settings.bins.defaultCKBVersion);
   if (listHashesString) {
     const listHashes = toml.parse(listHashesString) as unknown as ListHashes;
-    const systemScriptArray = listHashes.offckb.system_cells
+    const chainSpecHashes: SpecHashes | null = Object.values(listHashes)[0];
+    if (chainSpecHashes == null) {
+      throw new Error(`invalid chain spec hashes file ${listHashesString}`);
+    }
+    const systemScriptArray = chainSpecHashes.system_cells
       .map((cell) => {
         // Extract the file name
         const name = cell.path.split('/').pop()?.replace(')', '') || 'unknown script';
-        const depGroupIndex = listHashes.offckb.dep_groups.findIndex((depGroup) =>
+        const depGroupIndex = chainSpecHashes.dep_groups.findIndex((depGroup) =>
           depGroup.included_cells.includes(`Bundled(specs/cells/${name})`),
         );
         const depType = depGroupIndex === -1 ? 'code' : 'depGroup';
@@ -67,8 +71,8 @@ export function getSystemScriptsFromListHashes(): SystemScriptsRecord | null {
           depGroupIndex === -1
             ? undefined
             : {
-                txHash: listHashes.offckb.dep_groups[depGroupIndex].tx_hash,
-                index: listHashes.offckb.dep_groups[depGroupIndex].index,
+                txHash: chainSpecHashes.dep_groups[depGroupIndex].tx_hash,
+                index: chainSpecHashes.dep_groups[depGroupIndex].index,
               };
         const scriptInfo = systemCellToScriptInfo(cell, depType, depGroup);
         return {
