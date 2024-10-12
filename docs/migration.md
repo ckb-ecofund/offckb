@@ -2,9 +2,10 @@
 
 ## BREAKING CHANGES
 
-1. Rename `sync-config` to `sync-scripts`
-2. Rename `deployed-scripts` to `my-scripts`
-3. Templates `offckb.config.ts` file are refactored with NEW structure
+1. Rename Devnet chain name in `dev.toml` config from `offckb` to standard `ckb_dev`
+2. Rename `sync-config` to `sync-scripts`
+3. Rename `deployed-scripts` to `my-scripts`
+4. Templates `offckb.config.ts` file are refactored with NEW structure
 
 ## Add new commands
 
