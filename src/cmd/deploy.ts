@@ -138,21 +138,27 @@ async function deployBinary(
   console.log('wait 4 blocks..');
   await ckb.indexer.waitForSync(-4); // why negative 4? a bug in ckb-lumos
 
+  const txHash = result.scriptConfig.TX_HASH;
+  const index = result.scriptConfig.INDEX;
+  const dataByteLen = BigInt(tx.outputsData[+index].slice(2).length / 2);
+  const dataShannonLen = dataByteLen * BigInt('100000000');
+  const occupiedCapacity = '0x' + dataShannonLen.toString(16);
+
   // todo: handle multiple cell recipes?
   return {
     deploymentOptions: {
       name: contractName,
       binFilePath: binPath,
       enableTypeId: true,
-      lockScript: tx.outputs[+result.scriptConfig.INDEX].lock,
+      lockScript: tx.outputs[+index].lock,
     },
     deploymentRecipe: {
       cellRecipes: [
         {
           name: contractName,
-          txHash: result.scriptConfig.TX_HASH,
-          index: result.scriptConfig.INDEX,
-          occupiedCapacity: '0x' + BigInt(tx.outputsData[+result.scriptConfig.INDEX].slice(2).length / 2).toString(16),
+          txHash,
+          index,
+          occupiedCapacity,
           dataHash: ckbHash(tx.outputsData[+result.scriptConfig.INDEX]),
           typeId: computeScriptHash(result.typeId),
         },

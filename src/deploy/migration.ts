@@ -30,17 +30,17 @@ export interface DeploymentRecipeJson {
   cell_recipes: {
     name: string;
     tx_hash: string;
-    index: HexNumber;
-    occupied_capacity: HexNumber;
+    index: number;
+    occupied_capacity: number; // CKB blocksize limit is 500k, so it should be impossible to have a cell occupied data larger than Number.MAX_SAFE_INTEGER which is 9007,1992,5474,0991
     data_hash: string;
     type_id?: string;
   }[];
   dep_group_recipes: {
     name: string;
     tx_hash: string;
-    index: HexNumber;
+    index: number;
     data_hash: string;
-    occupied_capacity: HexNumber;
+    occupied_capacity: number; // CKB blocksize limit is 500k, so it should be impossible to have a cell occupied data larger than Number.MAX_SAFE_INTEGER which is 9007,1992,5474,0991
   }[];
 }
 
@@ -104,22 +104,34 @@ export function getNewestMigrationFile(folderPath: string): string | undefined {
 export function deploymentRecipeToJson(recipe: DeploymentRecipe): DeploymentRecipeJson {
   return {
     cell_recipes: recipe.cellRecipes.map((val) => {
+      if (BigInt(val.occupiedCapacity) > BigInt(Number.MAX_SAFE_INTEGER)) {
+        // CKB blocksize limit is 500k, so it should be impossible to have a cell occupied data larger than Number.MAX_SAFE_INTEGER which is 9007,1992,5474,0991
+        console.error(
+          `invalid occupiedCapacity: ${val.occupiedCapacity}, the cell_recipes json might be incorrect for cell outpoint ${val.txHash}:${+val.index}`,
+        );
+      }
       return {
         name: val.name,
         tx_hash: val.txHash,
-        index: val.index,
-        occupied_capacity: val.occupiedCapacity,
+        index: +val.index,
+        occupied_capacity: +BigInt(val.occupiedCapacity).toString(10),
         data_hash: val.dataHash,
         type_id: val.typeId,
       };
     }),
     dep_group_recipes: recipe.depGroupRecipes.map((val) => {
+      if (BigInt(val.occupiedCapacity) > BigInt(Number.MAX_SAFE_INTEGER)) {
+        // CKB blocksize limit is 500k, so it should be impossible to have a cell occupied data larger than Number.MAX_SAFE_INTEGER which is 9007,1992,5474,0991
+        console.error(
+          `invalid occupiedCapacity: ${val.occupiedCapacity}, the dep_group_recipes json might be incorrect for cell outpoint ${val.txHash}:${+val.index}`,
+        );
+      }
       return {
         name: val.name,
         tx_hash: val.txHash,
-        index: val.index,
+        index: +val.index,
         data_hash: val.dataHash,
-        occupied_capacity: val.occupiedCapacity,
+        occupied_capacity: +BigInt(val.occupiedCapacity).toString(10),
       };
     }),
   };
@@ -131,8 +143,8 @@ export function deploymentRecipeFromJson(json: DeploymentRecipeJson): Deployment
       return {
         name: val.name,
         txHash: val.tx_hash,
-        index: val.index,
-        occupiedCapacity: val.occupied_capacity,
+        index: '0x' + val.index.toString(16),
+        occupiedCapacity: '0x' + val.occupied_capacity.toString(16),
         dataHash: val.data_hash,
         typeId: val.type_id,
       };
@@ -141,9 +153,9 @@ export function deploymentRecipeFromJson(json: DeploymentRecipeJson): Deployment
       return {
         name: val.name,
         txHash: val.tx_hash,
-        index: val.index,
+        index: '0x' + val.index.toString(16),
         dataHash: val.data_hash,
-        occupiedCapacity: val.occupied_capacity,
+        occupiedCapacity: '0x' + val.occupied_capacity.toString(16),
       };
     }),
   };
