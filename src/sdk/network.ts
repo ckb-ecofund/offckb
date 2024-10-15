@@ -19,4 +19,3 @@ export const networks = {
     proxy_rpc_url: `http://127.0.0.1:${config.rpc.proxyPort}`,
   },
 };
-

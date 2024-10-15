@@ -1,14 +1,14 @@
 import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
-import { DeploymentRecipe, generateDeploymentRecipeJsonFile } from '../deploy/migration';
+import { DeploymentRecipe, generateDeploymentMigrationFile, Migration } from '../deploy/migration';
 import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
 import { genMyScriptsJsonFile } from '../scripts/gen';
 import { OffCKBConfigFile } from '../template/offckb-config';
 import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
 import path from 'path';
 import fs from 'fs';
-import { commons, hd, helpers } from '@ckb-lumos/lumos';
+import { HexString } from '@ckb-lumos/lumos';
 import { Network } from '../util/type';
-import { Account, CKB } from '../util/ckb';
+import { CKB } from '../sdk/ckb';
 
 export type DeployBinaryReturnType = ReturnType<typeof deployBinary>;
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
@@ -41,7 +41,7 @@ export async function recordDeployResult(
   }
   for (const result of results) {
     generateDeploymentToml(result.deploymentOptions, network);
-    generateDeploymentRecipeJsonFile(result.deploymentOptions.name, result.deploymentRecipe, network);
+    generateDeploymentMigrationFile(result.deploymentOptions.name, result.deploymentRecipe, network);
   }
 
   // update my-scripts.json
@@ -57,13 +57,13 @@ export async function recordDeployResult(
   console.log('done.');
 }
 
-export async function deployBinaries(binPaths: string[], from: Account, ckb: CKB) {
+export async function deployBinaries(binPaths: string[], privateKey: HexString, ckb: CKB) {
   if (binPaths.length === 0) {
     console.log('No binary to deploy.');
   }
   const results: DeployedInterfaceType[] = [];
   for (const bin of binPaths) {
-    const result = await deployBinary(bin, from, ckb);
+    const result = await deployBinary(bin, privateKey, ckb);
     results.push(result);
   }
   return results;
@@ -71,7 +71,7 @@ export async function deployBinaries(binPaths: string[], from: Account, ckb: CKB
 
 export async function deployBinary(
   binPath: string,
-  from: Account,
+  privateKey: HexString,
   ckb: CKB,
 ): Promise<{
   deploymentRecipe: DeploymentRecipe;
@@ -79,26 +79,18 @@ export async function deployBinary(
 }> {
   const bin = await readFileToUint8Array(binPath);
   const contractName = path.basename(binPath);
-  const result = await commons.deploy.generateDeployWithTypeIdTx({
-    cellProvider: ckb.indexer,
-    fromInfo: from.address,
-    scriptBinary: bin,
-    config: ckb.getLumosConfig(),
-  });
 
-  // send deploy tx
-  let txSkeleton = result.txSkeleton;
-  txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
-  const message = txSkeleton.get('signingEntries').get(0)!.message;
-  const Sig = hd.key.signRecoverable(message!, from.privKey);
-  const tx = helpers.sealTransaction(txSkeleton, [Sig]);
-  const res = await ckb.rpc.sendTransaction(tx, 'passthrough');
-  console.log(`contract ${contractName} deployed, tx hash:`, res);
-  console.log('wait 4 blocks..');
-  await ckb.indexer.waitForSync(-4); // why negative 4? a bug in ckb-lumos
+  const result = Migration.isDeployedWithTypeId(contractName, ckb.network)
+    ? await ckb.upgradeTypeIdScript(contractName, bin, privateKey)
+    : await ckb.deployNewTypeIDScript(bin, privateKey);
+  console.log(`contract ${contractName} deployed, tx hash:`, result.txHash);
+  console.log('wait for tx confirmed on-chain...');
+  await ckb.queryOnChainTransaction(result.txHash);
+  console.log('tx committed.');
 
-  const txHash = result.scriptConfig.TX_HASH;
-  const index = result.scriptConfig.INDEX;
+  const txHash = result.txHash;
+  const index = result.scriptOutputCellIndex;
+  const tx = result.tx;
   const dataByteLen = BigInt(tx.outputsData[+index].slice(2).length / 2);
   const dataShannonLen = dataByteLen * BigInt('100000000');
   const occupiedCapacity = '0x' + dataShannonLen.toString(16);
@@ -116,10 +108,10 @@ export async function deployBinary(
         {
           name: contractName,
           txHash,
-          index,
+          index: '0x' + index.toString(16),
           occupiedCapacity,
-          dataHash: ckbHash(tx.outputsData[+result.scriptConfig.INDEX]),
-          typeId: computeScriptHash(result.typeId),
+          dataHash: ckbHash(tx.outputsData[+index]),
+          typeId: computeScriptHash(result.typeId!),
         },
       ],
       depGroupRecipes: [],
