@@ -61,7 +61,7 @@ export class CKB {
     return signer;
   }
 
-  async queryOnChainTransaction(txHash: HexString, timeout: number = 60000) {
+  async waitForTxConfirm(txHash: HexString, timeout: number = 60000) {
     const query = async () => {
       const res = await this.client.getTransactionNoCache(txHash);
       if (res && res.status === 'committed') {
@@ -71,6 +71,23 @@ export class CKB {
       }
     };
     return waitFor(query, timeout, 5000);
+  }
+
+  async deployScript(scriptBinBytes: Uint8Array, privateKey: string): Promise<DeploymentResult> {
+    const signer = this.buildSigner(privateKey);
+    const signerSecp256k1Address = await signer.getAddressObjSecp256k1();
+    const tx = ccc.Transaction.from({
+      outputs: [
+        {
+          lock: signerSecp256k1Address.script,
+        },
+      ],
+      outputsData: [scriptBinBytes],
+    });
+    await tx.completeInputsByCapacity(signer);
+    await tx.completeFeeBy(signer, 1000);
+    const txHash = await signer.sendTransaction(tx);
+    return { txHash, tx, scriptOutputCellIndex: 0, isTypeId: false };
   }
 
   async deployNewTypeIDScript(scriptBinBytes: Uint8Array, privateKey: string): Promise<DeploymentResult> {

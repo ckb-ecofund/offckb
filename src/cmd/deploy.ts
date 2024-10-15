@@ -9,9 +9,10 @@ import { CKB } from '../sdk/ckb';
 export interface DeployOptions extends NetworkOption {
   target: string | null | undefined;
   privkey?: string | null;
+  typeId?: boolean;
 }
 
-export async function deploy(opt: DeployOptions = { network: Network.devnet, target: null }) {
+export async function deploy(opt: DeployOptions = { network: Network.devnet, typeId: false, target: null }) {
   const network = opt.network as Network;
   validateNetworkOpt(network);
 
@@ -19,13 +20,13 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
 
   // we use deployerAccount to deploy contract by default
   const privateKey = opt.privkey || deployerAccount.privkey;
-
+  const enableTypeId = opt.typeId ?? false;
   const targetFolder = opt.target;
   if (targetFolder) {
     const binFolder = isAbsolutePath(targetFolder) ? targetFolder : path.resolve(process.cwd(), targetFolder);
     const bins = listBinaryFilesInFolder(binFolder);
     const binPaths = bins.map((bin) => path.resolve(binFolder, bin));
-    const results = await deployBinaries(binPaths, privateKey, ckb);
+    const results = await deployBinaries(binPaths, privateKey, enableTypeId, ckb);
 
     // record the deployed contract infos
     recordDeployResult(results, network, false); // we don't update my-scripts.json since we don't know where the file is
@@ -41,7 +42,7 @@ export async function deploy(opt: DeployOptions = { network: Network.devnet, tar
 
   // read contract bin folder
   const bins = getToDeployBinsPath();
-  const results = await deployBinaries(bins, privateKey, ckb);
+  const results = await deployBinaries(bins, privateKey, enableTypeId, ckb);
 
   // record the deployed contract infos
   recordDeployResult(results, network);

@@ -57,13 +57,13 @@ export async function recordDeployResult(
   console.log('done.');
 }
 
-export async function deployBinaries(binPaths: string[], privateKey: HexString, ckb: CKB) {
+export async function deployBinaries(binPaths: string[], privateKey: HexString, enableTypeId: boolean, ckb: CKB) {
   if (binPaths.length === 0) {
     console.log('No binary to deploy.');
   }
   const results: DeployedInterfaceType[] = [];
   for (const bin of binPaths) {
-    const result = await deployBinary(bin, privateKey, ckb);
+    const result = await deployBinary(bin, privateKey, enableTypeId, ckb);
     results.push(result);
   }
   return results;
@@ -72,6 +72,7 @@ export async function deployBinaries(binPaths: string[], privateKey: HexString, 
 export async function deployBinary(
   binPath: string,
   privateKey: HexString,
+  enableTypeId: boolean,
   ckb: CKB,
 ): Promise<{
   deploymentRecipe: DeploymentRecipe;
@@ -80,12 +81,15 @@ export async function deployBinary(
   const bin = await readFileToUint8Array(binPath);
   const contractName = path.basename(binPath);
 
-  const result = Migration.isDeployedWithTypeId(contractName, ckb.network)
-    ? await ckb.upgradeTypeIdScript(contractName, bin, privateKey)
-    : await ckb.deployNewTypeIDScript(bin, privateKey);
+  const result = enableTypeId
+    ? await ckb.deployScript(bin, privateKey)
+    : Migration.isDeployedWithTypeId(contractName, ckb.network)
+      ? await ckb.upgradeTypeIdScript(contractName, bin, privateKey)
+      : await ckb.deployNewTypeIDScript(bin, privateKey);
+
   console.log(`contract ${contractName} deployed, tx hash:`, result.txHash);
   console.log('wait for tx confirmed on-chain...');
-  await ckb.queryOnChainTransaction(result.txHash);
+  await ckb.waitForTxConfirm(result.txHash);
   console.log('tx committed.');
 
   const txHash = result.txHash;
@@ -100,7 +104,7 @@ export async function deployBinary(
     deploymentOptions: {
       name: contractName,
       binFilePath: binPath,
-      enableTypeId: true,
+      enableTypeId: enableTypeId,
       lockScript: tx.outputs[+index].lock,
     },
     deploymentRecipe: {
@@ -111,7 +115,7 @@ export async function deployBinary(
           index: '0x' + index.toString(16),
           occupiedCapacity,
           dataHash: ckbHash(tx.outputsData[+index]),
-          typeId: computeScriptHash(result.typeId!),
+          typeId: enableTypeId ? computeScriptHash(result.typeId!) : undefined,
         },
       ],
       depGroupRecipes: [],
