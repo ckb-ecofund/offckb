@@ -101,6 +101,7 @@ program
   .description('Deploy contracts to different networks, only supports devnet and testnet')
   .option('--network <network>', 'Specify the network to deploy to', 'devnet')
   .option('--target <target>', 'Specify the relative bin target folder to deploy to')
+  .option('-t, --type-id', 'Specify if use upgradable type id to deploy the script')
   .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
   .action((options: DeployOptions) => deploy(options));
 

@@ -210,6 +210,12 @@ To deploy the script, cd into the frontend folder and run:
 cd frontend && offckb deploy --network <devnet/testnet>
 ```
 
+Pass `--type-id` option if you want Scripts to be upgradable
+
+```sh
+cd frontend && offckb deploy --type-id --network <devnet/testnet>
+```
+
 Once the deployment is done, you can use the following command to check the deployed scripts:
 
 ```sh

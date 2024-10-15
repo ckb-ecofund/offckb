@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import { getContractsPath } from '../deploy/util';
-import { getMigrationFolderPath, getNewestMigrationFile, readDeploymentRecipeJsonFile } from '../deploy/migration';
+import { getMigrationFolderPath, getNewestMigrationFile, readDeploymentMigrationFile } from '../deploy/migration';
 import { MyScriptsRecord } from '../scripts/type';
 import { getSubfolders } from '../util/fs';
 import { Network } from '../util/type';
@@ -22,7 +22,7 @@ export function readUserDeployedScriptsInfo(network: Network) {
     if (newestFilePath) {
       try {
         // Read the file content
-        const recipe = readDeploymentRecipeJsonFile(newestFilePath);
+        const recipe = readDeploymentMigrationFile(newestFilePath);
         // todo: handle multiple cell recipes?
         const firstCell = recipe.cellRecipes[0];
         const isDepCode = recipe.depGroupRecipes.length > 0;

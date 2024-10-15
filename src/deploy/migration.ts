@@ -26,7 +26,7 @@ export interface DeploymentRecipe {
   depGroupRecipes: DepGroupRecipe[];
 }
 
-export interface DeploymentRecipeJson {
+export interface MigrationJson {
   cell_recipes: {
     name: string;
     tx_hash: string;
@@ -44,7 +44,35 @@ export interface DeploymentRecipeJson {
   }[];
 }
 
-export function generateDeploymentRecipeJsonFile(
+export class Migration {
+  static find(scriptName: string, network: Network = Network.devnet) {
+    const filePath = getMigrationFolderPath(scriptName, network);
+    const migrationFile = getNewestMigrationFile(filePath);
+    if (migrationFile == null) return null;
+
+    return readDeploymentMigrationFile(migrationFile);
+  }
+
+  static isDeployed(scriptName: string, network: Network = Network.devnet) {
+    const deploymentReceipt = Migration.find(scriptName, network);
+    if (deploymentReceipt == null) return false;
+
+    return true;
+  }
+
+  static isDeployedWithTypeId(scriptName: string, network: Network = Network.devnet) {
+    const isDeployed = this.isDeployed(scriptName, network);
+    if (isDeployed === false) return false;
+
+    const deploymentReceipt = Migration.find(scriptName, network)!;
+    const typeId = deploymentReceipt.cellRecipes[0].typeId;
+    if (typeId == null) return false;
+
+    return true;
+  }
+}
+
+export function generateDeploymentMigrationFile(
   name: string,
   deploymentRecipe: DeploymentRecipe,
   network = Network.devnet,
@@ -62,9 +90,9 @@ export function generateDeploymentRecipeJsonFile(
   }
 }
 
-export function readDeploymentRecipeJsonFile(filePath: string): DeploymentRecipe {
+export function readDeploymentMigrationFile(filePath: string): DeploymentRecipe {
   const jsonString = fs.readFileSync(filePath, 'utf-8');
-  const data: DeploymentRecipeJson = JSON.parse(jsonString);
+  const data: MigrationJson = JSON.parse(jsonString);
   return deploymentRecipeFromJson(data);
 }
 
@@ -101,7 +129,7 @@ export function getNewestMigrationFile(folderPath: string): string | undefined {
   return files.length > 0 ? path.join(folderPath, files[files.length - 1]) : undefined;
 }
 
-export function deploymentRecipeToJson(recipe: DeploymentRecipe): DeploymentRecipeJson {
+export function deploymentRecipeToJson(recipe: DeploymentRecipe): MigrationJson {
   return {
     cell_recipes: recipe.cellRecipes.map((val) => {
       if (BigInt(val.occupiedCapacity) > BigInt(Number.MAX_SAFE_INTEGER)) {
@@ -137,7 +165,7 @@ export function deploymentRecipeToJson(recipe: DeploymentRecipe): DeploymentReci
   };
 }
 
-export function deploymentRecipeFromJson(json: DeploymentRecipeJson): DeploymentRecipe {
+export function deploymentRecipeFromJson(json: MigrationJson): DeploymentRecipe {
   return {
     cellRecipes: json.cell_recipes.map((val) => {
       return {
