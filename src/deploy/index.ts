@@ -81,7 +81,7 @@ export async function deployBinary(
   const bin = await readFileToUint8Array(binPath);
   const contractName = path.basename(binPath);
 
-  const result = enableTypeId
+  const result = !enableTypeId
     ? await ckb.deployScript(bin, privateKey)
     : Migration.isDeployedWithTypeId(contractName, ckb.network)
       ? await ckb.upgradeTypeIdScript(contractName, bin, privateKey)
@@ -93,11 +93,17 @@ export async function deployBinary(
   console.log('tx committed.');
 
   const txHash = result.txHash;
+  const typeIdScript = result.typeId;
   const index = result.scriptOutputCellIndex;
   const tx = result.tx;
   const dataByteLen = BigInt(tx.outputsData[+index].slice(2).length / 2);
   const dataShannonLen = dataByteLen * BigInt('100000000');
   const occupiedCapacity = '0x' + dataShannonLen.toString(16);
+
+  if (enableTypeId && typeIdScript == null) {
+    throw new Error('type id script is null while enableTypeId is true.');
+  }
+  const typeIdScriptHash = enableTypeId ? computeScriptHash(typeIdScript!) : undefined;
 
   // todo: handle multiple cell recipes?
   return {
@@ -115,7 +121,7 @@ export async function deployBinary(
           index: '0x' + index.toString(16),
           occupiedCapacity,
           dataHash: ckbHash(tx.outputsData[+index]),
-          typeId: enableTypeId ? computeScriptHash(result.typeId!) : undefined,
+          typeId: typeIdScriptHash,
         },
       ],
       depGroupRecipes: [],
