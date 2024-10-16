@@ -114,7 +114,10 @@ export function getMigrationFolderPath(scriptName: string, network: Network) {
   return path.resolve(contractsPath, `${scriptName}/migrations`);
 }
 
-export function getNewestMigrationFile(folderPath: string): string | undefined {
+export function getNewestMigrationFile(folderPath: string): string | null {
+  if (!fs.existsSync(folderPath) || !fs.lstatSync(folderPath).isDirectory()) {
+    return null;
+  }
   const files = fs
     .readdirSync(folderPath)
     .filter((file) => file.endsWith('.json')) // Ensure only JSON files are considered
@@ -126,7 +129,7 @@ export function getNewestMigrationFile(folderPath: string): string | undefined {
     });
 
   // Return the full path of the newest file (last in sorted array) or undefined if no files
-  return files.length > 0 ? path.join(folderPath, files[files.length - 1]) : undefined;
+  return files.length > 0 ? path.join(folderPath, files[files.length - 1]) : null;
 }
 
 export function deploymentRecipeToJson(recipe: DeploymentRecipe): MigrationJson {
