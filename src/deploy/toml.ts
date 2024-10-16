@@ -1,6 +1,6 @@
 import { Script } from '@ckb-lumos/lumos';
 import fs from 'fs';
-import toml from '@iarna/toml';
+import toml, { JsonMap } from '@iarna/toml';
 import { Network } from '../util/type';
 import { dirname } from 'path';
 import { getContractsPath } from './util';
@@ -16,7 +16,7 @@ export interface DeploymentOptions {
 export interface DeploymentToml {
   cells: {
     name: string;
-    enable_type_id: 'true' | 'false';
+    enable_type_id: boolean;
     location: {
       file: string;
     };
@@ -29,11 +29,11 @@ export interface DeploymentToml {
 }
 
 export function generateDeploymentToml(options: DeploymentOptions, network: Network) {
-  const data = {
+  const data: DeploymentToml = {
     cells: [
       {
         name: options.name,
-        enable_type_id: options.enableTypeId ? 'true' : 'false',
+        enable_type_id: options.enableTypeId,
         location: {
           file: options.binFilePath,
         },
@@ -46,7 +46,7 @@ export function generateDeploymentToml(options: DeploymentOptions, network: Netw
     },
   };
 
-  const tomlString = toml.stringify(data);
+  const tomlString = toml.stringify(data as unknown as JsonMap);
   const outputFilePath: string = `${getContractsPath(network)}/${options.name}/deployment.toml`;
   if (outputFilePath) {
     if (!fs.existsSync(dirname(outputFilePath))) {
@@ -65,7 +65,7 @@ export function readDeploymentToml(scriptName: string, network: Network) {
     cells: [
       {
         name: data.cells[0].name as string,
-        enableTypeId: data.cells[0].enable_type_id === 'true' ? true : false,
+        enableTypeId: data.cells[0].enable_type_id,
         location: {
           file: data.cells[0].location.file as string,
         },
