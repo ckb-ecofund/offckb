@@ -6,11 +6,12 @@ import { Network } from '../util/type';
 import { isValidNetworkString } from '../util/validator';
 import { networks } from './network';
 import { buildCCCDevnetKnownScripts } from '../scripts/private';
-import { HexString } from '@ckb-lumos/lumos';
+import { HexNumber, HexString } from '@ckb-lumos/lumos';
 import { Migration } from '../deploy/migration';
 
 export class CKBProps {
   network?: Network;
+  feeRate?: number;
   isEnableProxyRpc?: boolean;
 }
 
@@ -22,16 +23,28 @@ export interface DeploymentResult {
   typeId?: Script;
 }
 
+export interface TransferOption {
+  privateKey: HexString;
+  toAddress: string;
+  amountInCKB: HexNumber;
+}
+
+export type TransferAllOption = Pick<TransferOption, 'privateKey' | 'toAddress'>;
+
 export class CKB {
   public network: Network;
+  public feeRate: number;
+  public isEnableProxyRpc: boolean;
   private client: ClientPublicTestnet | ClientPublicMainnet;
 
-  constructor({ network = Network.devnet, isEnableProxyRpc = false }: CKBProps) {
+  constructor({ network = Network.devnet, feeRate = 1000, isEnableProxyRpc = false }: CKBProps) {
     if (!isValidNetworkString(network)) {
       throw new Error('invalid network option');
     }
 
     this.network = network;
+    this.feeRate = feeRate;
+    this.isEnableProxyRpc = isEnableProxyRpc;
 
     if (isEnableProxyRpc === true) {
       this.client =
@@ -56,9 +69,15 @@ export class CKB {
     }
   }
 
-  private buildSigner(privateKey: HexString) {
+  buildSigner(privateKey: HexString) {
     const signer = new ccc.SignerCkbPrivateKey(this.client, privateKey);
     return signer;
+  }
+
+  async buildSecp256k1Address(privateKey: HexString) {
+    const signer = this.buildSigner(privateKey);
+    const address = await signer.getAddressObjSecp256k1();
+    return address.toString();
   }
 
   async waitForTxConfirm(txHash: HexString, timeout: number = 60000) {
@@ -73,6 +92,67 @@ export class CKB {
     return waitFor(query, timeout, 5000);
   }
 
+  async waitForBlocksBy(interval: number) {
+    if (interval < 0) throw new Error('interval must be number >= 0');
+
+    const timeout = interval * 50000; // block interval is 18 secs, we set limit to 30s
+    const tip = await this.client.getTip();
+    const blockNum = tip + BigInt(interval);
+    const query = async () => {
+      const res = await this.client.getBlockByNumber(blockNum);
+      if (res) {
+        return true;
+      } else {
+        return false;
+      }
+    };
+    return waitFor(query, timeout, 5000);
+  }
+
+  async balance(address: string): Promise<string> {
+    const lock = (await ccc.Address.fromString(address, this.client)).script;
+    const balanceInShannon = await this.client.getBalanceSingle(lock);
+    const balanceInCKB = ccc.fixedPointToString(balanceInShannon);
+    return balanceInCKB;
+  }
+
+  async transfer({ privateKey, toAddress, amountInCKB }: TransferOption): Promise<HexString> {
+    const signer = this.buildSigner(privateKey);
+    const to = await ccc.Address.fromString(toAddress, this.client);
+    const tx = ccc.Transaction.from({
+      outputs: [
+        {
+          capacity: ccc.fixedPointFrom(amountInCKB),
+          lock: to.script,
+        },
+      ],
+    });
+    await tx.completeInputsByCapacity(signer);
+    await tx.completeFeeBy(signer, this.feeRate);
+    const txHash = await signer.sendTransaction(tx);
+    return txHash;
+  }
+
+  async transferAll({ privateKey, toAddress }: TransferAllOption): Promise<HexString> {
+    const signer = this.buildSigner(privateKey);
+    const to = await ccc.Address.fromString(toAddress, this.client);
+    const balanceInCKB = await this.balance((await signer.getRecommendedAddressObj()).toString());
+
+    // leave 0.001 ckb for tx fee
+    const amountInCKB = ccc.fixedPointFrom(balanceInCKB) - ccc.fixedPointFrom(0.001);
+    const tx = ccc.Transaction.from({
+      outputs: [
+        {
+          capacity: ccc.fixedPointFrom(amountInCKB),
+          lock: to.script,
+        },
+      ],
+    });
+    await tx.completeInputsByCapacity(signer);
+    const txHash = await signer.sendTransaction(tx);
+    return txHash;
+  }
+
   async deployScript(scriptBinBytes: Uint8Array, privateKey: string): Promise<DeploymentResult> {
     const signer = this.buildSigner(privateKey);
     const signerSecp256k1Address = await signer.getAddressObjSecp256k1();
@@ -85,7 +165,7 @@ export class CKB {
       outputsData: [scriptBinBytes],
     });
     await tx.completeInputsByCapacity(signer);
-    await tx.completeFeeBy(signer, 1000);
+    await tx.completeFeeBy(signer, this.feeRate);
     const txHash = await signer.sendTransaction(tx);
     return { txHash, tx, scriptOutputCellIndex: 0, isTypeId: false };
   }
@@ -107,7 +187,7 @@ export class CKB {
       throw new Error('Unexpected disappeared output');
     }
     typeIdTx.outputs[0].type.args = ccc.hashTypeId(typeIdTx.inputs[0], 0);
-    await typeIdTx.completeFeeBy(signer, 1000);
+    await typeIdTx.completeFeeBy(signer, this.feeRate);
     const txHash = await signer.sendTransaction(typeIdTx);
     return { txHash, tx: typeIdTx, scriptOutputCellIndex: 0, isTypeId: true, typeId: typeIdTx.outputs[0].type };
   }
@@ -161,7 +241,7 @@ export class CKB {
       throw new Error('Unexpected disappeared output');
     }
     typeIdTx.outputs[0].type.args = typeIdArgs as `0x{string}`;
-    await typeIdTx.completeFeeBy(signer, 1000);
+    await typeIdTx.completeFeeBy(signer, this.feeRate);
     const txHash = await signer.sendTransaction(typeIdTx);
     return { txHash, tx: typeIdTx, scriptOutputCellIndex: 0, isTypeId: true, typeId: typeIdTx.outputs[0].type };
   }

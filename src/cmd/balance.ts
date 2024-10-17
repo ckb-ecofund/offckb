@@ -1,5 +1,4 @@
-import { BI } from '@ckb-lumos/lumos';
-import { CKB } from '../util/ckb';
+import { CKB } from '../sdk/ckb';
 import { validateNetworkOpt } from '../util/validator';
 import { NetworkOption, Network } from '../util/type';
 
@@ -9,10 +8,9 @@ export async function balanceOf(address: string, opt: BalanceOption = { network:
   const network = opt.network;
   validateNetworkOpt(network);
 
-  const ckb = new CKB(network);
-  const lumosConfig = ckb.getLumosConfig();
+  const ckb = new CKB({ network });
 
-  const balance = await ckb.capacityOf(address, lumosConfig);
-  const balanceInCKB = balance.div(BI.from('100000000'));
+  const balanceInCKB = await ckb.balance(address);
   console.log(`Balance: ${balanceInCKB} CKB`);
+  process.exit(0);
 }

@@ -1,4 +1,4 @@
-import { CKB } from '../util/ckb';
+import { CKB } from '../sdk/ckb';
 import { ckbDevnetMinerAccount } from '../cfg/account';
 import { NetworkOption, Network } from '../util/type';
 import { buildTestnetTxLink } from '../util/link';
@@ -8,53 +8,56 @@ import { RequestInit } from 'node-fetch';
 
 export interface DepositOptions extends NetworkOption {}
 
-export async function deposit(toAddress: string, amount: string, opt: DepositOptions = { network: Network.devnet }) {
+export async function deposit(
+  toAddress: string,
+  amountInCKB: string,
+  opt: DepositOptions = { network: Network.devnet },
+) {
   const network = opt.network;
   validateNetworkOpt(network);
 
-  const ckb = new CKB(network);
-  const lumosConfig = ckb.getLumosConfig();
+  const ckb = new CKB({ network });
 
   if (network === 'testnet') {
     return await depositFromTestnetFaucet(toAddress, ckb);
   }
 
   // deposit from devnet miner
-  const from = CKB.generateAccountFromPrivateKey(ckbDevnetMinerAccount.privkey, lumosConfig);
-  const txHash = await ckb.transfer(
-    {
-      from: from.address,
-      to: toAddress,
-      privKey: from.privKey,
-      amount,
-    },
-    lumosConfig,
-  );
+  const privateKey = ckbDevnetMinerAccount.privkey;
+  const txHash = await ckb.transfer({
+    toAddress,
+    privateKey,
+    amountInCKB,
+  });
   console.log('tx hash: ', txHash);
 }
 
 async function depositFromTestnetFaucet(ckbAddress: string, ckb: CKB) {
   console.log('testnet faucet only supports fixed-amount claim: 10,000 CKB');
 
-  const lumosConfig = ckb.getLumosConfig();
   const randomAccountPrivateKey = '0x' + generateHex(64);
-  const randomAccount = CKB.generateAccountFromPrivateKey(randomAccountPrivateKey, lumosConfig);
+  const randomAccountAddress = await ckb.buildSecp256k1Address(randomAccountPrivateKey);
 
   console.log(
-    `use random account to claim from faucet: \n\nprivate key: ${randomAccountPrivateKey}\n\n address: ${randomAccount.address}`,
+    `use random account to claim from faucet: \n\nprivate key: ${randomAccountPrivateKey}\n\n address: ${randomAccountAddress}`,
   );
   try {
-    await sendClaimRequest(randomAccount.address);
+    const claimResponse = await sendClaimRequest(randomAccountAddress);
 
-    console.log('Wait for 4 blocks to transfer all from random account to your account..');
+    console.log('Wait for claim transaction confirmed to transfer all from random account to your account..');
     console.log('You can transfer by yourself if it ends up fails..');
-    await ckb.indexer.waitForSync(-4);
-    const txHash = await ckb.transferAll(randomAccount.privKey, ckbAddress, lumosConfig);
-    console.log(`Done, check ${buildTestnetTxLink(txHash)} for details.`);
+    if (claimResponse.txHash != null) {
+      await ckb.waitForTxConfirm(claimResponse.txHash);
+    } else {
+      await ckb.waitForBlocksBy(4); // wait 4 blocks
+    }
   } catch (error) {
     console.log(error);
-    throw new Error('request failed.');
+    throw new Error('claim request failed.');
   }
+
+  const txHash = await ckb.transferAll({ privateKey: randomAccountPrivateKey, toAddress: ckbAddress });
+  console.log(`Done, check ${buildTestnetTxLink(txHash)} for details.`);
 }
 
 async function sendClaimRequest(toAddress: string) {
@@ -71,7 +74,7 @@ async function sendClaimRequest(toAddress: string) {
   const body = JSON.stringify({
     claim_event: {
       address_hash: toAddress,
-      amount: '10000',
+      amount: '10000', // unit: CKB
     },
   });
 
@@ -81,12 +84,19 @@ async function sendClaimRequest(toAddress: string) {
     body,
   };
 
-  try {
-    const response = await Request.send(url, config);
-    console.log('send claim request, status: ', response.status); // Handle the response data here
-  } catch (error) {
-    console.error('Error:', error);
-  }
+  const response = await Request.send(url, config);
+  console.log('send claim request, status: ', response.status); // Handle the response data here
+  const jsonResponse = await response.json();
+  return jsonResponse.data.attributes as {
+    addressHash: string;
+    status: 'pending' | 'commit';
+    txHash: string | null;
+    txStatus: 'pending' | 'commit';
+    id: number;
+    timestamp: number;
+    fee: string;
+    capacity: string; // unit: CKB
+  };
 }
 
 function generateHex(length: number) {
