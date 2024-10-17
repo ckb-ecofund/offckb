@@ -19,6 +19,7 @@ import { printSystemScripts } from './cmd/system-scripts';
 import { proxyRpc, ProxyRpcOptions } from './cmd/proxy-rpc';
 import { molFiles, molSingleFile } from './cmd/mol';
 import * as fs from 'fs';
+import { transferAll } from './cmd/transfer-all';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -86,6 +87,15 @@ program
   .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
   .action(async (toAddress: string, amountInCKB: string, options: TransferOptions) => {
     return transfer(toAddress, amountInCKB, options);
+  });
+
+program
+  .command('transfer-all [toAddress]')
+  .description('Transfer All CKB tokens to address, only devnet and testnet')
+  .option('--network <network>', 'Specify the network to transfer to', 'devnet')
+  .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
+  .action(async (toAddress: string, options: TransferOptions) => {
+    return transferAll(toAddress, options);
   });
 
 program
