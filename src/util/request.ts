@@ -1,24 +1,28 @@
-import axios, { AxiosProxyConfig, AxiosRequestConfig } from 'axios';
-import { readSettings } from '../cfg/setting';
+import { ProxyConfig, readSettings } from '../cfg/setting';
+import { HttpsProxyAgent } from 'https-proxy-agent';
+import fetch, { RequestInit } from 'node-fetch';
 
 export class Request {
   static proxy = readSettings().proxy;
 
-  static async send(_config: AxiosRequestConfig) {
-    const config = this.proxy ? { ...{ proxy: this.proxy }, ..._config } : _config;
-    return await axios(config);
+  static async send(url: string, options: RequestInit = {}) {
+    const agent = this.proxy ? new HttpsProxyAgent(this.proxyConfigToUrl(this.proxy)) : undefined;
+    const opt: RequestInit = { ...{ agent }, ...options };
+    try {
+      const response = await fetch(url, opt);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}, URL: ${response.url}`);
+      }
+      return await response;
+    } catch (error: unknown) {
+      throw new Error(`fetch error! ${(error as Error).message}`);
+    }
   }
 
-  static async get(url: string, _config?: AxiosRequestConfig) {
-    const config = this.proxy ? { ...{ proxy: this.proxy }, ..._config } : _config;
-    console.log(config);
-    return await axios.get(url, config);
-  }
-
-  static parseProxyUrl(url: string): AxiosProxyConfig {
+  static parseProxyUrl(url: string): ProxyConfig {
     const parsedUrl = new URL(url);
 
-    const proxyConfig: AxiosProxyConfig = {
+    const proxyConfig: ProxyConfig = {
       host: parsedUrl.hostname,
       port: parseInt(parsedUrl.port, 10),
     };
@@ -37,7 +41,7 @@ export class Request {
     return proxyConfig;
   }
 
-  static proxyConfigToUrl(proxy: AxiosProxyConfig): string {
+  static proxyConfigToUrl(proxy: ProxyConfig): string {
     const protocol = proxy.protocol ? `${proxy.protocol}://` : '';
     const auth = proxy.auth ? `${proxy.auth.username}:${proxy.auth.password}@` : '';
     const port = proxy.port ? `:${proxy.port}` : '';
