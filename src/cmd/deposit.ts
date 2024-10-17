@@ -1,10 +1,10 @@
 import { CKB } from '../util/ckb';
-import { AxiosRequestConfig } from 'axios';
 import { ckbDevnetMinerAccount } from '../cfg/account';
 import { NetworkOption, Network } from '../util/type';
 import { buildTestnetTxLink } from '../util/link';
 import { validateNetworkOpt } from '../util/validator';
 import { Request } from '../util/request';
+import { RequestInit } from 'node-fetch';
 
 export interface DepositOptions extends NetworkOption {}
 
@@ -61,7 +61,7 @@ async function sendClaimRequest(toAddress: string) {
   const url = 'https://faucet-api.nervos.org/claim_events'; // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint
 
   const headers = {
-    'User-Agent': 'axios-requests/2.31.0',
+    'User-Agent': 'node-fetch-requests/v2',
     'Accept-Encoding': 'gzip, deflate',
     Accept: '*/*',
     Connection: 'keep-alive',
@@ -75,15 +75,14 @@ async function sendClaimRequest(toAddress: string) {
     },
   });
 
-  const config: AxiosRequestConfig = {
+  const config: RequestInit = {
     method: 'post',
-    url: url,
     headers: headers,
-    data: body,
+    body,
   };
 
   try {
-    const response = await Request.send(config);
+    const response = await Request.send(url, config);
     console.log('send claim request, status: ', response.status); // Handle the response data here
   } catch (error) {
     console.error('Error:', error);

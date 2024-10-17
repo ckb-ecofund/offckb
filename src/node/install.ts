@@ -58,10 +58,9 @@ export async function downloadCKBBinaryAndUnzip(version: string) {
 
 export async function downloadAndSaveCKBBinary(version: string, tempFilePath: string) {
   const downloadURL = buildDownloadUrl(version);
-  const response = await Request.get(downloadURL, {
-    responseType: 'arraybuffer',
-  });
-  fs.writeFileSync(tempFilePath, response.data);
+  const response = await Request.send(downloadURL);
+  const arrayBuffer = await response.arrayBuffer();
+  fs.writeFileSync(tempFilePath, Buffer.from(arrayBuffer));
 }
 
 export async function unZipFile(filePath: string, extractDir: string, useTar: boolean = false) {
