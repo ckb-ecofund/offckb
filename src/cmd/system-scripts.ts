@@ -1,4 +1,3 @@
-import { config } from '@ckb-lumos/lumos';
 import { readSettings } from '../cfg/setting';
 import { getListHashes, ListHashes, SpecHashes, SystemCell } from './list-hashes';
 import toml from '@iarna/toml';
@@ -142,7 +141,7 @@ export function systemCellToScriptInfo(
 }
 
 export function toLumosConfig(scripts: SystemScriptsRecord, addressPrefix: 'ckb' | 'ckt' = 'ckt') {
-  const config: config.Config = {
+  const config = {
     PREFIX: addressPrefix,
     SCRIPTS: {
       SECP256K1_BLAKE160: {
@@ -213,6 +212,7 @@ export function toLumosConfig(scripts: SystemScriptsRecord, addressPrefix: 'ckb'
     },
   };
   if (scripts.always_success) {
+    // @ts-expect-error we remove the lumos config type deps
     config.SCRIPTS['ALWAYS_SUCCESS'] = {
       CODE_HASH: scripts.always_success.script.codeHash,
       HASH_TYPE: scripts.always_success.script.hashType,
@@ -222,6 +222,7 @@ export function toLumosConfig(scripts: SystemScriptsRecord, addressPrefix: 'ckb'
     };
   }
   if (scripts.spore_cluster_agent) {
+    // @ts-expect-error we remove the lumos config type deps
     config.SCRIPTS['SPORE_CLUSTER_AGENT'] = {
       CODE_HASH: scripts.spore_cluster_agent.script.codeHash,
       HASH_TYPE: scripts.spore_cluster_agent.script.hashType,
@@ -231,6 +232,7 @@ export function toLumosConfig(scripts: SystemScriptsRecord, addressPrefix: 'ckb'
     };
   }
   if (scripts.spore_cluster_proxy) {
+    // @ts-expect-error we remove the lumos config type deps
     config.SCRIPTS['SPORE_CLUSTER_PROXY'] = {
       CODE_HASH: scripts.spore_cluster_proxy.script.codeHash,
       HASH_TYPE: scripts.spore_cluster_proxy.script.hashType,
@@ -240,6 +242,7 @@ export function toLumosConfig(scripts: SystemScriptsRecord, addressPrefix: 'ckb'
     };
   }
   if (scripts.spore_extension_lua) {
+    // @ts-expect-error we remove the lumos config type deps
     config.SCRIPTS['SPORE_LUA'] = {
       CODE_HASH: scripts.spore_extension_lua.script.codeHash,
       HASH_TYPE: scripts.spore_extension_lua.script.hashType,

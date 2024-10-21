@@ -1,6 +1,6 @@
 import { CKB } from '../sdk/ckb';
 import { validateNetworkOpt } from '../util/validator';
-import { NetworkOption, Network } from '../util/type';
+import { NetworkOption, Network } from '../type/base';
 
 export interface BalanceOption extends NetworkOption {}
 

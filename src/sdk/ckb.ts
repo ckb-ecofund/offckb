@@ -2,12 +2,11 @@
 // to replace lumos with ccc
 
 import { ccc, ClientPublicMainnet, ClientPublicTestnet, OutPointLike, Script } from '@ckb-ccc/core';
-import { Network } from '../util/type';
 import { isValidNetworkString } from '../util/validator';
 import { networks } from './network';
 import { buildCCCDevnetKnownScripts } from '../scripts/private';
-import { HexNumber, HexString } from '@ckb-lumos/lumos';
 import { Migration } from '../deploy/migration';
+import { Network, HexNumber, HexString } from '../type/base';
 
 export class CKBProps {
   network?: Network;

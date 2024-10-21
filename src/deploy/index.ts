@@ -1,14 +1,14 @@
 import { DeploymentOptions, generateDeploymentToml } from '../deploy/toml';
 import { DeploymentRecipe, generateDeploymentMigrationFile, Migration } from '../deploy/migration';
-import { ckbHash, computeScriptHash } from '@ckb-lumos/lumos/utils';
 import { genMyScriptsJsonFile } from '../scripts/gen';
 import { OffCKBConfigFile } from '../template/offckb-config';
 import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
 import path from 'path';
 import fs from 'fs';
-import { HexString } from '@ckb-lumos/lumos';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 import { CKB } from '../sdk/ckb';
+import { HexString } from '../type/base';
+import { ccc } from '@ckb-ccc/core';
 
 export type DeployBinaryReturnType = ReturnType<typeof deployBinary>;
 export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
@@ -103,7 +103,7 @@ export async function deployBinary(
   if (enableTypeId && typeIdScript == null) {
     throw new Error('type id script is null while enableTypeId is true.');
   }
-  const typeIdScriptHash = enableTypeId ? computeScriptHash(typeIdScript!) : undefined;
+  const typeIdScriptHash = enableTypeId ? ccc.Script.from(typeIdScript!).hash() : undefined;
 
   // todo: handle multiple cell recipes?
   return {
@@ -120,7 +120,7 @@ export async function deployBinary(
           txHash,
           index: '0x' + index.toString(16),
           occupiedCapacity,
-          dataHash: ckbHash(tx.outputsData[+index]),
+          dataHash: ccc.hashCkb(tx.outputsData[+index]),
           typeId: typeIdScriptHash,
         },
       ],

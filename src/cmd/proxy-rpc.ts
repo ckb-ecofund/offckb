@@ -1,6 +1,6 @@
 import { readSettings } from '../cfg/setting';
 import { createRPCProxy } from '../tools/rpc-proxy';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 
 export interface ProxyRpcOptions {
   ckbRpc?: string;
