@@ -4,7 +4,7 @@ import fs from 'fs';
 import { dumpTransaction } from '../tools/ckb-tx-dumper';
 import path from 'path';
 import { cccA } from '@ckb-ccc/core/advanced';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 
 export function debugTransaction(txHash: string, network: Network) {
   const txFile = buildTxFileOptionBy(txHash, network);

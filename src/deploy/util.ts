@@ -1,5 +1,5 @@
 import { readSettings } from '../cfg/setting';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 
 export function getContractsPath(network: Network) {
   const settings = readSettings();

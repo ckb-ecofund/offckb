@@ -1,7 +1,7 @@
 import { readDeploymentToml } from '../deploy/toml';
 import { getContractsPath } from '../deploy/util';
 import { readUserDeployedScriptsInfo } from '../scripts/util';
-import { NetworkOption, Network } from '../util/type';
+import { NetworkOption, Network } from '../type/base';
 import { validateNetworkOpt } from '../util/validator';
 
 export interface DeployedScriptOption extends NetworkOption {}

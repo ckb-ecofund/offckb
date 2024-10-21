@@ -5,7 +5,7 @@ import { OffCKBConfigFile } from '../template/offckb-config';
 import { listBinaryFilesInFolder, readFileToUint8Array, isAbsolutePath } from '../util/fs';
 import path from 'path';
 import fs from 'fs';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 import { CKB } from '../sdk/ckb';
 import { HexString } from '../type/base';
 import { ccc } from '@ckb-ccc/core';

@@ -1,4 +1,4 @@
-import { NetworkOption, Network } from '../util/type';
+import { NetworkOption, Network } from '../type/base';
 import path from 'path';
 import { deployerAccount } from '../cfg/account';
 import { listBinaryFilesInFolder, isAbsolutePath } from '../util/fs';

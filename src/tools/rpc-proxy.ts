@@ -1,6 +1,6 @@
 import httpProxy from 'http-proxy';
 import http from 'http';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 import fs from 'fs';
 import { readSettings } from '../cfg/setting';
 import path from 'path';

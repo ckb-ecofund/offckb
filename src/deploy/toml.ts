@@ -1,6 +1,6 @@
 import fs from 'fs';
 import toml, { JsonMap } from '@iarna/toml';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 import { dirname } from 'path';
 import { getContractsPath } from './util';
 import { HashType } from '@ckb-ccc/core';

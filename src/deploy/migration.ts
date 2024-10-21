@@ -1,4 +1,4 @@
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 import path, { dirname } from 'path';
 import fs from 'fs';
 import { getContractsPath } from './util';

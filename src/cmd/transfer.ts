@@ -1,5 +1,5 @@
 import { CKB } from '../sdk/ckb';
-import { NetworkOption, Network } from '../util/type';
+import { NetworkOption, Network } from '../type/base';
 import { buildTestnetTxLink } from '../util/link';
 import { validateNetworkOpt } from '../util/validator';
 
