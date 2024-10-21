@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import { Network } from './type';
+import { Network } from '../type/base';
 
 export function validateTypescriptWorkspace() {
   const cwd = process.cwd();

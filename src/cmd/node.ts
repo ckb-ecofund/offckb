@@ -4,7 +4,7 @@ import { installCKBBinary } from '../node/install';
 import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
 import { createRPCProxy } from '../tools/rpc-proxy';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 
 export interface NodeProp {
   version?: string;

@@ -1,4 +1,3 @@
-import { AxiosProxyConfig } from 'axios';
 import * as fs from 'fs';
 import * as path from 'path';
 import envPaths from './env-path';
@@ -12,8 +11,20 @@ export const cachePath = paths.cache;
 export const packageSrcPath = path.dirname(require.main!.filename);
 export const packageRootPath = path.resolve(packageSrcPath, '../');
 
+export interface ProxyBasicCredentials {
+  username: string;
+  password: string;
+}
+
+export interface ProxyConfig {
+  host: string;
+  port: number;
+  auth?: ProxyBasicCredentials;
+  protocol?: string;
+}
+
 export interface Settings {
-  proxy?: AxiosProxyConfig;
+  proxy?: ProxyConfig;
   rpc: {
     proxyPort: number;
   };

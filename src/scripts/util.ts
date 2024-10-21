@@ -3,7 +3,7 @@ import { getContractsPath } from '../deploy/util';
 import { getMigrationFolderPath, getNewestMigrationFile, readDeploymentMigrationFile } from '../deploy/migration';
 import { MyScriptsRecord } from '../scripts/type';
 import { getSubfolders } from '../util/fs';
-import { Network } from '../util/type';
+import { Network } from '../type/base';
 
 export function readUserDeployedScriptsInfo(network: Network) {
   const deployedScriptsInfo: MyScriptsRecord = {};

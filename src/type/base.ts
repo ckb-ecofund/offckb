@@ -10,3 +10,6 @@ export interface NetworkOption {
 }
 
 export type H256 = string;
+
+export type HexString = string;
+export type HexNumber = string;

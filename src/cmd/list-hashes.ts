@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { getCKBBinaryPath, readSettings } from '../cfg/setting';
 import { encodeBinPathForTerminal } from '../util/encoding';
-import { H256 } from '../util/type';
+import { H256 } from '../type/base';
 
 export interface SystemCell {
   path: string;

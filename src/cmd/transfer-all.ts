@@ -3,15 +3,11 @@ import { NetworkOption, Network } from '../type/base';
 import { buildTestnetTxLink } from '../util/link';
 import { validateNetworkOpt } from '../util/validator';
 
-export interface TransferOptions extends NetworkOption {
+export interface TransferAllOptions extends NetworkOption {
   privkey?: string | null;
 }
 
-export async function transfer(
-  toAddress: string,
-  amountInCKB: string,
-  opt: TransferOptions = { network: Network.devnet },
-) {
+export async function transferAll(toAddress: string, opt: TransferAllOptions = { network: Network.devnet }) {
   const network = opt.network;
   validateNetworkOpt(network);
 
@@ -22,9 +18,8 @@ export async function transfer(
   const privateKey = opt.privkey;
   const ckb = new CKB({ network });
 
-  const txHash = await ckb.transfer({
+  const txHash = await ckb.transferAll({
     toAddress,
-    amountInCKB,
     privateKey,
   });
   if (network === 'testnet') {

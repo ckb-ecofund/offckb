@@ -60,28 +60,29 @@ Usage: offckb [options] [command]
 ckb development network for your first try
 
 Options:
-  -V, --version                                     output the version number
-  -h, --help                                        display help for command
+  -V, --version                                 output the version number
+  -h, --help                                    display help for command
 
 Commands:
-  create [options] [your-project-name]              Create a new dApp from bare templates
-  node [options] [CKB-Version]                      Use the CKB to start devnet
-  proxy-rpc [options]                               Start the rpc proxy server
-  clean                                             Clean the devnet data, need to stop running the chain first
-  accounts                                          Print account list info
-  list-hashes [CKB-Version]                         Use the CKB to list blockchain scripts hashes
-  inject-config                                     Add offckb.config.ts to your frontend workspace
-  sync-scripts                                      Sync scripts json file in your frontend workspace
-  deposit [options] [toAddress] [amountInShannon]   Deposit CKB tokens to address, only devnet and testnet
-  transfer [options] [toAddress] [amountInShannon]  Transfer CKB tokens to address, only devnet and testnet
-  balance [options] [toAddress]                     Check account balance, only devnet and testnet
-  deploy [options]                                  Deploy contracts to different networks, only supports devnet and testnet
-  my-scripts [options]                              Show deployed contracts info on different networks, only supports devnet and testnet
-  config <action> [item] [value]                    do a configuration action
-  debug [options]                                   CKB Debugger for development
-  system-scripts [options]                          Output system scripts of the local devnet
-  mol [options]                                     Generate CKB Moleculec binding code for development
-  help [command]                                    display help for command
+  create [options] [your-project-name]          Create a new dApp from bare templates
+  node [options] [CKB-Version]                  Use the CKB to start devnet
+  proxy-rpc [options]                           Start the rpc proxy server
+  clean                                         Clean the devnet data, need to stop running the chain first
+  accounts                                      Print account list info
+  list-hashes [CKB-Version]                     Use the CKB to list blockchain scripts hashes
+  inject-config                                 Add offckb.config.ts to your frontend workspace
+  sync-scripts                                  Sync scripts json files in your frontend workspace
+  deposit [options] [toAddress] [amountInCKB]   Deposit CKB tokens to address, only devnet and testnet
+  transfer [options] [toAddress] [amountInCKB]  Transfer CKB tokens to address, only devnet and testnet
+  transfer-all [options] [toAddress]            Transfer All CKB tokens to address, only devnet and testnet
+  balance [options] [toAddress]                 Check account balance, only devnet and testnet
+  deploy [options]                              Deploy contracts to different networks, only supports devnet and testnet
+  my-scripts [options]                          Show deployed contracts info on different networks, only supports devnet and testnet
+  config <action> [item] [value]                do a configuration action
+  debug [options]                               CKB Debugger for development
+  system-scripts [options]                      Output system scripts of the local devnet
+  mol [options]                                 Generate CKB Moleculec binding code for development
+  help [command]                                display help for command
 ```
 
 _Use `offckb [command] -h` to learn more about a specific command._

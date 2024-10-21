@@ -19,6 +19,7 @@ import { printSystemScripts } from './cmd/system-scripts';
 import { proxyRpc, ProxyRpcOptions } from './cmd/proxy-rpc';
 import { molFiles, molSingleFile } from './cmd/mol';
 import * as fs from 'fs';
+import { transferAll } from './cmd/transfer-all';
 
 const version = require('../package.json').version;
 const description = require('../package.json').description;
@@ -72,20 +73,29 @@ program.command('inject-config').description('Add offckb.config.ts to your front
 program.command('sync-scripts').description('Sync scripts json files in your frontend workspace').action(syncScripts);
 
 program
-  .command('deposit [toAddress] [amountInShannon]')
+  .command('deposit [toAddress] [amountInCKB]')
   .description('Deposit CKB tokens to address, only devnet and testnet')
   .option('--network <network>', 'Specify the network to deposit to', 'devnet')
-  .action(async (toAddress: string, amount: string, options: DepositOptions) => {
-    return deposit(toAddress, amount, options);
+  .action(async (toAddress: string, amountInCKB: string, options: DepositOptions) => {
+    return deposit(toAddress, amountInCKB, options);
   });
 
 program
-  .command('transfer [toAddress] [amountInShannon]')
+  .command('transfer [toAddress] [amountInCKB]')
   .description('Transfer CKB tokens to address, only devnet and testnet')
   .option('--network <network>', 'Specify the network to transfer to', 'devnet')
   .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
-  .action(async (toAddress: string, amount: string, options: TransferOptions) => {
-    return transfer(toAddress, amount, options);
+  .action(async (toAddress: string, amountInCKB: string, options: TransferOptions) => {
+    return transfer(toAddress, amountInCKB, options);
+  });
+
+program
+  .command('transfer-all [toAddress]')
+  .description('Transfer All CKB tokens to address, only devnet and testnet')
+  .option('--network <network>', 'Specify the network to transfer to', 'devnet')
+  .option('--privkey <privkey>', 'Specify the private key to deploy scripts')
+  .action(async (toAddress: string, options: TransferOptions) => {
+    return transferAll(toAddress, options);
   });
 
 program
