@@ -13,3 +13,4 @@
 2. `system-scripts`
 3. `debug`
 4. `mol`
+5. `transfer-all`
