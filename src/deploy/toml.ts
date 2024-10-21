@@ -1,16 +1,20 @@
-import { Script } from '@ckb-lumos/lumos';
 import fs from 'fs';
 import toml, { JsonMap } from '@iarna/toml';
 import { Network } from '../util/type';
 import { dirname } from 'path';
 import { getContractsPath } from './util';
 import { HashType } from '@ckb-ccc/core';
+import { HexString } from '../type/base';
 
 export interface DeploymentOptions {
   name: string;
   binFilePath: string;
   enableTypeId: boolean;
-  lockScript: Script;
+  lockScript: {
+    codeHash: HexString;
+    hashType: HashType;
+    args: HexString;
+  };
 }
 
 export interface DeploymentToml {

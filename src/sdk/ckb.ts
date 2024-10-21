@@ -6,8 +6,8 @@ import { Network } from '../util/type';
 import { isValidNetworkString } from '../util/validator';
 import { networks } from './network';
 import { buildCCCDevnetKnownScripts } from '../scripts/private';
-import { HexNumber, HexString } from '@ckb-lumos/lumos';
 import { Migration } from '../deploy/migration';
+import { HexNumber, HexString } from '../type/base';
 
 export class CKBProps {
   network?: Network;
