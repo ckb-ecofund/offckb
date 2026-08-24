@@ -54,7 +54,7 @@ secp256k1_multisig_v2:
 	cp ckb/ckb-system-scripts/specs/cells/secp256k1_blake160_multisig_all ckb/devnet/specs/secp256k1_blake160_multisig_all_v2
 
 # Fiber contracts are copied (not rebuilt) from the pinned ckb/fiber submodule
-# (FNN v0.9.0-rc7, fiber commit bc361aa) and committed under
+# (FNN v0.9.0, fiber commit e6cb7ac) and committed under
 # ckb/devnet/specs/fiber/ so published packages work offline; re-run this
 # target after re-pinning the submodule. The upstream binaries embed the
 # builder's home directory in panic metadata, so the copies are sanitized

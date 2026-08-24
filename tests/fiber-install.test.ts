@@ -44,26 +44,26 @@ describe('buildFnnDownloadUrl', () => {
 
 describe('buildFnnPackageName', () => {
   it('names the linux/darwin packages for both supported architectures', () => {
-    expect(buildFnnPackageName('0.9.0-rc7', 'linux', 'x64')).toBe('fnn_v0.9.0-rc7-x86_64-linux-portable');
-    expect(buildFnnPackageName('0.9.0-rc7', 'linux', 'arm64')).toBe('fnn_v0.9.0-rc7-aarch64-linux-portable');
-    expect(buildFnnPackageName('0.9.0-rc7', 'darwin', 'x64')).toBe('fnn_v0.9.0-rc7-x86_64-darwin-portable');
-    expect(buildFnnPackageName('0.9.0-rc7', 'darwin', 'arm64')).toBe('fnn_v0.9.0-rc7-aarch64-darwin-portable');
+    expect(buildFnnPackageName('0.9.0', 'linux', 'x64')).toBe('fnn_v0.9.0-x86_64-linux-portable');
+    expect(buildFnnPackageName('0.9.0', 'linux', 'arm64')).toBe('fnn_v0.9.0-aarch64-linux-portable');
+    expect(buildFnnPackageName('0.9.0', 'darwin', 'x64')).toBe('fnn_v0.9.0-x86_64-darwin-portable');
+    expect(buildFnnPackageName('0.9.0', 'darwin', 'arm64')).toBe('fnn_v0.9.0-aarch64-darwin-portable');
   });
 
   it('maps every Windows arch to the only published x86_64 package', () => {
     // FNN publishes no aarch64 Windows build; Windows on ARM runs x64 under
     // emulation, so this mapping is intentional.
-    expect(buildFnnPackageName('0.9.0-rc7', 'win32', 'x64')).toBe('fnn_v0.9.0-rc7-x86_64-windows');
-    expect(buildFnnPackageName('0.9.0-rc7', 'win32', 'arm64')).toBe('fnn_v0.9.0-rc7-x86_64-windows');
+    expect(buildFnnPackageName('0.9.0', 'win32', 'x64')).toBe('fnn_v0.9.0-x86_64-windows');
+    expect(buildFnnPackageName('0.9.0', 'win32', 'arm64')).toBe('fnn_v0.9.0-x86_64-windows');
   });
 
   it('rejects unsupported architectures instead of silently mapping to x86_64', () => {
-    expect(() => buildFnnPackageName('0.9.0-rc7', 'linux', 'ppc64')).toThrow('Unsupported CPU architecture');
-    expect(() => buildFnnPackageName('0.9.0-rc7', 'darwin', 'ia32')).toThrow('Unsupported CPU architecture');
+    expect(() => buildFnnPackageName('0.9.0', 'linux', 'ppc64')).toThrow('Unsupported CPU architecture');
+    expect(() => buildFnnPackageName('0.9.0', 'darwin', 'ia32')).toThrow('Unsupported CPU architecture');
   });
 
   it('rejects unsupported operating systems', () => {
-    expect(() => buildFnnPackageName('0.9.0-rc7', 'freebsd' as NodeJS.Platform, 'x64')).toThrow(
+    expect(() => buildFnnPackageName('0.9.0', 'freebsd' as NodeJS.Platform, 'x64')).toThrow(
       'Unsupported operating system',
     );
   });
