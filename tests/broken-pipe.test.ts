@@ -52,8 +52,12 @@ describe('util/shutdown broken-pipe policy', () => {
    */
   function captureHandlers(): Array<(error: NodeJS.ErrnoException) => void> {
     const handlers: Array<(error: NodeJS.ErrnoException) => void> = [];
-    const stdoutOn = jest.spyOn(process.stdout, 'on');
-    const stderrOn = jest.spyOn(process.stderr, 'on');
+    // jest.spyOn calls through to the original method by default, so a plain
+    // spy would still register the handlers on the live streams (and
+    // mockRestore does not remove them). mockReturnThis makes `.on()` a no-op
+    // that only records the call, keeping the streams untouched.
+    const stdoutOn = jest.spyOn(process.stdout, 'on').mockReturnThis();
+    const stderrOn = jest.spyOn(process.stderr, 'on').mockReturnThis();
     shutdown.installBrokenPipeHandlers();
     for (const streamOn of [stdoutOn, stderrOn]) {
       for (const [event, handler] of streamOn.mock.calls) {
