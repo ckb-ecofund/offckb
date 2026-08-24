@@ -479,7 +479,7 @@ offckb fiber clean                # delete the whole fiber environment
 - Only the plain local devnet is supported: no mainnet/testnet, and no forked devnet (a `fork.json` present in the devnet directory rejects Fiber startup).
 - A devnet created by an offckb version without Fiber support does not have the Fiber contracts in its genesis. `fiber start` / `node --fiber` on such a devnet refuse with migration guidance: rebuild with `offckb clean` (which deletes the local chain data) and start again; a plain `offckb node` keeps working on the old devnet unchanged.
 - Node `N` uses built-in CKB account `N+2` (accounts 3-18 are reserved for Fiber), RPC port `21713+N` and P2P port `8343+N`. Up to 16 nodes: `offckb fiber start --nodes 4`.
-- `offckb fiber start [FNN-Version]` downloads a tested FNN release (currently `0.9.0-rc7`). Downloaded tarballs are verified against SHA-256 digests pinned in offckb before installation. Use `--binary-path <fnn>` (or `--fnn-binary-path <fnn>` with `node --fiber`) to run a locally built FNN.
+- `offckb fiber start [FNN-Version]` downloads a tested FNN release (currently `0.9.0`). Downloaded tarballs are verified against SHA-256 digests pinned in offckb before installation. Use `--binary-path <fnn>` (or `--fnn-binary-path <fnn>` with `node --fiber`) to run a locally built FNN.
 - Every FNN writes its stdout/stderr to `devnet/fiber/nodes/<id>/fnn.log`, never to your terminal. Per-node FNN config overrides live in `devnet/fiber/nodes.yml` (regenerated `config.yml` files do not keep hand edits). Fields owned by offckb — chain, scripts, listening/bootnode addresses, store path, CKB RPC/UDT wiring, services — are managed and cannot be overridden there.
 - Startup verifies that the devnet spec, the running CKB and every FNN agree on the same chain (genesis hash), and checks each node's identity key, CKB account and available balance before reporting ready.
 - One fiber environment per machine: the RPC/P2P ports are fixed per node id, so a second concurrent fiber environment fails its port check. Note the CKB side of the check is the chain's genesis hash, and every plain offckb devnet shares the same genesis — if you run several offckb environments on one machine (e.g. separate `XDG_DATA_HOME`), make sure `fiber start` attaches to the CKB you actually started for it; when in doubt, check `offckb fiber status` against the environment you mean to use.
@@ -546,7 +546,7 @@ LOG_LEVEL=debug offckb node
 - [x] Nostr-Lock https://github.com/cryptape/nostr-binding/tree/main/contracts/nostr-lock
   - version: 25dd59d
 - [x] Fiber (auth / funding-lock / commitment-lock) https://github.com/nervosnetwork/fiber
-  - commit id: bc361aa (FNN v0.9.0-rc7)
+  - commit id: e6cb7ac (FNN v0.9.0)
 - [x] Type ID built-in
 
 ## Accounts

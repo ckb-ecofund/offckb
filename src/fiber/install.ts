@@ -13,7 +13,7 @@ import { logger } from '../util/logger';
 // Only FNN versions tested against the contracts and config rules bundled
 // with this offckb release may be downloaded. Other versions require
 // --binary-path / --fnn-binary-path with a locally built FNN.
-export const SUPPORTED_FNN_VERSIONS = ['0.9.0-rc7'] as const;
+export const SUPPORTED_FNN_VERSIONS = ['0.9.0'] as const;
 export const DEFAULT_FNN_VERSION = SUPPORTED_FNN_VERSIONS[0];
 
 // Independently pinned SHA-256 digests of the upstream release tarballs,
@@ -22,12 +22,12 @@ export const DEFAULT_FNN_VERSION = SUPPORTED_FNN_VERSIONS[0];
 // download is verified against these pins before anything is extracted;
 // a version or package without a pin fails closed.
 export const KNOWN_FNN_SHA256: Record<string, Record<string, string>> = {
-  '0.9.0-rc7': {
-    'fnn_v0.9.0-rc7-x86_64-linux-portable': 'a27627e8cea2304e6075084d2fab72cd1276f512548351d6060e26622cc26faa',
-    'fnn_v0.9.0-rc7-aarch64-linux-portable': 'fc25e907f9f24d345397da5794bac09c03fd76456a0f776bf3377192e3689143',
-    'fnn_v0.9.0-rc7-x86_64-darwin-portable': '3ffa7ca2e3801e2d549c306200ae3add9ee90ec4a5093dfad6fefe04881e107b',
-    'fnn_v0.9.0-rc7-aarch64-darwin-portable': '0127370913d7ec0291c0e1e38a0fff06efb6cdf999bafc87abb5b98e23b5df47',
-    'fnn_v0.9.0-rc7-x86_64-windows': '7c9dd492a481aa18079aef17134bc16e8e247bd0535cb0372ab3476d55cb688b',
+  '0.9.0': {
+    'fnn_v0.9.0-x86_64-linux-portable': '4085453de9a3f7ca0f0aeb7db9e34c0af4d34feb84566be554a5c70557cecbea',
+    'fnn_v0.9.0-aarch64-linux-portable': 'f7b03271d0c8e67cc28dd8ff76876d7740d8ac95a0523764e4846bcef0dcce80',
+    'fnn_v0.9.0-x86_64-darwin-portable': '088410e1db827d2972df752fd5dbb73c90eed8d985a81bc3b3045835f6798640',
+    'fnn_v0.9.0-aarch64-darwin-portable': 'e55720bf167f556ba437b03d0e7c2e3a000c4a9c3d612293be7671fb54168a00',
+    'fnn_v0.9.0-x86_64-windows': 'b9eb9d3a63e082aca9fcdfbe0260b54edbabee987050fde1467fa5fe15b9c480',
   },
 };
 
