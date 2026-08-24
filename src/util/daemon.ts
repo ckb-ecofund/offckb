@@ -296,9 +296,14 @@ function parsePsLstart(text: string): number | null {
   return Number.isFinite(ms) ? ms : null;
 }
 
+// Generous so the Windows daemon-identity probe (PowerShell + CIM cold start)
+// does not fail closed against a legitimate daemon on a slow machine; it only
+// needs to bound a genuinely hung probe.
+const PROCESS_PROBE_TIMEOUT_MS = 15_000;
+
 function execFileText(command: string, args: string[]): Promise<string | null> {
   return new Promise((resolve) => {
-    execFile(command, args, { timeout: 5000 }, (error, stdout) => {
+    execFile(command, args, { timeout: PROCESS_PROBE_TIMEOUT_MS }, (error, stdout) => {
       if (error) {
         resolve(null);
         return;
