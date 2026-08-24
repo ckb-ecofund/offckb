@@ -32,7 +32,10 @@ jobs:
       - name: Update package version
         run: |
           SHORT_COMMIT_ID=$(git log -1 --pretty=format:%h)
-          npm version prerelease --preid="canary-$SHORT_COMMIT_ID"
+          BASE_VERSION=$(node -p "require('./package.json').version")
+          # Append the canary suffix to the current version without bumping it,
+          # e.g. 0.5.0 -> 0.5.0-canary-<commitid>
+          npm pkg set version="${BASE_VERSION}-canary-${SHORT_COMMIT_ID}"
 
       - name: Build
         run: pnpm build
