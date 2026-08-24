@@ -68,7 +68,7 @@ export const defaultSettings: Settings = {
   bins: {
     rootFolder: path.resolve(dataPath, 'bins'),
     defaultCKBVersion: '0.208.0',
-    defaultFnnVersion: '0.9.0-rc7',
+    defaultFnnVersion: '0.9.0',
     downloadPath: path.resolve(cachePath, 'download'),
   },
   devnet: {
